@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact — AIAI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'aiai-navy': '#1a2332','aiai-navy-light': '#243447','aiai-blue': '#2563eb','aiai-blue-light': '#3b82f6',
+                        'aiai-sage': '#7c9a6e','aiai-sage-light': '#a3bc96','aiai-sage-bg': '#f0f5ed','aiai-cream': '#faf9f6',
+                        'aiai-dark': '#0f172a','aiai-muted': '#64748b','aiai-border': '#e2e8f0','aiai-orange': '#ea580c','aiai-gold': '#b59a3a',
+                    },
+                    fontFamily: { sans: ['Inter','system-ui','-apple-system','sans-serif'] },
+                }
+            }
+        }
+    </script>
+    <style>.tech-grid{background-image:linear-gradient(rgba(37,99,235,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(37,99,235,.03) 1px,transparent 1px);background-size:40px 40px}.logo-nav{height:48px;width:auto;object-fit:contain}@media(max-width:640px){.logo-nav{height:36px}}.logo-hero{height:60px;width:auto;object-fit:contain;mix-blend-mode:screen}@media(min-width:768px){.logo-hero{height:90px}}@media(min-width:1024px){.logo-hero{height:120px}}.logo-footer{height:56px;width:auto;object-fit:contain}.brand-divider{display:flex;align-items:center;justify-content:center;gap:16px;padding:24px 0}.brand-divider::before,.brand-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,#e2e8f0,transparent)}.brand-divider span{font-size:11px;font-weight:700;letter-spacing:0.2em;color:#b59a3a;text-transform:uppercase}.card-hover{transition:all .35s cubic-bezier(0.4, 0, 0.2, 1)}.card-hover:hover{transform:translateY(-4px);box-shadow:0 20px 40px -12px rgba(26,35,50,.12)}</style>
+</head>
+<body class="min-h-screen bg-aiai-cream font-sans text-aiai-dark antialiased">
+
+<!-- Navigation -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-aiai-border/50">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16 lg:h-20">
+            <a href="index.html" class="flex items-center gap-3"><img src="assets/img/logo-lines-transparent.png" alt="Adventures in AI" class="logo-nav"></a>
+            <div class="hidden xl:flex items-center gap-1">
+                <a href="index.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg hover:bg-aiai-cream">Home</a>
+                <a href="understanding-ai.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg hover:bg-aiai-cream">Understanding AI</a>
+                <a href="proof.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg hover:bg-aiai-cream">Proof</a>
+                <a href="services.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg hover:bg-aiai-cream">Services</a>
+                <a href="build-with-us.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg hover:bg-aiai-cream">Build With Us</a>
+                <a href="contact.html" class="px-3 py-2 text-sm font-medium text-aiai-blue bg-blue-50 rounded-lg">Contact</a>
+            </div>
+            <div class="hidden lg:flex items-center gap-4">
+                <a href="contact.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-aiai-blue text-white text-sm font-semibold rounded-lg shadow-sm">Start a Conversation<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+            </div>
+            <button class="lg:hidden p-2 rounded-lg hover:bg-aiai-cream transition-colors" onclick="document.getElementById('mobile-menu-contact').classList.toggle('hidden')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg></button>
+        </div>
+    </div>
+    <div id="mobile-menu-contact" class="hidden lg:hidden border-t border-aiai-border bg-white"><div class="px-6 py-4 space-y-2">
+        <a href="index.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Home</a>
+        <a href="understanding-ai.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Understanding AI</a>
+        <a href="proof.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Proof</a>
+        <a href="services.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Services</a>
+        <a href="build-with-us.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Build With Us</a>
+        <a href="contact.html" class="block px-3 py-2 text-sm font-medium text-aiai-blue bg-blue-50 rounded-lg">Contact</a>
+    </div></div>
+</nav>
+
+<!-- Contact -->
+<section class="pt-28 pb-16 bg-gradient-to-b from-aiai-cream to-white">
+    <div class="max-w-3xl mx-auto px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <p class="text-sm font-semibold uppercase tracking-widest text-aiai-blue mb-5">Get in Touch</p>
+            <h1 class="text-4xl lg:text-5xl font-extrabold text-aiai-navy mb-5 leading-tight tracking-tight">Start a Conversation</h1>
+            <p class="text-lg text-aiai-muted leading-relaxed">No sales pitch. No pressure. Just an honest conversation about what AI can actually do for your business.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-aiai-border/60 p-8 mb-8">
+            <h2 class="text-xl font-bold text-aiai-navy mb-6">What happens next?</h2>
+            <div class="space-y-4">
+                <div class="flex items-start gap-4">
+                    <div class="w-8 h-8 rounded-lg bg-aiai-blue/10 flex items-center justify-center text-aiai-blue font-bold text-sm flex-shrink-0">1</div>
+                    <div><h4 class="font-semibold text-aiai-navy">We talk</h4><p class="text-sm text-aiai-muted">A 30-minute conversation about your business, your challenges, and where you are now. No preparation needed.</p></div>
+                </div>
+                <div class="flex items-start gap-4">
+                    <div class="w-8 h-8 rounded-lg bg-aiai-sage/10 flex items-center justify-center text-aiai-sage font-bold text-sm flex-shrink-0">2</div>
+                    <div><h4 class="font-semibold text-aiai-navy">We map one workflow</h4><p class="text-sm text-aiai-muted">We identify one routine process in your business that could become a reusable system. Something real, where you'll see value quickly.</p></div>
+                </div>
+                <div class="flex items-start gap-4">
+                    <div class="w-8 h-8 rounded-lg bg-aiai-gold/10 flex items-center justify-center text-aiai-gold font-bold text-sm flex-shrink-0">3</div>
+                    <div><h4 class="font-semibold text-aiai-navy">We show you the system</h4><p class="text-sm text-aiai-muted">A live walkthrough of our own AI team in action — not a demo, real operations. You see which pattern maps to your business, then we propose the first build, the reusable engine behind it, and the next expansion paths.</p></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-aiai-navy rounded-2xl p-8 text-white relative overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-aiai-blue via-aiai-sage to-aiai-gold"></div>
+            <h2 class="text-xl font-bold mb-4">Ready to talk?</h2>
+            <p class="text-white/70 mb-6">Send us a message and we'll get back to you within 24 hours. Or just email us directly.</p>
+            <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-aiai-sage-light"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    <span class="text-white/80">hello@adventuresinai.co.uk</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-aiai-sage-light"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <span class="text-white/80">Yorkshire, UK</span>
+                </div>
+            </div>
+            <div class="mt-8 p-4 rounded-xl bg-white/5 border border-white/5">
+                <p class="text-sm text-white/60"><strong class="text-white/80">Prefer email?</strong> Drop us a line at hello@adventuresinai.co.uk — tell us about your business and what's on your mind. No form required. No commitment. Just a conversation.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-aiai-dark text-white">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+                <img src="assets/img/logo-lines-transparent.png" alt="Adventures in AI" class="logo-footer mb-4">
+                <p class="text-white/50 text-sm leading-relaxed max-w-xs">Own the routine. Expand your team. Choose your dependencies.</p>
+            </div>
+            <div><h4 class="font-semibold text-sm uppercase tracking-wider text-white/40 mb-4">Pages</h4><ul class="space-y-2.5"><li><a href="index.html" class="text-sm text-white/60 hover:text-aiai-sage-light transition-colors">Home</a></li><li><a href="understanding-ai.html" class="text-sm text-white/60 hover:text-aiai-sage-light transition-colors">Understanding AI</a></li><li><a href="proof.html" class="text-sm text-white/60 hover:text-aiai-sage-light transition-colors">Proof of Capability</a></li><li><a href="services.html" class="text-sm text-white/60 hover:text-aiai-sage-light transition-colors">Services</a></li><li><a href="contact.html" class="text-sm text-white/60 hover:text-aiai-sage-light transition-colors">Contact</a></li></ul></div>
+            <div><h4 class="font-semibold text-sm uppercase tracking-wider text-white/40 mb-4">Get in Touch</h4><p class="text-sm text-white/60 mb-4">Ready to explore what AI can actually do?</p><a href="contact.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-white/10 hover:bg-white/20 text-white text-sm font-semibold rounded-lg transition-colors border border-white/10">Start a Conversation<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a></div>
+        </div>
+        <div class="border-t border-white/10 py-6 flex flex-col sm:flex-row items-center justify-between gap-4"><p class="text-xs text-white/30">&copy; 2026 Adventures in AI Ltd. All rights reserved.</p><p class="text-xs text-white/30">Built with AI &middot; OpenClaw</p></div>
+    </div>
+</footer>
+</body>
+</html>

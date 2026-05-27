@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Build With Us — Adventures in AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'aiai-navy': '#1a2332',
+                        'aiai-navy-light': '#243447',
+                        'aiai-blue': '#2563eb',
+                        'aiai-blue-light': '#3b82f6',
+                        'aiai-sage': '#7c9a6e',
+                        'aiai-sage-light': '#a3bc96',
+                        'aiai-sage-bg': '#f0f5ed',
+                        'aiai-cream': '#faf9f6',
+                        'aiai-dark': '#0f172a',
+                        'aiai-muted': '#64748b',
+                        'aiai-border': '#e2e8f0',
+                        'aiai-orange': '#ea580c',
+                        'aiai-gold': '#b59a3a',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-gradient {
+            background: linear-gradient(135deg, #1a2332 0%, #243447 50%, #1a2332 100%);
+        }
+        .tech-grid {
+            background-image: 
+                linear-gradient(rgba(37, 99, 235, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(37, 99, 235, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .card-hover {
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 25px 50px -12px rgba(26, 35, 50, 0.12);
+        }
+        .brand-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 0 0 24px;
+        }
+        .brand-divider::before,
+        .brand-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #d6dde8, transparent);
+        }
+        .brand-divider span {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.22em;
+            color: #b59a3a;
+            text-transform: uppercase;
+        }
+        /* Form styles */
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+        }
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        /* Range slider */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: linear-gradient(to right, #2563eb var(--progress, 0%), #e2e8f0 var(--progress, 0%));
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #2563eb;
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #2563eb;
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
+        }
+        /* Report animation */
+        .report-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .report-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .aiai-logo {
+            height: 36px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 8px 18px rgba(26, 35, 50, 0.08));
+        }
+        @media (max-width: 640px) {
+            .aiai-logo {
+                height: 28px;
+            }
+        }
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-aiai-cream font-sans text-aiai-dark antialiased">
+
+<!-- Navigation -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-aiai-border/50">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16 lg:h-20">
+            <a href="index.html" class="flex items-center gap-3 group">
+                <img src="assets/img/logo-lines-transparent.png" alt="AIAI" class="aiai-logo">
+            </a>
+            <div class="hidden xl:flex items-center gap-1">
+                <a href="index.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Home</a>
+                <a href="understanding-ai.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Understanding AI</a>
+                <a href="proof.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Proof</a>
+                <a href="services.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Services</a>
+                <a href="contact.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Contact</a>
+                <a href="build-with-us.html" class="px-3 py-2 text-sm font-medium text-aiai-blue bg-blue-50 rounded-lg">Build With Us</a>
+            </div>
+            <div class="hidden lg:flex items-center gap-4">
+                <a href="contact.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-aiai-blue text-white text-sm font-semibold rounded-lg hover:bg-aiai-blue-light transition-colors shadow-sm">
+                    Start a Conversation
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                </a>
+            </div>
+            <!-- Mobile menu button -->
+            <button class="lg:hidden p-2 rounded-lg hover:bg-aiai-cream transition-colors" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16"></path><path d="M4 12h16"></path><path d="M4 18h16"></path></svg>
+            </button>
+        </div>
+    </div>
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-aiai-border bg-white">
+        <div class="px-6 py-4 space-y-2">
+            <a href="index.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Home</a>
+            <a href="understanding-ai.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Understanding AI</a>
+            <a href="proof.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Proof</a>
+            <a href="services.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Services</a>
+            <a href="contact.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Contact</a>
+            <a href="build-with-us.html" class="block px-3 py-2 text-sm font-medium text-aiai-blue bg-blue-50 rounded-lg">Build With Us</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="relative pt-28 pb-16 overflow-hidden hero-gradient">
+    <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute top-16 right-[10%] w-96 h-96 bg-aiai-blue/8 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-0 left-[5%] w-72 h-72 bg-aiai-sage/8 rounded-full blur-[100px]"></div>
+        <div class="absolute inset-0 tech-grid"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="max-w-3xl">
+            <p class="text-sm font-semibold uppercase tracking-widest text-aiai-sage-light mb-5">Build With Us</p>
+            <h1 class="text-4xl lg:text-5xl xl:text-6xl font-extrabold text-white mb-6 leading-tight tracking-tight">
+                See What AI Could Do<br>
+                <span class="text-aiai-sage-light">For Your Business</span>
+            </h1>
+            <p class="text-lg lg:text-xl text-white/65 leading-relaxed max-w-2xl">
+                Answer 4 quick questions and we'll build you a personalised AI readiness snapshot — instantly. No sales pitch, no waiting. Just honest insight.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Form Section -->
+<section id="form-section" class="py-16 bg-white border-b border-aiai-border">
+    <div class="max-w-2xl mx-auto px-6 lg:px-8">
+        <div class="text-center mb-10">
+            <p class="text-sm font-semibold uppercase tracking-widest text-aiai-blue mb-3">Your Business Profile</p>
+            <h2 class="text-2xl lg:text-3xl font-bold text-aiai-navy mb-3">Tell us about your business</h2>
+            <p class="text-aiai-muted">This takes about 30 seconds. Your report generates instantly — no waiting.</p>
+        </div>
+
+        <form id="build-form" class="space-y-6">
+            <!-- Business Name -->
+            <div>
+                <label for="businessName" class="block text-sm font-semibold text-aiai-navy mb-2">Business Name</label>
+                <input type="text" id="businessName" name="businessName" placeholder="e.g. Box Construction Ltd" required
+                    class="form-input w-full px-4 py-3 rounded-xl border border-aiai-border bg-white text-aiai-dark placeholder-aiai-muted/60 text-sm focus:outline-none transition-colors">
+            </div>
+
+            <!-- Industry -->
+            <div>
+                <label for="industry" class="block text-sm font-semibold text-aiai-navy mb-2">Industry</label>
+                <select id="industry" name="industry" required
+                    class="form-select form-input w-full px-4 py-3 rounded-xl border border-aiai-border bg-white text-aiai-dark text-sm focus:outline-none transition-colors">
+                    <option value="" disabled selected>Choose your industry...</option>
+                    <option value="construction">Construction</option>
+                    <option value="professional-services">Professional Services</option>
+                    <option value="retail">Retail / E-commerce</option>
+                    <option value="hospitality">Hospitality</option>
+                </select>
+            </div>
+
+            <!-- Pain Point -->
+            <div>
+                <label for="painPoint" class="block text-sm font-semibold text-aiai-navy mb-2">Biggest Pain Point Right Now</label>
+                <select id="painPoint" name="painPoint" required disabled
+                    class="form-select form-input w-full px-4 py-3 rounded-xl border border-aiai-border bg-aiai-cream text-aiai-muted text-sm focus:outline-none transition-colors cursor-not-allowed">
+                    <option value="" disabled selected>First select an industry...</option>
+                </select>
+            </div>
+
+            <!-- AI Usage Slider -->
+            <div>
+                <label for="aiUsage" class="block text-sm font-semibold text-aiai-navy mb-3">Current AI Usage</label>
+                <div class="px-1">
+                    <input type="range" id="aiUsage" name="aiUsage" min="0" max="3" value="0" step="1"
+                        class="w-full mb-3" style="--progress: 0%">
+                </div>
+                <div class="flex justify-between text-xs text-aiai-muted">
+                    <span id="label-none" class="font-semibold text-aiai-blue">None</span>
+                    <span id="label-minimal">Minimal</span>
+                    <span id="label-some">Some</span>
+                    <span id="label-heavy">Heavy</span>
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="pt-4">
+                <button type="submit"
+                    class="w-full inline-flex items-center justify-center gap-2 px-8 py-4 bg-aiai-blue text-white font-semibold rounded-xl hover:bg-aiai-blue-light transition-all shadow-lg hover:shadow-xl hover:shadow-aiai-blue/20 text-base">
+                    Generate My AI Snapshot
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                </button>
+                <p class="text-center text-xs text-aiai-muted mt-3">Takes under a second. No email required.</p>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- Report Section (initially hidden) -->
+<section id="report-section" class="hidden py-16 bg-aiai-cream">
+    <div class="max-w-4xl mx-auto px-6 lg:px-8">
+
+        <!-- Report Header -->
+        <div id="report-header" class="report-section mb-12">
+            <div class="p-8 rounded-3xl bg-aiai-navy text-white relative overflow-hidden border border-white/8 shadow-[0_26px_70px_-34px_rgba(15,23,42,0.68)]">
+                <div class="absolute -top-10 right-8 h-32 w-32 rounded-full bg-aiai-blue/15 blur-3xl"></div>
+                <div class="absolute -bottom-10 left-10 h-28 w-28 rounded-full bg-aiai-sage/12 blur-3xl"></div>
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-aiai-blue via-aiai-sage to-aiai-gold"></div>
+                <div class="relative">
+                    <p class="text-sm font-semibold uppercase tracking-widest text-aiai-sage-light mb-4">Your AI Snapshot</p>
+                    <h2 id="report-hero-headline" class="text-3xl lg:text-4xl font-extrabold mb-4 leading-tight"></h2>
+                    <p id="report-hero-subhead" class="text-lg text-white/70 leading-relaxed max-w-2xl"></p>
+                    <div class="mt-6 flex flex-wrap gap-3">
+                        <span id="report-sector-badge" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 text-sm text-white/80 border border-white/10">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            <span id="report-sector-label"></span>
+                        </span>
+                        <span id="report-pain-badge" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 text-sm text-white/80 border border-white/10">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 9v4"></path><path d="M12 17h.01"></path><circle cx="12" cy="12" r="10"></circle></svg>
+                            <span id="report-pain-label"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- The Problem -->
+        <div id="report-problem" class="report-section mb-10">
+            <div class="p-8 rounded-2xl bg-white border border-aiai-border shadow-sm">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center text-red-500">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 9v4"></path><path d="M12 17h.01"></path><circle cx="12" cy="12" r="10"></circle></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-aiai-navy">The Problem</h3>
+                </div>
+                <div class="space-y-4">
+                    <div class="p-4 rounded-xl bg-aiai-cream border-l-4 border-aiai-orange">
+                        <p class="text-xs font-bold text-aiai-orange uppercase mb-1">External Pressure</p>
+                        <p id="problem-external" class="text-sm text-aiai-dark leading-relaxed"></p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-aiai-cream border-l-4 border-aiai-blue">
+                        <p class="text-xs font-bold text-aiai-blue uppercase mb-1">Internal Friction</p>
+                        <p id="problem-internal" class="text-sm text-aiai-dark leading-relaxed"></p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-aiai-cream border-l-4 border-aiai-sage">
+                        <p class="text-xs font-bold text-aiai-sage uppercase mb-1">The Principle</p>
+                        <p id="problem-philosophical" class="text-sm text-aiai-dark leading-relaxed"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Your Focused Solution -->
+        <div id="report-solution" class="report-section mb-10">
+            <div class="p-8 rounded-2xl bg-aiai-blue/5 border-2 border-aiai-blue/20">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 rounded-lg bg-aiai-blue/10 flex items-center justify-center text-aiai-blue">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-aiai-navy">Your Focused Solution</h3>
+                </div>
+                <p id="solution-label" class="text-sm font-semibold text-aiai-blue mb-3"></p>
+                <p id="solution-text" class="text-base text-aiai-dark leading-relaxed"></p>
+            </div>
+        </div>
+
+        <!-- Guide -->
+        <div id="report-guide" class="report-section mb-10">
+            <div class="p-8 rounded-2xl bg-aiai-sage/5 border border-aiai-sage/20">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 rounded-lg bg-aiai-sage/10 flex items-center justify-center text-aiai-sage">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-aiai-navy">Your Guide</h3>
+                </div>
+                <p id="guide-text" class="text-base text-aiai-dark leading-relaxed"></p>
+            </div>
+        </div>
+
+        <!-- Plan -->
+        <div id="report-plan" class="report-section mb-10">
+            <div class="p-8 rounded-2xl bg-white border border-aiai-border shadow-sm">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 rounded-lg bg-aiai-gold/10 flex items-center justify-center text-aiai-gold">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-aiai-navy">Your Plan</h3>
+                </div>
+                <div class="p-4 rounded-xl bg-aiai-gold/5 border border-aiai-gold/20 mb-6">
+                    <p id="plan-intro" class="text-sm text-aiai-dark font-medium leading-relaxed"></p>
+                </div>
+                <div id="plan-steps" class="space-y-4">
+                    <!-- Steps injected here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Stakes -->
+        <div id="report-stakes" class="report-section mb-10">
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="p-6 rounded-2xl bg-red-50 border border-red-100">
+                    <div class="flex items-center gap-2 mb-4">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="text-red-500"><path d="M12 9v4"></path><path d="M12 17h.01"></path><circle cx="12" cy="12" r="10"></circle></svg>
+                        <h4 class="font-bold text-red-700">Without a Plan</h4>
+                    </div>
+                    <p id="stakes-failure" class="text-sm text-red-800/80 leading-relaxed"></p>
+                </div>
+                <div class="p-6 rounded-2xl bg-green-50 border border-green-100">
+                    <div class="flex items-center gap-2 mb-4">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="text-green-600"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                        <h4 class="font-bold text-green-700">With a Plan</h4>
+                    </div>
+                    <p id="stakes-success" class="text-sm text-green-800/80 leading-relaxed"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Proof Points -->
+        <div id="report-proof" class="report-section mb-10">
+            <div class="p-8 rounded-2xl bg-aiai-navy text-white relative overflow-hidden">
+                <div class="absolute -top-10 right-8 h-32 w-32 rounded-full bg-aiai-blue/15 blur-3xl"></div>
+                <div class="absolute -bottom-10 left-10 h-28 w-28 rounded-full bg-aiai-sage/12 blur-3xl"></div>
+                <h3 class="text-lg font-bold mb-6 flex items-center gap-2">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="text-aiai-sage-light"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    Proof Points
+                </h3>
+                <ul id="proof-list" class="space-y-3">
+                    <!-- Injected via JS -->
+                </ul>
+            </div>
+        </div>
+
+        <!-- Disclaimer -->
+        <div id="report-disclaimer" class="report-section mb-12">
+            <div class="p-6 rounded-2xl bg-aiai-cream border border-aiai-border">
+                <div class="flex items-start gap-3">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="text-aiai-muted flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+                    <p id="disclaimer-text" class="text-sm text-aiai-muted leading-relaxed"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTAs -->
+        <div id="report-cta" class="report-section mb-16">
+            <div class="text-center">
+                <h3 class="text-2xl font-bold text-aiai-navy mb-4">Ready to go deeper?</h3>
+                <p class="text-aiai-muted mb-8 max-w-lg mx-auto">This snapshot is just the starting point. Let's look at your actual data and build a plan that fits your business.</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="contact.html" id="cta-primary" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-aiai-blue text-white font-semibold rounded-xl hover:bg-aiai-blue-light transition-all shadow-lg hover:shadow-xl hover:shadow-aiai-blue/20 text-base">
+                        Book a 30-Minute Validation Call
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                    </a>
+                    <button type="button" id="cta-secondary" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-aiai-navy font-semibold rounded-xl hover:bg-aiai-cream transition-all border border-aiai-border text-base">
+                        Download Full AI Roadmap
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    </button>
+                </div>
+                <p class="text-xs text-aiai-muted mt-6">Or email us directly: <a href="mailto:hello@adventuresinai.co.uk" class="text-aiai-blue hover:underline">hello@adventuresinai.co.uk</a></p>
+            </div>
+        </div>
+
+        <!-- Restart -->
+        <div class="text-center pb-8">
+            <button type="button" onclick="window.scrollTo({top:0,behavior:'smooth'}); setTimeout(()=>location.reload(),400);"
+                class="inline-flex items-center gap-2 text-sm text-aiai-muted hover:text-aiai-blue transition-colors">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+                Start over with different details
+            </button>
+        </div>
+
+    </div>
+</section>
+
+<!-- Lead Capture Modal (hidden until "Book" clicked) -->
+<div id="lead-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl max-w-md w-full p-8 shadow-2xl relative">
+        <button onclick="closeLeadModal()" class="absolute top-4 right-4 p-2 rounded-lg hover:bg-aiai-cream transition-colors text-aiai-muted">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+        </button>
+        <h3 class="text-xl font-bold text-aiai-navy mb-2">Book Your Validation Call</h3>
+        <p class="text-sm text-aiai-muted mb-6">Leave your details and we'll be in touch within 24 hours.</p>
+        <form id="lead-form" action="https://placeholder.formspree.io/f/YOUR_FORM_ID" method="POST" class="space-y-4">
+            <input type="hidden" id="lead-sector" name="sector">
+            <input type="hidden" id="lead-pain" name="pain_point">
+            <input type="hidden" id="lead-ai-usage" name="ai_usage">
+            <div>
+                <label class="block text-sm font-semibold text-aiai-navy mb-1">Name</label>
+                <input type="text" name="name" required class="form-input w-full px-4 py-3 rounded-xl border border-aiai-border text-sm focus:outline-none">
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-aiai-navy mb-1">Email</label>
+                <input type="email" name="email" required class="form-input w-full px-4 py-3 rounded-xl border border-aiai-border text-sm focus:outline-none">
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-aiai-navy mb-1">Business Name</label>
+                <input type="text" id="lead-business-name" name="business_name" required class="form-input w-full px-4 py-3 rounded-xl border border-aiai-border text-sm focus:outline-none">
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-aiai-navy mb-1">Message (optional)</label>
+                <textarea name="message" rows="3" class="form-input w-full px-4 py-3 rounded-xl border border-aiai-border text-sm focus:outline-none resize-none"></textarea>
+            </div>
+            <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-aiai-blue text-white font-semibold rounded-xl hover:bg-aiai-blue-light transition-all shadow-lg">
+                Send Request
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+            </button>
+            <p class="text-xs text-aiai-muted text-center">We'll never share your details. Unsubscribe anytime.</p>
+        </form>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-aiai-navy text-white py-12 border-t border-white/10">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-3">
+                <img src="assets/img/logo-lines-transparent.png" alt="AIAI" class="aiai-footer-logo" style="height:36px;opacity:0.84;">
+            </div>
+            <div class="flex flex-wrap items-center gap-6 text-sm text-white/50">
+                <a href="index.html" class="hover:text-white transition-colors">Home</a>
+                <a href="understanding-ai.html" class="hover:text-white transition-colors">Understanding AI</a>
+                <a href="proof.html" class="hover:text-white transition-colors">Proof</a>
+                <a href="services.html" class="hover:text-white transition-colors">Services</a>
+                <a href="contact.html" class="hover:text-white transition-colors">Contact</a>
+                <a href="build-with-us.html" class="text-white/80 hover:text-white transition-colors">Build With Us</a>
+            </div>
+        </div>
+        <div class="mt-8 pt-8 border-t border-white/10 text-center text-xs text-white/30">
+            <p> Adventures in AI. Built with AI, for humans.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Data & Logic -->
+<script src="assets/js/sector-data.js"></script>
+<script>
+(function() {
+    'use strict';
+
+    const $ = id => document.getElementById(id);
+    const sectors = window.AIAI_SECTORS;
+    const universal = window.AIAI_UNIVERSAL;
+
+    const AI_LABELS = ['None', 'Minimal', 'Some', 'Heavy'];
+    const AI_KEYS = ['none', 'minimal', 'some', 'heavy'];
+
+    // ---- Slider ----
+    const slider = $('aiUsage');
+    function updateSlider() {
+        const pct = (slider.value / 3) * 100;
+        slider.style.setProperty('--progress', pct + '%');
+        AI_LABELS.forEach((label, i) => {
+            const el = $('label-' + AI_KEYS[i]);
+            if (el) el.className = i === parseInt(slider.value) ? 'font-semibold text-aiai-blue' : 'text-aiai-muted';
+        });
+    }
+    slider.addEventListener('input', updateSlider);
+    updateSlider();
+
+    // ---- Dynamic Pain Points ----
+    const industrySelect = $('industry');
+    const painSelect = $('painPoint');
+
+    function populatePainPoints(sectorId) {
+        const sector = sectors[sectorId];
+        painSelect.innerHTML = '<option value="" disabled selected>Choose your biggest pain point...</option>';
+        if (!sector) {
+            painSelect.disabled = true;
+            painSelect.classList.add('cursor-not-allowed', 'bg-aiai-cream', 'text-aiai-muted');
+            return;
+        }
+        Object.entries(sector.painPoints).forEach(([key, data]) => {
+            const opt = document.createElement('option');
+            opt.value = key;
+            opt.textContent = data.label;
+            painSelect.appendChild(opt);
+        });
+        painSelect.disabled = false;
+        painSelect.classList.remove('cursor-not-allowed', 'bg-aiai-cream', 'text-aiai-muted');
+    }
+
+    industrySelect.addEventListener('change', e => populatePainPoints(e.target.value));
+
+    // ---- Form Submit ----
+    $('build-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const businessName = $('businessName').value.trim();
+        const sectorId = industrySelect.value;
+        const painKey = painSelect.value;
+        const aiLevel = parseInt(slider.value);
+        const aiKey = AI_KEYS[aiLevel];
+
+        if (!businessName || !sectorId || !painKey) return;
+
+        const sector = sectors[sectorId];
+        const painData = sector.painPoints[painKey];
+
+        // Render report
+        renderReport(businessName, sector, painData, aiKey);
+
+        // Scroll to report
+        const reportSection = $('report-section');
+        reportSection.classList.remove('hidden');
+        reportSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // Staggered fade-in
+        const sections = reportSection.querySelectorAll('.report-section');
+        sections.forEach((sec, i) => {
+            sec.classList.remove('visible');
+            setTimeout(() => sec.classList.add('visible'), i * 120);
+        });
+    });
+
+    function renderReport(name, sector, painData, aiKey) {
+        // Hero
+        const headline = name + ', ' + sector.hero.headline;
+        $('report-hero-headline').textContent = headline;
+        $('report-hero-subhead').textContent = sector.hero.subhead;
+        $('report-sector-label').textContent = sector.label;
+        $('report-pain-label').textContent = painData.label;
+
+        // Problem
+        $('problem-external').textContent = sector.problem.external;
+        $('problem-internal').textContent = sector.problem.internal;
+        $('problem-philosophical').textContent = sector.problem.philosophical;
+
+        // Solution
+        $('solution-label').textContent = 'Focus area: ' + painData.label;
+        $('solution-text').textContent = painData.solution;
+
+        // Guide
+        $('guide-text').textContent = sector.guide;
+
+        // Plan
+        $('plan-intro').textContent = sector.planIntro[aiKey];
+        const planSteps = $('plan-steps');
+        planSteps.innerHTML = '';
+        sector.planSteps[aiKey].forEach((step, i) => {
+            const div = document.createElement('div');
+            div.className = 'flex gap-4 p-4 rounded-xl bg-aiai-cream border border-aiai-border';
+            div.innerHTML = `
+                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-aiai-blue text-white flex items-center justify-center text-sm font-bold">${i + 1}</div>
+                <div>
+                    <p class="font-semibold text-aiai-navy text-sm mb-1">${step.title}</p>
+                    <p class="text-sm text-aiai-muted leading-relaxed">${step.desc}</p>
+                </div>
+            `;
+            planSteps.appendChild(div);
+        });
+
+        // Stakes
+        $('stakes-failure').textContent = sector.stakes.failure;
+        $('stakes-success').textContent = sector.stakes.success;
+
+        // Proof points
+        const proofList = $('proof-list');
+        proofList.innerHTML = '';
+        universal.proofPoints.forEach(pt => {
+            const li = document.createElement('li');
+            li.className = 'flex items-start gap-3 text-sm text-white/70';
+            li.innerHTML = `<span class="text-aiai-sage-light flex-shrink-0 mt-0.5">✓</span><span>${pt}</span>`;
+            proofList.appendChild(li);
+        });
+
+        // Disclaimer
+        $('disclaimer-text').textContent = universal.disclaimer;
+
+        // CTAs
+        $('cta-primary').textContent = sector.cta.primary;
+        $('cta-secondary').textContent = sector.cta.secondary;
+
+        // Hidden lead form fields
+        $('lead-sector').value = sector.label;
+        $('lead-pain').value = painData.label;
+        $('lead-ai-usage').value = AI_LABELS[AI_KEYS.indexOf(aiKey)];
+        $('lead-business-name').value = name;
+    }
+
+    // ---- Lead Modal ----
+    window.openLeadModal = function() {
+        $('lead-modal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    };
+    window.closeLeadModal = function() {
+        $('lead-modal').classList.add('hidden');
+        document.body.style.overflow = '';
+    };
+    $('cta-primary').addEventListener('click', function(e) {
+        e.preventDefault();
+        openLeadModal();
+    });
+    $('lead-modal').addEventListener('click', function(e) {
+        if (e.target === this) closeLeadModal();
+    });
+
+    // Secondary CTA → show "coming soon" toast
+    $('cta-secondary').addEventListener('click', function() {
+        const toast = document.createElement('div');
+        toast.className = 'fixed bottom-8 left-1/2 -translate-x-1/2 px-6 py-3 bg-aiai-navy text-white text-sm font-medium rounded-xl shadow-2xl z-50 animate-pulse-soft';
+        toast.textContent = 'Roadmap downloads coming soon — book a call for now!';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    });
+
+})();
+</script>
+
+</body>
+</html>
