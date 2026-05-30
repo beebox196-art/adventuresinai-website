@@ -177,9 +177,8 @@
         const companyVal = document.getElementById('form-company').value.trim();
         document.getElementById('form-subject').value = 'AIAI Contact: ' + (companyVal || nameVal);
 
-        // Disable form
-        const inputs = form.querySelectorAll('input, textarea, button');
-        inputs.forEach(function(input) { input.disabled = true; });
+        // Disable submit button only (disabled inputs are excluded from FormData)
+        formSubmit.disabled = true;
         formSubmit.textContent = 'Sending...';
         formError.hidden = true;
 
@@ -203,8 +202,8 @@
                 throw new Error('Server returned ' + response.status);
             }
         } catch (err) {
-            // Re-enable form
-            inputs.forEach(function(input) { input.disabled = false; });
+            // Re-enable submit button
+            formSubmit.disabled = false;
             formSubmit.textContent = 'Send Message';
 
             // Show error
@@ -228,8 +227,7 @@
         formContainer.hidden = false;
         formSuccess.hidden = true;
         formError.hidden = true;
-        const inputs = form.querySelectorAll('input, textarea, button');
-        inputs.forEach(function(input) { input.disabled = false; });
+        formSubmit.disabled = false;
         formSubmit.textContent = 'Send Message';
         formSubmit.focus();
     });
