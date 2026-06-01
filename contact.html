@@ -22,7 +22,15 @@
             }
         }
     </script>
-    <style>.tech-grid{background-image:linear-gradient(rgba(37,99,235,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(37,99,235,.03) 1px,transparent 1px);background-size:40px 40px}.logo-nav{height:48px;width:auto;object-fit:contain}@media(max-width:640px){.logo-nav{height:36px}}.logo-hero{height:60px;width:auto;object-fit:contain;mix-blend-mode:screen}@media(min-width:768px){.logo-hero{height:90px}}@media(min-width:1024px){.logo-hero{height:120px}}.logo-footer{height:56px;width:auto;object-fit:contain}.brand-divider{display:flex;align-items:center;justify-content:center;gap:16px;padding:24px 0}.brand-divider::before,.brand-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,#e2e8f0,transparent)}.brand-divider span{font-size:11px;font-weight:700;letter-spacing:0.2em;color:#b59a3a;text-transform:uppercase}.card-hover{transition:all .35s cubic-bezier(0.4, 0, 0.2, 1)}.card-hover:hover{transform:translateY(-4px);box-shadow:0 20px 40px -12px rgba(26,35,50,.12)}</style>
+    <style>.tech-grid{background-image:linear-gradient(rgba(37,99,235,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(37,99,235,.03) 1px,transparent 1px);background-size:40px 40px}.card-hover{transition:all .35s cubic-bezier(0.4, 0, 0.2, 1)}.card-hover:hover{transform:translateY(-4px);box-shadow:0 20px 40px -12px rgba(26,35,50,.12)}.logo-hero{height:60px;width:auto;object-fit:contain;mix-blend-mode:screen}@media(min-width:768px){.logo-hero{height:90px}}@media(min-width:1024px){.logo-hero{height:120px}}</style>
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+    <meta property="og:image" content="https://aiai.co.uk/assets/img/og-share-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="theme-color" content="#1a2332">
 </head>
 <body class="min-h-screen bg-aiai-cream font-sans text-aiai-dark antialiased">
 
@@ -30,7 +38,7 @@
 <nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-aiai-border/50">
     <div class="max-w-7xl mx-auto px-6 lg:px-8">
         <div class="flex items-center justify-between h-16 lg:h-20">
-            <a href="index.html" class="flex items-center gap-3"><img src="assets/img/logo-lines-transparent.png" alt="Adventures in AI" class="logo-nav"></a>
+            <a href="index.html" class="flex items-center group"><img src="assets/img/logo-lines-navy.png" alt="AIAI — Adventures in AI" class="h-10 lg:h-12 w-auto object-contain transition-transform group-hover:scale-105"></a>
             <div class="hidden xl:flex items-center gap-1">
                 <a href="index.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg hover:bg-aiai-cream">Home</a>
                 <a href="understanding-ai.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg hover:bg-aiai-cream">Understanding AI</a>
@@ -143,13 +151,22 @@
     </div>
 </section>
 
+<!-- Gold Rule -->
+<div class="h-px bg-gradient-to-r from-transparent via-aiai-gold/40 to-transparent"></div>
+
 <!-- Footer -->
 <footer class="bg-aiai-dark text-white">
     <div class="max-w-7xl mx-auto px-6 lg:px-8">
         <div class="py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-                <img src="assets/img/logo-lines-transparent.png" alt="Adventures in AI" class="logo-footer mb-4">
-                <p class="text-white/50 text-sm leading-relaxed max-w-xs">Own the routine. Expand your team. Choose your dependencies.</p>
+                <div class="flex flex-col items-start gap-3">
+                    <div class="flex items-center gap-3">
+                        <img src="assets/img/logo-box-white.png" alt="AIAI" class="h-14 w-14 object-contain">
+                        <img src="assets/img/logo-lines-white.png" alt="Adventures in AI" class="h-8 w-auto object-contain">
+                    </div>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-aiai-gold/70">Proof Over Promise</p>
+                </div>
+                <p class="text-white/50 text-sm leading-relaxed max-w-xs mt-3">Own the routine. Expand your team. Choose your dependencies.</p>
             </div>
             <div><h4 class="font-semibold text-sm uppercase tracking-wider text-white/40 mb-4">Pages</h4><ul class="space-y-2.5"><li><a href="index.html" class="text-sm text-white/60 hover:text-aiai-sage-light transition-colors">Home</a></li><li><a href="understanding-ai.html" class="text-sm text-white/60 hover:text-aiai-sage-light transition-colors">Understanding AI</a></li><li><a href="proof.html" class="text-sm text-white/60 hover:text-aiai-sage-light transition-colors">Proof of Capability</a></li><li><a href="services.html" class="text-sm text-white/60 hover:text-aiai-sage-light transition-colors">Services</a></li><li><a href="contact.html" class="text-sm text-white/60 hover:text-aiai-sage-light transition-colors">Contact</a></li><li><a href="case-study-openclaw.html" class="text-sm text-white/60 hover:text-aiai-sage-light transition-colors">Case Studies</a></li></ul></div>
             <div><h4 class="font-semibold text-sm uppercase tracking-wider text-white/40 mb-4">Get in Touch</h4><p class="text-sm text-white/60 mb-4">Ready to explore what AI can actually do?</p><a href="contact.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-white/10 hover:bg-white/20 text-white text-sm font-semibold rounded-lg transition-colors border border-white/10">Start a Conversation<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a></div>

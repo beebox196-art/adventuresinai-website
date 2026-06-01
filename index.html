@@ -77,49 +77,16 @@
         .counter-value {
             font-variant-numeric: tabular-nums;
         }
-        .aiai-logo {
-            height: 36px;
-            width: auto;
-            object-fit: contain;
-            filter: drop-shadow(0 8px 18px rgba(26, 35, 50, 0.08));
-        }
-        .aiai-footer-logo {
-            height: 36px;
-            width: auto;
-            object-fit: contain;
-            opacity: 0.84;
-            filter: drop-shadow(0 10px 24px rgba(15, 23, 42, 0.18));
-        }
-        .brand-divider {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-            padding: 0 0 24px;
-        }
-        .brand-divider::before,
-        .brand-divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, #d6dde8, transparent);
-        }
-        .brand-divider span {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.22em;
-            color: #b59a3a;
-            text-transform: uppercase;
-        }
-        @media (max-width: 640px) {
-            .aiai-logo {
-                height: 28px;
-            }
-            .aiai-footer-logo {
-                height: 32px;
-            }
-        }
+
     </style>
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+    <meta property="og:image" content="https://aiai.co.uk/assets/img/og-share-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="theme-color" content="#1a2332">
 </head>
 <body class="min-h-screen bg-aiai-cream font-sans text-aiai-dark antialiased">
 
@@ -127,8 +94,8 @@
 <nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-aiai-border/50">
     <div class="max-w-7xl mx-auto px-6 lg:px-8">
         <div class="flex items-center justify-between h-16 lg:h-20">
-            <a href="index.html" class="flex items-center gap-3 group">
-                <img src="assets/img/logo-lines-transparent.png" alt="AIAI" class="aiai-logo">
+            <a href="index.html" class="flex items-center group">
+                <img src="assets/img/logo-lines-navy.png" alt="AIAI — Adventures in AI" class="h-10 lg:h-12 w-auto object-contain transition-transform group-hover:scale-105">
             </a>
             <div class="hidden xl:flex items-center gap-1">
                 <a href="index.html" class="px-3 py-2 text-sm font-medium text-aiai-blue bg-blue-50 rounded-lg">Home</a>
@@ -167,6 +134,9 @@
 
 <!-- Hero Section -->
 <section class="relative pt-28 pb-16 lg:pt-24 lg:pb-12 xl:pt-28 xl:pb-16 overflow-hidden hero-gradient">
+    <div class="absolute top-4 right-4 lg:top-12 lg:right-12 opacity-[0.04] pointer-events-none">
+        <img src="assets/img/logo-box-transparent.png" alt="" class="h-64 w-64 lg:h-96 lg:w-96 object-contain" aria-hidden="true">
+    </div>
     <div class="absolute inset-0 pointer-events-none">
         <div class="absolute top-16 right-[10%] w-96 h-96 bg-aiai-blue/8 rounded-full blur-[120px]"></div>
         <div class="absolute bottom-0 left-[5%] w-72 h-72 bg-aiai-sage/8 rounded-full blur-[100px]"></div>
@@ -536,7 +506,11 @@
         <div class="absolute bottom-10 right-[10%] h-64 w-64 rounded-full bg-aiai-blue/6 blur-[110px]"></div>
     </div>
     <div class="relative max-w-7xl mx-auto px-6 lg:px-8">
-        <div class="brand-divider"><span>Live Signals</span></div>
+        <div class="flex items-center justify-center gap-4 py-6">
+            <div class="flex-1 h-px bg-gradient-to-r from-transparent via-aiai-gold/30 to-transparent"></div>
+            <span class="text-xs font-bold uppercase tracking-[0.2em] text-aiai-gold">Live Signals</span>
+            <div class="flex-1 h-px bg-gradient-to-r from-transparent via-aiai-gold/30 to-transparent"></div>
+        </div>
         <div class="text-center mb-10 lg:mb-8">
             <p class="text-sm font-semibold uppercase tracking-widest text-aiai-sage mb-3">A System That Builds Its Own Briefings.</p>
             <h2 class="text-3xl lg:text-3xl xl:text-4xl font-bold text-aiai-navy mb-4 leading-tight">Our AI team monitors, researches, and synthesises — every day, without us asking.</h2>
@@ -613,8 +587,10 @@
 </section>
 
 <!-- Brand Divider -->
-<div class="brand-divider bg-aiai-cream">
-    <span>AIAI</span>
+<div class="flex items-center justify-center gap-4 py-6">
+    <div class="flex-1 h-px bg-gradient-to-r from-transparent via-aiai-gold/30 to-transparent"></div>
+    <span class="text-xs font-bold uppercase tracking-[0.2em] text-aiai-gold">AIAI</span>
+    <div class="flex-1 h-px bg-gradient-to-r from-transparent via-aiai-gold/30 to-transparent"></div>
 </div>
 
 <!-- What We Do - Service Tiers Preview -->
@@ -771,13 +747,22 @@
     </div>
 </section>
 
+<!-- Gold Rule -->
+<div class="h-px bg-gradient-to-r from-transparent via-aiai-gold/40 to-transparent"></div>
+
 <!-- Footer -->
 <footer class="bg-aiai-dark text-white">
     <div class="max-w-7xl mx-auto px-6 lg:px-8">
         <div class="py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-                <img src="assets/img/logo-lines-transparent.png" alt="AIAI" class="aiai-footer-logo mb-4">
-                <p class="text-white/50 text-sm leading-relaxed max-w-xs">Own the routine. Expand your team. Choose your dependencies.</p>
+                <div class="flex flex-col items-start gap-3">
+                    <div class="flex items-center gap-3">
+                        <img src="assets/img/logo-box-white.png" alt="AIAI" class="h-14 w-14 object-contain">
+                        <img src="assets/img/logo-lines-white.png" alt="Adventures in AI" class="h-8 w-auto object-contain">
+                    </div>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-aiai-gold/70">Proof Over Promise</p>
+                </div>
+                <p class="text-white/50 text-sm leading-relaxed max-w-xs mt-3">Own the routine. Expand your team. Choose your dependencies.</p>
             </div>
             <div>
                 <h4 class="font-semibold text-sm uppercase tracking-wider text-white/40 mb-4">Pages</h4>

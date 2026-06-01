@@ -36,18 +36,17 @@
         .tech-grid { background-image: linear-gradient(rgba(37,99,235,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(37,99,235,0.03) 1px, transparent 1px); background-size: 40px 40px; }
         .card-hover { transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
         .card-hover:hover { transform: translateY(-4px); box-shadow: 0 22px 48px -18px rgba(26,35,50,0.14); }
-        .logo-nav { height: 48px; width: auto; object-fit: contain; }
-        @media (max-width: 640px) { .logo-nav { height: 36px; } }
-        .logo-hero { height: 60px; width: auto; object-fit: contain; opacity: 0.92; filter: drop-shadow(0 14px 28px rgba(26,35,50,0.12)); }
-        @media (min-width: 768px) { .logo-hero { height: 90px; } }
-        @media (min-width: 1024px) { .logo-hero { height: 120px; } }
-        .logo-footer { height: 56px; width: auto; object-fit: contain; filter: drop-shadow(0 10px 24px rgba(15,23,42,0.18)); }
-        .brand-divider { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 24px 0; }
-        .brand-divider::before, .brand-divider::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, #e2e8f0, transparent); }
-        .brand-divider span { font-size: 11px; font-weight: 700; letter-spacing: 0.2em; color: #b59a3a; text-transform: uppercase; }
         .jargon-card { transition: all 0.3s ease; border-left: 3px solid transparent; }
         .jargon-card:hover { border-left-color: #7c9a6e; background-color: #fafdf7; }
     </style>
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+    <meta property="og:image" content="https://aiai.co.uk/assets/img/og-share-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="theme-color" content="#1a2332">
 </head>
 <body class="min-h-screen bg-aiai-cream font-sans text-aiai-dark antialiased">
 
@@ -55,8 +54,8 @@
 <nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-aiai-border/50">
     <div class="max-w-7xl mx-auto px-6 lg:px-8">
         <div class="flex items-center justify-between h-16 lg:h-20">
-            <a href="index.html" class="flex items-center gap-3">
-                <img src="assets/img/logo-lines-transparent.png" alt="Adventures in AI" class="logo-nav">
+            <a href="index.html" class="flex items-center group">
+                <img src="assets/img/logo-lines-navy.png" alt="AIAI — Adventures in AI" class="h-10 lg:h-12 w-auto object-contain transition-transform group-hover:scale-105">
             </a>
             <div class="hidden xl:flex items-center gap-1">
                 <a href="index.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Home</a>
@@ -99,7 +98,9 @@
     </div>
     <div class="relative max-w-7xl mx-auto px-6 lg:px-8">
         <div class="mb-6">
-            <img src="assets/img/logo-lines-transparent.png" alt="Adventures in AI" class="logo-hero">
+            <div class="absolute top-4 right-4 lg:top-8 lg:right-8 opacity-[0.05] pointer-events-none">
+            <img src="assets/img/logo-box-transparent.png" alt="" class="h-48 w-48 lg:h-72 lg:w-72 object-contain" aria-hidden="true">
+        </div>
         </div>
         <div class="max-w-3xl">
             <p class="text-sm font-semibold uppercase tracking-widest text-aiai-blue mb-5">The AI Landscape</p>
@@ -167,7 +168,11 @@
 </section>
 
 <!-- Brand Divider -->
-<div class="brand-divider bg-white"><span>AIAI</span></div>
+<div class="flex items-center justify-center gap-4 py-6">
+    <div class="flex-1 h-px bg-gradient-to-r from-transparent via-aiai-gold/30 to-transparent"></div>
+    <span class="text-xs font-bold uppercase tracking-[0.2em] text-aiai-gold">AIAI</span>
+    <div class="flex-1 h-px bg-gradient-to-r from-transparent via-aiai-gold/30 to-transparent"></div>
+</div>
 
 <!-- Jargon Buster -->
 <section class="py-16 lg:py-12 xl:py-16 bg-aiai-cream">
@@ -295,7 +300,11 @@
 </section>
 
 <!-- Brand Divider -->
-<div class="brand-divider bg-aiai-cream"><span>AIAI</span></div>
+<div class="flex items-center justify-center gap-4 py-6">
+    <div class="flex-1 h-px bg-gradient-to-r from-transparent via-aiai-gold/30 to-transparent"></div>
+    <span class="text-xs font-bold uppercase tracking-[0.2em] text-aiai-gold">AIAI</span>
+    <div class="flex-1 h-px bg-gradient-to-r from-transparent via-aiai-gold/30 to-transparent"></div>
+</div>
 
 <!-- The Honest Assessment -->
 <section class="py-16 lg:py-12 xl:py-16 bg-white">
@@ -425,7 +434,11 @@
 </section>
 
 <!-- Brand Divider -->
-<div class="brand-divider bg-aiai-cream"><span>AIAI</span></div>
+<div class="flex items-center justify-center gap-4 py-6">
+    <div class="flex-1 h-px bg-gradient-to-r from-transparent via-aiai-gold/30 to-transparent"></div>
+    <span class="text-xs font-bold uppercase tracking-[0.2em] text-aiai-gold">AIAI</span>
+    <div class="flex-1 h-px bg-gradient-to-r from-transparent via-aiai-gold/30 to-transparent"></div>
+</div>
 
 <!-- Common Myths -->
 <section class="py-16 lg:py-12 xl:py-16 bg-white">
@@ -546,28 +559,32 @@
             <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-aiai-blue via-aiai-sage to-aiai-gold"></div>
             <p class="text-xs font-semibold uppercase tracking-[0.24em] text-aiai-gold/90 mb-4">AIAI View</p>
             <h3 class="text-2xl font-bold mb-4">The pragmatic answer</h3>
-            <p class="text-white/60 leading-relaxed mb-6">We run multiple AI providers - not because we can't decide, but because dependency on one is the real risk. Local models handle 80% of daily work on hardware we own. Cloud models handle the heavy lifting when needed. The direction of travel is more local, not less.</p>
+            <p class="text-white/60 leading-relaxed mb-6">We run a hybrid approach — multiple cloud models for day-to-day work, with a local LLM as our final fallback if we lose cloud access entirely. For large enterprises with budget and infrastructure, the balance may shift more heavily toward local models. But for most organisations, a pragmatic cloud-first approach with local resilience is where you start. The real risk isn't cloud versus local — it's depending on one provider and losing control of your own capability.</p>
             <div class="grid sm:grid-cols-3 gap-4 mb-6">
                 <div class="p-4 rounded-2xl bg-white/10 border border-white/10 backdrop-blur-sm">
-                    <p class="text-aiai-sage-light font-semibold mb-1">Own the routine</p>
-                    <p class="text-xs text-white/50">Local models for daily work. Your infrastructure, your data, your rules. No vendor can turn it off.</p>
+                    <p class="text-aiai-sage-light font-semibold mb-1">Cloud as your workhorse</p>
+                    <p class="text-xs text-white/50">Multiple models, best-in-class performance. Cloud for the daily grind — no infrastructure headaches, no hardware costs.</p>
                 </div>
                 <div class="p-4 rounded-2xl bg-white/10 border border-white/10 backdrop-blur-sm">
-                    <p class="text-aiai-sage-light font-semibold mb-1">Expand your team</p>
-                    <p class="text-xs text-white/50">Choose who joins, who leaves, and when. Cloud models as team members you bring in for specific work, not landlords.</p>
+                    <p class="text-aiai-sage-light font-semibold mb-1">Local as your safety net</p>
+                    <p class="text-xs text-white/50">A local model as your fallback if cloud access fails. Your infrastructure, your data, your control. No vendor can turn it off.</p>
                 </div>
                 <div class="p-4 rounded-2xl bg-white/10 border border-white/10 backdrop-blur-sm">
                     <p class="text-aiai-sage-light font-semibold mb-1">Choose your dependencies</p>
                     <p class="text-xs text-white/50">Be intentional. Know what you rely on and why. The cost of simplicity is dependency - and dependency is more expensive than complexity.</p>
                 </div>
             </div>
-            <p class="text-sm text-white/40 italic">85% of organisations are repatriating up to half of their cloud workloads on-premises (Nutanix, 2025).<a href="#sources" class="text-[0.55em] text-aiai-sage font-semibold no-underline cursor-pointer ml-0.5 p-1 -m-1 hover:text-aiai-gold focus-visible:text-aiai-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-aiai-gold focus-visible:outline-offset-2 transition-colors" aria-label="Source: Nutanix via IT Pro" title="Nutanix via IT Pro" role="doc-noteref"><sup>⁷</sup></a> The direction of travel is clear. We're already there.</p>
+            <p class="text-sm text-white/40 italic">85% of organisations are repatriating up to half of their cloud workloads on-premises (Nutanix, 2025).<a href="#sources" class="text-[0.55em] text-aiai-sage font-semibold no-underline cursor-pointer ml-0.5 p-1 -m-1 hover:text-aiai-gold focus-visible:text-aiai-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-aiai-gold focus-visible:outline-offset-2 transition-colors" aria-label="Source: Nutanix via IT Pro" title="Nutanix via IT Pro" role="doc-noteref"><sup>⁷</sup></a> The direction of travel is towards local resilience — but for most organisations, cloud-first with a local fallback is the smarter starting point.</p>
         </div>
     </div>
 </section>
 
 <!-- Brand Divider -->
-<div class="brand-divider bg-aiai-cream"><span>AIAI</span></div>
+<div class="flex items-center justify-center gap-4 py-6">
+    <div class="flex-1 h-px bg-gradient-to-r from-transparent via-aiai-gold/30 to-transparent"></div>
+    <span class="text-xs font-bold uppercase tracking-[0.2em] text-aiai-gold">AIAI</span>
+    <div class="flex-1 h-px bg-gradient-to-r from-transparent via-aiai-gold/30 to-transparent"></div>
+</div>
 
 <!-- CTA -->
 <section class="py-16 lg:py-12 xl:py-16 bg-aiai-navy relative overflow-hidden">
@@ -621,13 +638,22 @@
     </div>
 </section>
 
+<!-- Gold Rule -->
+<div class="h-px bg-gradient-to-r from-transparent via-aiai-gold/40 to-transparent"></div>
+
 <!-- Footer -->
 <footer class="bg-aiai-dark text-white">
     <div class="max-w-7xl mx-auto px-6 lg:px-8">
         <div class="py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-                <img src="assets/img/logo-lines-transparent.png" alt="Adventures in AI" class="logo-footer mb-4">
-                <p class="text-white/50 text-sm leading-relaxed max-w-xs">Own the routine. Expand your team. Choose your dependencies.</p>
+                <div class="flex flex-col items-start gap-3">
+                    <div class="flex items-center gap-3">
+                        <img src="assets/img/logo-box-white.png" alt="AIAI" class="h-14 w-14 object-contain">
+                        <img src="assets/img/logo-lines-white.png" alt="Adventures in AI" class="h-8 w-auto object-contain">
+                    </div>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-aiai-gold/70">Proof Over Promise</p>
+                </div>
+                <p class="text-white/50 text-sm leading-relaxed max-w-xs mt-3">Own the routine. Expand your team. Choose your dependencies.</p>
             </div>
             <div>
                 <h4 class="font-semibold text-sm uppercase tracking-wider text-white/40 mb-4">Pages</h4>
