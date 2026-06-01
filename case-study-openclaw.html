@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study: From Chatbot to Co-Worker — The OpenClaw Story | Adventures in AI</title>
+    <meta name="description" content="How a personal side project became the fastest-growing open-source project in history — and what it tells us about the age of AI agents.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'aiai-navy': '#1a2332',
+                        'aiai-navy-light': '#243447',
+                        'aiai-blue': '#2563eb',
+                        'aiai-blue-light': '#3b82f6',
+                        'aiai-sage': '#7c9a6e',
+                        'aiai-sage-light': '#a3bc96',
+                        'aiai-sage-bg': '#f0f5ed',
+                        'aiai-cream': '#faf9f6',
+                        'aiai-dark': '#0f172a',
+                        'aiai-muted': '#64748b',
+                        'aiai-border': '#e2e8f0',
+                        'aiai-orange': '#ea580c',
+                        'aiai-gold': '#b59a3a',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                        serif: ['Merriweather', 'Georgia', 'serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-gradient { background: linear-gradient(135deg, #1a2332 0%, #243447 50%, #1a2332 100%); }
+        .aiai-logo { height: 36px; }
+        .aiai-footer-logo { height: 40px; }
+        @media (max-width: 640px) { .aiai-logo { height: 28px; } .aiai-footer-logo { height: 32px; } }
+        .article-body { font-family: 'Merriweather', Georgia, serif; font-size: 1.05rem; line-height: 1.85; color: #1e293b; }
+        .article-body p { margin-bottom: 1.5rem; }
+        .article-body h2 { font-family: 'Inter', sans-serif; font-size: 1.6rem; font-weight: 800; color: #1a2332; margin-top: 3rem; margin-bottom: 1rem; }
+        .article-body h3 { font-family: 'Inter', sans-serif; font-size: 1.25rem; font-weight: 700; color: #334155; margin-top: 2rem; margin-bottom: 0.75rem; }
+        .article-body ul { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+        .article-body li { margin-bottom: 0.5rem; }
+        .article-body a { color: #2563eb; text-decoration: underline; text-decoration-color: rgba(37,99,235,0.3); text-underline-offset: 2px; }
+        .article-body a:hover { text-decoration-color: #2563eb; }
+        .pull-quote { border-left: 4px solid #b59a3a; padding: 1.25rem 1.5rem; margin: 2rem 0; background: linear-gradient(135deg, #fafdf7, #f8f6f0); border-radius: 0 8px 8px 0; }
+        .pull-quote p { font-family: 'Inter', sans-serif; font-size: 1.2rem; font-weight: 600; color: #1a2332; line-height: 1.6; margin: 0; font-style: italic; }
+        .pull-quote .attribution { font-size: 0.85rem; color: #64748b; margin-top: 0.5rem; font-style: normal; }
+        .stat-card { transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -12px rgba(26,35,50,0.15); }
+        .timeline-line { position: relative; }
+        .timeline-line::before { content: ''; position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, #2563eb, #7c9a6e, #b59a3a); }
+        @media (min-width: 768px) {
+            .timeline-line::before { left: 50%; transform: translateX(-50%); }
+        }
+        .timeline-item { opacity: 0; transform: translateY(20px); transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .timeline-item.visible { opacity: 1; transform: translateY(0); }
+        .lesson-card { transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+        .lesson-card:hover { transform: translateY(-3px); box-shadow: 0 20px 40px -12px rgba(26,35,50,0.12); }
+        .hero-stat { animation: fadeUp 0.8s ease-out forwards; opacity: 0; }
+        .hero-stat:nth-child(1) { animation-delay: 0.1s; }
+        .hero-stat:nth-child(2) { animation-delay: 0.2s; }
+        .hero-stat:nth-child(3) { animation-delay: 0.3s; }
+        .hero-stat:nth-child(4) { animation-delay: 0.4s; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .tech-grid { background-image: linear-gradient(rgba(37,99,235,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(37,99,235,0.03) 1px, transparent 1px); background-size: 40px 40px; }
+        .card-hover { transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 22px 48px -18px rgba(26,35,50,0.14); }
+    </style>
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+    <meta property="og:image" content="https://aiai.co.uk/assets/img/og-share-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="theme-color" content="#1a2332">
+</head>
+<body class="min-h-screen bg-aiai-cream font-sans text-aiai-dark antialiased">
+
+<!-- Navigation -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-aiai-border/50">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16 lg:h-20">
+            <a href="index.html" class="flex items-center gap-3 group">
+                <img src="assets/img/logo-lines-transparent.png" alt="AIAI" class="aiai-logo">
+            </a>
+            <div class="hidden xl:flex items-center gap-1">
+                <a href="index.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Home</a>
+                <a href="understanding-ai.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Understanding AI</a>
+                <a href="proof.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Proof</a>
+                <a href="services.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Services</a>
+                <a href="contact.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Contact</a>
+                <a href="build-with-us.html" class="px-3 py-2 text-sm font-medium text-aiai-blue bg-blue-50 rounded-lg">Build With Us</a>
+                <a href="case-study-openclaw.html" class="px-3 py-2 text-sm font-medium text-aiai-blue bg-blue-50 rounded-lg">Case Studies</a>
+            </div>
+            <div class="hidden lg:flex items-center gap-4">
+                <a href="contact.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-aiai-blue text-white text-sm font-semibold rounded-lg hover:bg-aiai-blue-light transition-colors shadow-sm">
+                    Start a Conversation
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                </a>
+            </div>
+            <button class="lg:hidden p-2 rounded-lg hover:bg-aiai-cream transition-colors" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16"></path><path d="M4 12h16"></path><path d="M4 18h16"></path></svg>
+            </button>
+        </div>
+    </div>
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-aiai-border bg-white">
+        <div class="px-6 py-4 space-y-2">
+            <a href="index.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Home</a>
+            <a href="understanding-ai.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Understanding AI</a>
+            <a href="proof.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Proof</a>
+            <a href="services.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Services</a>
+            <a href="contact.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Contact</a>
+            <a href="build-with-us.html" class="block px-3 py-2 text-sm font-medium text-aiai-blue bg-blue-50 rounded-lg">Build With Us</a>
+            <a href="case-study-openclaw.html" class="block px-3 py-2 text-sm font-medium text-aiai-blue bg-blue-50 rounded-lg">Case Studies</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="relative pt-28 pb-16 lg:pt-32 lg:pb-20 xl:pt-36 xl:pb-24 overflow-hidden hero-gradient">
+    <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute top-16 right-[10%] w-96 h-96 bg-aiai-blue/8 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-0 left-[5%] w-72 h-72 bg-aiai-sage/8 rounded-full blur-[100px]"></div>
+        <div class="absolute top-1/2 right-1/4 w-48 h-48 bg-aiai-gold/5 rounded-full blur-[80px]"></div>
+        <div class="absolute inset-0 tech-grid"></div>
+    </div>
+    <div class="relative max-w-4xl mx-auto px-6 lg:px-8 text-center">
+        <div class="inline-flex items-center gap-2 px-4 py-2 bg-aiai-sage/10 border border-aiai-sage/20 rounded-full mb-6">
+            <span class="text-xs font-semibold uppercase tracking-widest text-aiai-sage-light">Case Study</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-white mb-6 leading-tight tracking-tight">
+            From Chatbot to<br><span class="text-aiai-sage-light">Co-Worker</span>
+        </h1>
+        <p class="text-lg lg:text-xl text-white/65 leading-relaxed max-w-2xl mx-auto mb-8">
+            The OpenClaw story — how a personal side project became the fastest-growing open-source project in history, and what it tells us about the age of AI agents.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-4 text-sm text-white/40">
+            <span>June 2026</span>
+            <span class="w-1 h-1 bg-white/30 rounded-full"></span>
+            <span>Adventures in AI</span>
+            <span class="w-1 h-1 bg-white/30 rounded-full"></span>
+            <span>12 min read</span>
+        </div>
+        <div class="mt-8">
+            <a href="OpenClaw-Case-Study.pdf" download class="inline-flex items-center gap-2 px-5 py-2.5 bg-white/10 border border-white/20 text-white text-sm font-semibold rounded-lg hover:bg-white/20 transition-all">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                Download as PDF
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Hero Stats -->
+<section class="relative -mt-8 z-10">
+    <div class="max-w-4xl mx-auto px-6 lg:px-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+            <div class="hero-stat stat-card bg-white rounded-xl p-5 text-center border border-aiai-border/50">
+                <div class="text-2xl lg:text-3xl font-extrabold text-aiai-blue" data-target="300" data-suffix="K+">300K+</div>
+                <div class="text-xs font-medium text-aiai-muted mt-1">GitHub Stars</div>
+            </div>
+            <div class="hero-stat stat-card bg-white rounded-xl p-5 text-center border border-aiai-border/50">
+                <div class="text-2xl lg:text-3xl font-extrabold text-aiai-sage" data-target="10" data-suffix=" weeks">10 wks</div>
+                <div class="text-xs font-medium text-aiai-muted mt-1">Zero to 250K Stars</div>
+            </div>
+            <div class="hero-stat stat-card bg-white rounded-xl p-5 text-center border border-aiai-border/50">
+                <div class="text-2xl lg:text-3xl font-extrabold text-aiai-gold" data-target="13" data-suffix="K+">13K+</div>
+                <div class="text-xs font-medium text-aiai-muted mt-1">Community Skills</div>
+            </div>
+            <div class="hero-stat stat-card bg-white rounded-xl p-5 text-center border border-aiai-border/50">
+                <div class="text-2xl lg:text-3xl font-extrabold text-aiai-orange" data-target="50" data-suffix="+">50+</div>
+                <div class="text-xs font-medium text-aiai-muted mt-1">Messaging Integrations</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Article Content -->
+<article class="max-w-3xl mx-auto px-6 lg:px-8 py-12 lg:py-16">
+    <div class="article-body">
+
+        <h2>Part 1: The Origin</h2>
+
+        <h3>From PDFs to Agents</h3>
+        <p>Peter Steinberger isn't a newcomer. He founded PSPDFKit in 2011, building it into one of the most successful PDF SDK companies in the world — used by enterprises like Airbus, Disney, and SAP. He ran it for over a decade before exiting, wealthy enough that he didn't need to build anything ever again.</p>
+
+        <p>But in early 2025, Steinberger started experimenting with AI coding agents. His breakthrough wasn't technical — it was philosophical. He realised that the AI tools most people were using (ChatGPT, Claude, Gemini) were fundamentally limited by their design: they were chatbots. You asked a question, you got an answer. The interaction started when you typed and ended when the response finished.</p>
+
+        <p>Steinberger's insight was simple but radical: <strong>what if the AI didn't wait for you to ask?</strong></p>
+
+        <h3>The First Release: November 2025</h3>
+        <p>On 24 November 2025, Steinberger released the first public version of what would become OpenClaw. It started under the name <em>Clawdbot</em> — a playful pun on "Claude" (the Anthropic model it primarily used) combined with the lobster mascot that became the project's identity.</p>
+
+        <p>The core idea: instead of a chat interface, the agent lived in your messaging apps — WhatsApp, Telegram, iMessage, Discord, Slack. You could talk to it the same way you'd talk to a colleague. But unlike a chatbot, it could <em>do things</em>: read files on your computer, browse the web, manage your calendar, send emails, execute code. It ran locally on your machine, with your permissions, using your accounts.</p>
+
+        <div class="pull-quote">
+            <p>"People don't want smarter chatbots. They want co-workers. The difference isn't incremental — it's categorical."</p>
+        </div>
+
+        <h2>Part 2: The Explosion</h2>
+
+        <h3>Going Viral</h3>
+        <p>What happened next was extraordinary even by the standards of the AI hype cycle. Within weeks of its public release, Clawdbot's GitHub repository was gaining stars at a rate that surpassed any open-source project in history.</p>
+
+        <p>To put that in perspective: <strong>Linux</strong> took over 20 years to reach 218,000 stars. <strong>React</strong> took 8 years to reach 247,000 stars. <strong>OpenClaw</strong> reached 250,000 stars in approximately 10 weeks.</p>
+
+        <p>By March 2026, it had briefly surpassed React to become one of the most-starred repositories on all of GitHub. The velocity was unprecedented — tens of thousands of stars per day at its peak.</p>
+
+        <h3>Why It Caught Fire</h3>
+        <p>Several factors converged:</p>
+        <ul>
+            <li><strong>It solved a real problem.</strong> People were tired of chatbots that could only talk. OpenClaw could actually <em>act</em>.</li>
+            <li><strong>It was local-first.</strong> In an era of data breaches and privacy scandals, running your AI agent on your own machine resonated deeply.</li>
+            <li><strong>It was model-agnostic.</strong> It could use Claude, GPT, Gemini, local models via Ollama, or any of 20+ other providers.</li>
+            <li><strong>The timing was right.</strong> By late 2025, millions had used ChatGPT enough to understand what LLMs could do — and hit the wall of what chat-only interfaces <em>couldn't</em> do.</li>
+            <li><strong>The developer experience was excellent.</strong> Within minutes of cloning the repo, you could have an agent running on your Mac.</li>
+        </ul>
+
+        <h3>The Naming Saga</h3>
+        <p>What followed was one of the fastest rebrands in technology history:</p>
+        <ul>
+            <li><strong>January 27, 2026:</strong> Renamed to <strong>Moltbot</strong> (lobsters molt when they grow — the crustacean theme continued)</li>
+            <li><strong>January 29–30, 2026:</strong> Renamed again to <strong>OpenClaw</strong> (emphasising open-source values and model-agnostic independence)</li>
+        </ul>
+        <p>Three brand names in roughly one week. The community found it amusing rather than confusing — the lobster mascot, affectionately named "Clawrence," became a rallying point.</p>
+
+        <h2>Part 3: The Crisis</h2>
+
+        <h3>ClawHavoc</h3>
+        <p>In February 2026, just as OpenClaw was hitting its stride, disaster struck.</p>
+
+        <p>Security researchers at Koi Security disclosed <strong>ClawHavoc</strong> — a coordinated supply-chain attack on ClawHub, OpenClaw's community skill marketplace. The numbers were stark:</p>
+
+        <ul>
+            <li><strong>341 malicious skills</strong> identified in an initial audit of ~2,857 total skills (~12% of the registry)</li>
+            <li>Later analyses raised the count to <strong>824–1,184 malicious entries</strong></li>
+            <li>Attack methods included <strong>Atomic Stealer (AMOS)</strong> on macOS, keyloggers, reverse shells, and crypto wallet theft</li>
+            <li>Delivery mechanism: social engineering — skills posing as useful tools with fake "prerequisite" instructions</li>
+        </ul>
+
+        <p>Around the same time, <strong>CVE-2026-25253</strong> was disclosed — a one-click remote code execution vulnerability via token leakage. The headlines were brutal.</p>
+
+        <h3>The Response</h3>
+        <p>The OpenClaw Foundation responded with a multi-layered security overhaul:</p>
+        <ul>
+            <li><strong>VirusTotal integration</strong> — every skill uploaded to ClawHub now gets scanned</li>
+            <li><strong>Verified publisher programme</strong> — trusted authors get a verification badge</li>
+            <li><strong>Skill Workshop governance</strong> (May 2026) — a formal proposal, review, quarantine, and rollback system</li>
+            <li><strong>Externalised plugin architecture</strong> — core runtime components moved to npm packages with proper supply-chain security</li>
+        </ul>
+
+        <div class="pull-quote">
+            <p>"ClawHavoc was a genuine crisis. But the open-source response was faster and more thorough than any closed-source incident response could have been."</p>
+        </div>
+
+        <h2>Part 4: The Foundation</h2>
+
+        <h3>Steinberger Joins OpenAI</h3>
+        <p>On February 15, 2026, Peter Steinberger announced he was joining OpenAI to work on next-generation personal agents. The immediate fear: would OpenAI swallow OpenClaw?</p>
+
+        <h3>Independent by Design</h3>
+        <p>The OpenClaw Foundation was established as an <strong>independent non-profit</strong>, explicitly modelled on the Ghostty Foundation structure:</p>
+        <ul>
+            <li><strong>Community-elected board</strong> of maintainers — not appointed by any company</li>
+            <li><strong>MIT licence</strong> — fully permissive, ensuring the code stays free forever</li>
+            <li><strong>OpenAI as minority sponsor</strong> — financial support only, no governance privileges or roadmap influence</li>
+            <li><strong>Public RFC process</strong> — all major decisions go through open discussion and maintainer votes</li>
+        </ul>
+
+        <p>Sam Altman confirmed: <em>"OpenClaw will live in a foundation as an open source project that OpenAI will continue to support."</em></p>
+
+        <h2>Part 5: The Ecosystem</h2>
+
+        <p>By mid-2026, OpenClaw describes itself as a "federation of ~70 open-source projects" sharing a runtime and protocols:</p>
+
+        <ul>
+            <li><strong>GitHub Stars:</strong> 300K+ (briefly #1 most-starred)</li>
+            <li><strong>ClawHub Skills:</strong> 13,000+ community contributions</li>
+            <li><strong>Messaging Integrations:</strong> 50+ (WhatsApp, Telegram, Slack, Discord, Teams, iMessage, Signal, etc.)</li>
+            <li><strong>AI Provider Plugins:</strong> 20+ (OpenAI, Anthropic, Google, Ollama, OpenRouter, etc.)</li>
+            <li><strong>Community Contributors:</strong> 400+</li>
+        </ul>
+
+        <h3>Enterprise Adoption</h3>
+        <ul>
+            <li><strong>NVIDIA</strong> (April 2026): Published on long-running autonomous agents and organisational impact</li>
+            <li><strong>Red Hat</strong> (March 2026): Detailed guide on operationalising OpenClaw on OpenShift</li>
+            <li><strong>AWS Marketplace:</strong> One-click AMI for production browser automation</li>
+        </ul>
+
+        <h2>Part 6: What This Means — 7 Lessons</h2>
+
+        <div class="space-y-4 mb-8">
+            <div class="lesson-card bg-white rounded-xl p-6 border border-aiai-border/50">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0 w-8 h-8 bg-aiai-blue/10 rounded-lg flex items-center justify-center text-aiai-blue font-bold text-sm">1</div>
+                    <div>
+                        <h3 class="!mt-0 !mb-2">Agents Beat Chatbots</h3>
+                        <p style="margin:0;font-size:0.95rem;color:#475569;">The explosive growth wasn't driven by better language models. It was driven by giving those models <em>hands</em>.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="lesson-card bg-white rounded-xl p-6 border border-aiai-border/50">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0 w-8 h-8 bg-aiai-sage/10 rounded-lg flex items-center justify-center text-aiai-sage font-bold text-sm">2</div>
+                    <div>
+                        <h3 class="!mt-0 !mb-2">Local-First Has Legs</h3>
+                        <p style="margin:0;font-size:0.95rem;color:#475569;">In a world where every AI company wants to own your data, running locally struck a nerve. Your data on your hardware isn't a niche feature.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="lesson-card bg-white rounded-xl p-6 border border-aiai-border/50">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0 w-8 h-8 bg-aiai-gold/10 rounded-lg flex items-center justify-center text-aiai-gold font-bold text-sm">3</div>
+                    <div>
+                        <h3 class="!mt-0 !mb-2">Model-Agnostic Is Model-Savvy</h3>
+                        <p style="margin:0;font-size:0.95rem;color:#475569;">Tying your platform to a single AI provider creates dependency risk. OpenClaw's flexibility to switch models is a strategic advantage, not just a convenience.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="lesson-card bg-white rounded-xl p-6 border border-aiai-border/50">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0 w-8 h-8 bg-aiai-orange/10 rounded-lg flex items-center justify-center text-aiai-orange font-bold text-sm">4</div>
+                    <div>
+                        <h3 class="!mt-0 !mb-2">Open Source Survives Crises Better</h3>
+                        <p style="margin:0;font-size:0.95rem;color:#475569;">When 341 malicious skills were discovered, the entire community could inspect, verify, and fix. You can't do that with a black box.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="lesson-card bg-white rounded-xl p-6 border border-aiai-border/50">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0 w-8 h-8 bg-aiai-blue/10 rounded-lg flex items-center justify-center text-aiai-blue font-bold text-sm">5</div>
+                    <div>
+                        <h3 class="!mt-0 !mb-2">Foundation Governance Can Work</h3>
+                        <p style="margin:0;font-size:0.95rem;color:#475569;">Community-elected maintainers, public RFC processes, sponsor money without sponsor control — a template for other AI infrastructure projects.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="lesson-card bg-white rounded-xl p-6 border border-aiai-border/50">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0 w-8 h-8 bg-aiai-sage/10 rounded-lg flex items-center justify-center text-aiai-sage font-bold text-sm">6</div>
+                    <div>
+                        <h3 class="!mt-0 !mb-2">Security Is the Agent Problem</h3>
+                        <p style="margin:0;font-size:0.95rem;color:#475569;">Autonomy requires access, and access creates risk. Every agent platform, open or closed, must solve this fundamental challenge.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="lesson-card bg-white rounded-xl p-6 border border-aiai-border/50">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0 w-8 h-8 bg-aiai-gold/10 rounded-lg flex items-center justify-center text-aiai-gold font-bold text-sm">7</div>
+                    <div>
+                        <h3 class="!mt-0 !mb-2">Speed of Adoption Is a Double-Edged Sword</h3>
+                        <p style="margin:0;font-size:0.95rem;color:#475569;">Zero to 300K stars in months is extraordinary. It also means millions of users installing software before governance structures have matured.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>Part 7: Our Experience</h2>
+
+        <p>Full disclosure: we use OpenClaw daily. This case study isn't just a historical exercise — it's informed by months of hands-on experience running autonomous AI agents for real business tasks.</p>
+
+        <p>Our setup runs 24/7 on a Mac mini, orchestrating a team of specialised agents: research (Gav), development (Q), UI design (Mel), adversarial review (Kieran), and coordination (Bee). They handle email triage, research synthesis, project management, code review, weekly strategy reports, and dozens of other tasks that would otherwise consume hours of human attention.</p>
+
+        <p>What we've learned:</p>
+        <ul>
+            <li><strong>The always-on model changes everything.</strong> An agent that's available 24/7, that can act proactively, is categorically different from a chatbot you visit when you remember.</li>
+            <li><strong>Trust is earned in small increments.</strong> You don't start by giving an agent the keys to everything. You start with read-only tasks, verify the output, and gradually expand access.</li>
+            <li><strong>Security hygiene matters.</strong> We use verified skills only, limit privileges per agent, and audit regularly.</li>
+            <li><strong>Multi-model is a real advantage.</strong> Different tasks benefit from different models. Cost management depends on this flexibility.</li>
+            <li><strong>The human stays in the loop.</strong> For anything external, public, or financially consequential, we require explicit approval. The agent proposes; the human disposes.</li>
+        </ul>
+
+        <div class="pull-quote">
+            <p>"The agent proposes; the human disposes."</p>
+        </div>
+
+    </div>
+</article>
+
+<!-- Timeline Section -->
+<section class="bg-aiai-navy text-white py-16 lg:py-20">
+    <div class="max-w-4xl mx-auto px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center gap-2 px-4 py-2 bg-aiai-sage/10 border border-aiai-sage/20 rounded-full mb-4">
+                <span class="text-xs font-semibold uppercase tracking-widest text-aiai-sage-light">Timeline</span>
+            </div>
+            <h2 class="text-3xl lg:text-4xl font-extrabold text-white">Key Dates</h2>
+        </div>
+
+        <div class="relative">
+            <div class="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-aiai-blue via-aiai-sage to-aiai-gold -translate-x-1/2"></div>
+            <div class="space-y-8">
+                <div class="timeline-item md:flex md:items-center md:justify-between">
+                    <div class="md:w-5/12 md:text-right mb-2 md:mb-0">
+                        <span class="text-aiai-blue font-bold text-sm">Nov 24, 2025</span>
+                        <p class="text-white/70 text-sm mt-1">First public release as Clawdbot</p>
+                    </div>
+                    <div class="hidden md:flex w-8 h-8 bg-aiai-blue rounded-full items-center justify-center flex-shrink-0 z-10">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                    </div>
+                    <div class="md:w-5/12"></div>
+                </div>
+                <div class="timeline-item md:flex md:items-center md:justify-between">
+                    <div class="md:w-5/12"></div>
+                    <div class="hidden md:flex w-8 h-8 bg-aiai-blue rounded-full items-center justify-center flex-shrink-0 z-10">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                    </div>
+                    <div class="md:w-5/12 mb-2 md:mb-0">
+                        <span class="text-aiai-blue font-bold text-sm">Jan 2026</span>
+                        <p class="text-white/70 text-sm mt-1">Stars surge past 100K</p>
+                    </div>
+                </div>
+                <div class="timeline-item md:flex md:items-center md:justify-between">
+                    <div class="md:w-5/12 md:text-right mb-2 md:mb-0">
+                        <span class="text-aiai-blue font-bold text-sm">Jan 27, 2026</span>
+                        <p class="text-white/70 text-sm mt-1">Renamed to Moltbot</p>
+                    </div>
+                    <div class="hidden md:flex w-8 h-8 bg-aiai-blue rounded-full items-center justify-center flex-shrink-0 z-10">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                    </div>
+                    <div class="md:w-5/12"></div>
+                </div>
+                <div class="timeline-item md:flex md:items-center md:justify-between">
+                    <div class="md:w-5/12"></div>
+                    <div class="hidden md:flex w-8 h-8 bg-aiai-blue rounded-full items-center justify-center flex-shrink-0 z-10">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                    </div>
+                    <div class="md:w-5/12 mb-2 md:mb-0">
+                        <span class="text-aiai-blue font-bold text-sm">Jan 29–30, 2026</span>
+                        <p class="text-white/70 text-sm mt-1">Final rebrand to OpenClaw</p>
+                    </div>
+                </div>
+                <div class="timeline-item md:flex md:items-center md:justify-between">
+                    <div class="md:w-5/12 md:text-right mb-2 md:mb-0">
+                        <span class="text-red-400 font-bold text-sm">Feb 2026</span>
+                        <p class="text-white/70 text-sm mt-1">ClawHavoc security incident disclosed (341+ malicious skills)</p>
+                    </div>
+                    <div class="hidden md:flex w-8 h-8 bg-red-500 rounded-full items-center justify-center flex-shrink-0 z-10">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    </div>
+                    <div class="md:w-5/12"></div>
+                </div>
+                <div class="timeline-item md:flex md:items-center md:justify-between">
+                    <div class="md:w-5/12"></div>
+                    <div class="hidden md:flex w-8 h-8 bg-aiai-gold rounded-full items-center justify-center flex-shrink-0 z-10">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    </div>
+                    <div class="md:w-5/12 mb-2 md:mb-0">
+                        <span class="text-aiai-gold font-bold text-sm">Feb 15, 2026</span>
+                        <p class="text-white/70 text-sm mt-1">Steinberger joins OpenAI. Foundation established.</p>
+                    </div>
+                </div>
+                <div class="timeline-item md:flex md:items-center md:justify-between">
+                    <div class="md:w-5/12 md:text-right mb-2 md:mb-0">
+                        <span class="text-aiai-sage-light font-bold text-sm">Mar 2026</span>
+                        <p class="text-white/70 text-sm mt-1">Stars surpass React (~250K). Red Hat enterprise guide.</p>
+                    </div>
+                    <div class="hidden md:flex w-8 h-8 bg-aiai-sage rounded-full items-center justify-center flex-shrink-0 z-10">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                    </div>
+                    <div class="md:w-5/12"></div>
+                </div>
+                <div class="timeline-item md:flex md:items-center md:justify-between">
+                    <div class="md:w-5/12"></div>
+                    <div class="hidden md:flex w-8 h-8 bg-aiai-sage rounded-full items-center justify-center flex-shrink-0 z-10">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    </div>
+                    <div class="md:w-5/12 mb-2 md:mb-0">
+                        <span class="text-aiai-sage-light font-bold text-sm">Apr 2026</span>
+                        <p class="text-white/70 text-sm mt-1">NVIDIA blog. TED Talk. VirusTotal scanning integrated.</p>
+                    </div>
+                </div>
+                <div class="timeline-item md:flex md:items-center md:justify-between">
+                    <div class="md:w-5/12 md:text-right mb-2 md:mb-0">
+                        <span class="text-aiai-gold font-bold text-sm">May 2026</span>
+                        <p class="text-white/70 text-sm mt-1">Skill Workshop, Workboard, Auto Mode guardrails, iOS layouts</p>
+                    </div>
+                    <div class="hidden md:flex w-8 h-8 bg-aiai-gold rounded-full items-center justify-center flex-shrink-0 z-10">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><path d="M3 9h18"></path><path d="M9 21V9"></path></svg>
+                    </div>
+                    <div class="md:w-5/12"></div>
+                </div>
+                <div class="timeline-item md:flex md:items-center md:justify-between">
+                    <div class="md:w-5/12"></div>
+                    <div class="hidden md:flex w-8 h-8 bg-white/20 rounded-full items-center justify-center flex-shrink-0 z-10">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    </div>
+                    <div class="md:w-5/12 mb-2 md:mb-0">
+                        <span class="text-white/60 font-bold text-sm">Jun 2026</span>
+                        <p class="text-white/70 text-sm mt-1">300K+ stars. Stability &amp; security focus. This case study.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-16 lg:py-20 bg-gradient-to-b from-aiai-cream to-white">
+    <div class="max-w-3xl mx-auto px-6 lg:px-8 text-center">
+        <div class="inline-flex items-center gap-2 px-4 py-2 bg-aiai-sage/10 border border-aiai-sage/20 rounded-full mb-6">
+            <span class="text-xs font-semibold uppercase tracking-widest text-aiai-sage">Our Take</span>
+        </div>
+        <h2 class="text-2xl lg:text-3xl font-extrabold text-aiai-navy mb-6">Living With AI Agents — Every Day</h2>
+        <p class="text-lg text-aiai-muted leading-relaxed mb-8">
+            We run an autonomous AI team 24/7 on a Mac mini. They handle research, development, design, code review, and dozens of other tasks. This case study isn't just history — it's informed by real, daily experience with the technology we're writing about.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="contact.html" class="inline-flex items-center gap-2 px-7 py-3.5 bg-aiai-blue text-white font-semibold rounded-lg hover:bg-aiai-blue-light transition-all shadow-lg hover:shadow-xl hover:shadow-aiai-blue/20">
+                Start a Conversation
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+            </a>
+            <a href="OpenClaw-Case-Study.pdf" download class="inline-flex items-center gap-2 px-5 py-3 bg-white border border-aiai-border text-aiai-navy font-semibold rounded-lg hover:bg-aiai-cream transition-colors">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                Download PDF
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-aiai-navy text-white py-12 lg:py-16">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-8">
+            <div class="flex items-center gap-3">
+                <img src="assets/img/logo-lines-white.png" alt="AIAI" class="aiai-footer-logo">
+                <span class="text-white/40 text-sm">Adventures in AI</span>
+            </div>
+            <div class="flex items-center gap-6 text-sm text-white/40">
+                <a href="index.html" class="hover:text-white/70 transition-colors">Home</a>
+                <a href="understanding-ai.html" class="hover:text-white/70 transition-colors">Understanding AI</a>
+                <a href="proof.html" class="hover:text-white/70 transition-colors">Proof</a>
+                <a href="services.html" class="hover:text-white/70 transition-colors">Services</a>
+                <a href="contact.html" class="hover:text-white/70 transition-colors">Contact</a>
+            </div>
+            <p class="text-white/30 text-sm">&copy; 2026 Adventures in AI Ltd</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Mobile menu toggle
+    document.querySelectorAll('[onclick*="mobile-menu"]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+    });
+
+    // Scroll-triggered timeline animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.timeline-item').forEach(el => observer.observe(el));
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+</script>
+
+</body>
+</html>
