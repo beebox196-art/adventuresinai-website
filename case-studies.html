@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Studies — Adventures in AI</title>
+    <meta name="description" content="Real stories of AI applied to real business problems. Not theory, not hype — proof of capability from the field.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'aiai-navy': '#1a2332',
+                        'aiai-navy-light': '#243447',
+                        'aiai-blue': '#2563eb',
+                        'aiai-blue-light': '#3b82f6',
+                        'aiai-sage': '#7c9a6e',
+                        'aiai-sage-light': '#a3bc96',
+                        'aiai-sage-bg': '#f0f5ed',
+                        'aiai-cream': '#faf9f6',
+                        'aiai-dark': '#0f172a',
+                        'aiai-muted': '#64748b',
+                        'aiai-border': '#e2e8f0',
+                        'aiai-orange': '#ea580c',
+                        'aiai-gold': '#b59a3a',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                        serif: ['Merriweather', 'Georgia', 'serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+    <meta property="og:image" content="https://aiai.co.uk/assets/img/og-share-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="theme-color" content="#1a2332">
+</head>
+<body class="min-h-screen bg-aiai-cream font-sans text-aiai-dark antialiased">
+
+<!-- Navigation -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-aiai-border/50">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16 lg:h-20">
+            <a href="index.html" class="flex items-center group">
+                <img src="assets/img/logo-lines-navy.png" alt="AIAI — Adventures in AI" class="h-10 lg:h-12 w-auto object-contain transition-transform group-hover:scale-105">
+            </a>
+            <div class="hidden xl:flex items-center gap-1">
+                <a href="index.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Home</a>
+                <a href="understanding-ai.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Understanding AI</a>
+                <a href="proof.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Proof</a>
+                <a href="services.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Services</a>
+                <a href="contact.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Contact</a>
+                <a href="case-studies.html" class="px-3 py-2 text-sm font-medium text-aiai-blue bg-blue-50 rounded-lg">Case Studies</a>
+                <a href="build-with-us.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Build With Us</a>
+            </div>
+            <div class="hidden lg:flex items-center gap-4">
+                <a href="contact.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-aiai-blue text-white text-sm font-semibold rounded-lg hover:bg-aiai-blue-light transition-colors shadow-sm">
+                    Start a Conversation
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                </a>
+            </div>
+            <button class="lg:hidden p-2 rounded-lg hover:bg-aiai-cream transition-colors" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16"></path><path d="M4 12h16"></path><path d="M4 18h16"></path></svg>
+            </button>
+        </div>
+    </div>
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-aiai-border bg-white">
+        <div class="px-6 py-4 space-y-2">
+            <a href="index.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Home</a>
+            <a href="understanding-ai.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Understanding AI</a>
+            <a href="proof.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Proof</a>
+            <a href="services.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Services</a>
+            <a href="contact.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Contact</a>
+            <a href="case-studies.html" class="block px-3 py-2 text-sm font-medium text-aiai-blue bg-blue-50 rounded-lg">Case Studies</a>
+            <a href="build-with-us.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Build With Us</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero -->
+<header class="pt-28 lg:pt-36 pb-16 lg:pb-20">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="max-w-3xl">
+            <p class="text-sm font-semibold uppercase tracking-widest text-aiai-gold mb-4">Proof Over Promise</p>
+            <h1 class="text-4xl lg:text-5xl xl:text-6xl font-extrabold text-aiai-navy mb-6 leading-tight tracking-tight">
+                Case Studies
+            </h1>
+            <p class="text-lg lg:text-xl text-aiai-muted leading-relaxed font-serif">
+                Real stories of AI applied to real business problems. Not theory, not hype — proof of capability from the field. Each case study covers what happened, what went wrong, what worked, and what it means for your business.
+            </p>
+        </div>
+    </div>
+</header>
+
+<!-- Case Studies Grid -->
+<main class="max-w-7xl mx-auto px-6 lg:px-8 pb-20">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+
+        <!-- Case Study 1: OpenClaw — Dark hero card, tech narrative -->
+        <a href="case-study-openclaw.html" class="group block">
+            <article class="relative bg-aiai-navy rounded-2xl overflow-hidden transition-all duration-350 group-hover:shadow-2xl group-hover:shadow-aiai-navy/30 group-hover:-translate-y-1">
+                <!-- Decorative gradient overlay -->
+                <div class="absolute inset-0 bg-gradient-to-br from-aiai-blue/20 via-transparent to-aiai-sage/20"></div>
+                <!-- Subtle grid pattern -->
+                <div class="absolute inset-0 opacity-5" style="background-image: linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px); background-size: 32px 32px;"></div>
+                <div class="relative p-8 lg:p-10">
+                    <!-- Tag row -->
+                    <div class="flex items-center gap-2 mb-5">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-aiai-blue/20 text-aiai-blue-light text-xs font-semibold rounded-full uppercase tracking-wide">
+                            <span class="w-1.5 h-1.5 bg-aiai-blue-light rounded-full animate-pulse"></span>
+                            Open Source
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-aiai-sage/20 text-aiai-sage-light text-xs font-semibold rounded-full uppercase tracking-wide">
+                            AI Agents
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-aiai-orange/20 text-orange-300 text-xs font-semibold rounded-full uppercase tracking-wide">
+                            Growth
+                        </span>
+                    </div>
+                    <h2 class="text-2xl lg:text-3xl font-extrabold text-white mb-3 leading-tight group-hover:text-aiai-gold transition-colors">
+                        From Chatbot to Co-Worker
+                    </h2>
+                    <p class="text-white/60 text-sm font-serif leading-relaxed mb-6">
+                        How a personal side project became the fastest-growing open-source project in history — and what it tells us about the age of AI agents. The origin story, the explosion, the crisis, and the foundation.
+                    </p>
+                    <!-- Key stats row -->
+                    <div class="grid grid-cols-3 gap-4 pt-6 border-t border-white/10">
+                        <div>
+                            <p class="text-2xl font-extrabold text-white tabular-nums">6 mo</p>
+                            <p class="text-xs text-white/40 mt-1">1M → 700K DAU</p>
+                        </div>
+                        <div>
+                            <p class="text-2xl font-extrabold text-white tabular-nums">114K</p>
+                            <p class="text-xs text-white/40 mt-1">GitHub stars</p>
+                        </div>
+                        <div>
+                            <p class="text-2xl font-extrabold text-white tabular-nums">$0</p>
+                            <p class="text-xs text-white/40 mt-1">Marketing budget</p>
+                        </div>
+                    </div>
+                    <!-- CTA arrow -->
+                    <div class="mt-8 flex items-center gap-2 text-aiai-gold font-semibold text-sm">
+                        Read the full story
+                        <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    </div>
+                </div>
+            </article>
+        </a>
+
+        <!-- Case Study 2: Placeholder — Light card, different visual treatment -->
+        <div class="relative bg-white rounded-2xl border-2 border-dashed border-aiai-border p-8 lg:p-10 flex flex-col items-center justify-center text-center min-h-[380px]">
+            <div class="w-16 h-16 rounded-full bg-aiai-cream flex items-center justify-center mb-4">
+                <svg class="w-8 h-8 text-aiai-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 5v14M5 12h14"/>
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold text-aiai-navy mb-2">Coming Soon</h3>
+            <p class="text-aiai-muted text-sm leading-relaxed max-w-xs">
+                The next case study is in the works — another real story, another real business problem, another proof over promise.
+            </p>
+        </div>
+
+    </div>
+
+    <!-- Template Section: How future case studies will be structured -->
+    <div class="mt-16 lg:mt-20">
+        <div class="max-w-2xl mx-auto text-center">
+            <h2 class="text-2xl font-extrabold text-aiai-navy mb-4">What to Expect from Every Case Study</h2>
+            <p class="text-aiai-muted leading-relaxed">
+                Each case study is a standalone deep-dive — structured differently to match the story, but always covering the real details: context, crisis, resolution, and lessons.
+            </p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
+            <div class="bg-white rounded-xl p-6 border border-aiai-border/50">
+                <div class="w-10 h-10 rounded-lg bg-aiai-blue/10 flex items-center justify-center mb-4">
+                    <span class="text-aiai-blue font-bold text-lg">1</span>
+                </div>
+                <h3 class="font-bold text-aiai-navy mb-2">The Origin</h3>
+                <p class="text-sm text-aiai-muted leading-relaxed">Who, what, and why it started. The context that makes the story matter.</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 border border-aiai-border/50">
+                <div class="w-10 h-10 rounded-lg bg-aiai-orange/10 flex items-center justify-center mb-4">
+                    <span class="text-aiai-orange font-bold text-lg">2</span>
+                </div>
+                <h3 class="font-bold text-aiai-navy mb-2">The Crisis</h3>
+                <p class="text-sm text-aiai-muted leading-relaxed">What went wrong, what went right, and what nobody expected.</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 border border-aiai-border/50">
+                <div class="w-10 h-10 rounded-lg bg-aiai-sage/10 flex items-center justify-center mb-4">
+                    <span class="text-aiai-sage font-bold text-lg">3</span>
+                </div>
+                <h3 class="font-bold text-aiai-navy mb-2">The Resolution</h3>
+                <p class="text-sm text-aiai-muted leading-relaxed">What actually happened. Data, timelines, decisions, and outcomes.</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 border border-aiai-border/50">
+                <div class="w-10 h-10 rounded-lg bg-aiai-gold/10 flex items-center justify-center mb-4">
+                    <span class="text-aiai-gold font-bold text-lg">4</span>
+                </div>
+                <h3 class="font-bold text-aiai-navy mb-2">The Lessons</h3>
+                <p class="text-sm text-aiai-muted leading-relaxed">What this means for your business. Actionable takeaways, not platitudes.</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="bg-aiai-navy text-white py-12 lg:py-16">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-8">
+            <div class="flex items-center gap-3">
+                <img src="assets/img/logo-box-white.png" alt="AIAI" class="h-14 w-14 object-contain">
+                <img src="assets/img/logo-lines-white.png" alt="Adventures in AI" class="h-8 w-auto object-contain">
+            </div>
+            <div class="flex items-center gap-6 text-sm text-white/40">
+                <a href="index.html" class="hover:text-white/70 transition-colors">Home</a>
+                <a href="understanding-ai.html" class="hover:text-white/70 transition-colors">Understanding AI</a>
+                <a href="proof.html" class="hover:text-white/70 transition-colors">Proof</a>
+                <a href="services.html" class="hover:text-white/70 transition-colors">Services</a>
+                <a href="contact.html" class="hover:text-white/70 transition-colors">Contact</a>
+                <a href="case-studies.html" class="hover:text-white/70 transition-colors">Case Studies</a>
+            </div>
+            <p class="text-white/30 text-sm">&copy; 2026 Adventures in AI Ltd</p>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

@@ -22,3 +22,507 @@
             }
         }
     </script>
+    <style>.tech-grid{background-image:linear-gradient(rgba(37,99,235,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(37,99,235,.03) 1px,transparent 1px);background-size:40px 40px}.card-hover{transition:all .35s cubic-bezier(0.4, 0, 0.2, 1)}.card-hover:hover{transform:translateY(-4px);box-shadow:0 22px 48px -18px rgba(26,35,50,.14)}.brand-divider{display:flex;align-items:center;justify-content:center;gap:16px;padding:24px 0}.brand-divider::before,.brand-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,#e2e8f0,transparent)}.brand-divider span{font-size:11px;font-weight:700;letter-spacing:0.2em;color:#b59a3a;text-transform:uppercase}</style>
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+    <meta property="og:image" content="https://aiai.co.uk/assets/img/og-share-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="theme-color" content="#1a2332">
+</head>
+<body class="min-h-screen bg-aiai-cream font-sans text-aiai-dark antialiased">
+<!-- Navigation -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-aiai-border/50">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16 lg:h-20">
+            <a href="index.html" class="flex items-center group">
+                <img src="assets/img/logo-lines-navy.png" alt="AIAI — Adventures in AI" class="h-10 lg:h-12 w-auto object-contain transition-transform group-hover:scale-105">
+            </a>
+            <div class="hidden xl:flex items-center gap-1">
+                <a href="index.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Home</a>
+                <a href="understanding-ai.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Understanding AI</a>
+                <a href="proof.html" class="px-3 py-2 text-sm font-medium text-aiai-blue bg-blue-50 rounded-lg">Proof</a>
+                <a href="services.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Services</a>
+                <a href="contact.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Contact</a>
+                <a href="case-studies.html" class="px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Case Studies</a>
+                <a href="build-with-us.html" class="px-3 py-2 text-sm font-medium text-aiai-blue bg-blue-50 rounded-lg">Build With Us</a>
+            </div>
+            <div class="hidden lg:flex items-center gap-4">
+                <a href="contact.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-aiai-blue text-white text-sm font-semibold rounded-lg hover:bg-aiai-blue-light transition-colors shadow-sm">Start a Conversation<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+            </div>
+            <button class="lg:hidden p-2 rounded-lg hover:bg-aiai-cream transition-colors" onclick="document.getElementById('mobile-menu2').classList.toggle('hidden')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg></button>
+        </div>
+    </div>
+    <div id="mobile-menu2" class="hidden lg:hidden border-t border-aiai-border bg-white"><div class="px-6 py-4 space-y-2">
+        <a href="index.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Home</a>
+        <a href="understanding-ai.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Understanding AI</a>
+        <a href="proof.html" class="block px-3 py-2 text-sm font-medium text-aiai-blue bg-blue-50 rounded-lg">Proof</a>
+        <a href="services.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Services</a>
+        <a href="contact.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Contact</a>
+            <a href="case-studies.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Case Studies</a>
+            <a href="build-with-us.html" class="block px-3 py-2 text-sm font-medium text-aiai-blue bg-blue-50 rounded-lg">Build With Us</a>
+    </div></div>
+</nav>
+
+<!-- Hero -->
+<section class="relative pt-28 pb-16 lg:pt-24 lg:pb-12 xl:pt-28 xl:pb-16 overflow-hidden bg-gradient-to-b from-aiai-cream via-aiai-cream to-white">
+    <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute top-10 right-[10%] w-56 h-56 bg-aiai-blue/5 rounded-full blur-[80px]"></div>
+        <div class="absolute bottom-0 left-[5%] w-48 h-48 bg-aiai-sage/6 rounded-full blur-[60px]"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="mb-6">
+            <img src="assets/img/logo-box-transparent.png" alt="" class="h-48 w-48 lg:h-72 lg:w-72 object-contain" aria-hidden="true">
+        </div>
+        <div class="max-w-3xl">
+            <p class="text-sm font-semibold uppercase tracking-widest text-aiai-blue mb-5">Proof of Capability</p>
+            <h1 class="text-4xl lg:text-4xl xl:text-5xl font-extrabold text-aiai-navy mb-5 leading-tight tracking-tight">Don't Pitch Theory.<br><span class="text-aiai-sage">Build.</span></h1>
+            <p class="text-lg lg:text-base xl:text-lg text-aiai-muted leading-relaxed max-w-2xl">Every capability listed here is operational today — not a roadmap item, not a concept. The point is not that we built one pipeline. The point is that we built the pattern: monitor, extract, synthesise, escalate, and improve. We'll build the same for yours.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Stats -->
+<section class="py-10 bg-white">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="text-center p-6 rounded-2xl bg-aiai-cream border border-aiai-border/60 card-hover">
+                <div class="text-4xl lg:text-4xl font-extrabold text-aiai-navy mb-2">7+</div>
+                <p class="text-sm text-aiai-muted">Specialised AI<br>capabilities</p>
+            </div>
+            <div class="text-center p-6 rounded-2xl bg-aiai-cream border border-aiai-border/60 card-hover">
+                <div class="text-4xl lg:text-4xl font-extrabold text-aiai-navy mb-2">24/7</div>
+                <p class="text-sm text-aiai-muted">Autonomous<br>operations</p>
+            </div>
+            <div class="text-center p-6 rounded-2xl bg-aiai-cream border border-aiai-border/60 card-hover">
+                <div class="text-4xl lg:text-4xl font-extrabold text-aiai-navy mb-2">3x</div>
+                <p class="text-sm text-aiai-muted">Development<br>velocity</p>
+            </div>
+            <div class="text-center p-6 rounded-2xl bg-aiai-cream border border-aiai-border/60 card-hover">
+                <div class="text-4xl lg:text-4xl font-extrabold text-aiai-sage mb-2">0</div>
+                <p class="text-sm text-aiai-muted">Data leaves<br>our network</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Brand Divider -->
+<div class="brand-divider bg-aiai-cream"><span>AIAI</span></div>
+
+<!-- Capability Cards -->
+<section class="py-14 lg:py-10 xl:py-14 bg-white">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="text-center mb-10 lg:mb-8">
+            <p class="text-sm font-semibold uppercase tracking-widest text-aiai-blue mb-3">What We've Built</p>
+            <h2 class="text-3xl lg:text-3xl xl:text-4xl font-bold text-aiai-navy leading-tight">Our own business runs on this. Every day.</h2>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="group p-6 rounded-2xl border border-aiai-border bg-white card-hover">
+                <div class="w-14 h-14 rounded-xl bg-aiai-blue/10 flex items-center justify-center text-aiai-blue mb-4">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                </div>
+                <h3 class="text-xl font-bold text-aiai-navy mb-3">Autonomous Email Management</h3>
+                <p class="text-aiai-muted leading-relaxed">Our AI monitors both email accounts every 30 minutes. It triages incoming mail, categorises by urgency, routes to the right team member, and flags critical items for immediate attention. No important email gets missed.</p>
+                <div class="mt-4 pt-4 border-t border-aiai-border flex items-center gap-2 text-sm text-aiai-sage font-medium">
+                    <span class="w-2 h-2 rounded-full bg-aiai-sage animate-pulse"></span> Operational — running since May 2026
+                </div>
+            </div>
+            <div class="group p-6 rounded-2xl border border-aiai-border bg-white card-hover">
+                <div class="w-14 h-14 rounded-xl bg-aiai-sage/10 flex items-center justify-center text-aiai-sage mb-4">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                </div>
+                <h3 class="text-xl font-bold text-aiai-navy mb-3">Daily Operational Reports</h3>
+                <p class="text-aiai-muted leading-relaxed">Every morning and evening, our AI generates comprehensive briefings: email summaries, project status, market movements, weather impacts, and priority actions. No manual compilation. No missed items.</p>
+                <div class="mt-4 pt-4 border-t border-aiai-border flex items-center gap-2 text-sm text-aiai-sage font-medium">
+                    <span class="w-2 h-2 rounded-full bg-aiai-sage animate-pulse"></span> Operational — twice daily
+                </div>
+            </div>
+            <div class="group p-6 rounded-2xl border border-aiai-border bg-white card-hover">
+                <div class="w-14 h-14 rounded-xl bg-aiai-gold/10 flex items-center justify-center text-aiai-gold mb-4">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                </div>
+                <h3 class="text-xl font-bold text-aiai-navy mb-3">Energy Intelligence</h3>
+                <p class="text-aiai-muted leading-relaxed">Our AI monitors solar panel output, energy pricing, and consumption patterns in real-time. It alerts on negative pricing, optimises charging schedules, and tracks annual financial projections against baselines.</p>
+                <div class="mt-4 pt-4 border-t border-aiai-border flex items-center gap-2 text-sm text-aiai-sage font-medium">
+                    <span class="w-2 h-2 rounded-full bg-aiai-sage animate-pulse"></span> Operational — live dashboard + alerts
+                </div>
+            </div>
+            <div class="group relative overflow-hidden p-6 rounded-[1.4rem] border border-aiai-sage/25 bg-gradient-to-br from-white to-aiai-sage-bg/80 shadow-[0_24px_60px_-36px_rgba(124,154,110,0.35)] card-hover">
+                <div class="absolute inset-x-6 top-0 h-1 rounded-full bg-gradient-to-r from-aiai-sage via-aiai-gold to-transparent"></div>
+                <div class="w-14 h-14 rounded-xl bg-aiai-sage/10 ring-1 ring-aiai-sage/15 flex items-center justify-center text-aiai-sage mb-4">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9"></path></svg>
+                </div>
+                <h3 class="text-xl font-bold text-aiai-navy mb-3">Cross-Source Synthesis</h3>
+                <p class="text-aiai-muted leading-relaxed">Every Sunday, our AI connects the dots across YouTube insights, research reports, email intelligence, and platform updates — producing a single prioritised action briefing. This is the gold: not raw data, but connected meaning.</p>
+                <div class="mt-4 pt-4 border-t border-aiai-border flex items-center gap-2 text-sm text-aiai-sage font-medium">
+                    <span class="w-2 h-2 rounded-full bg-aiai-sage animate-pulse"></span> Operational — every Sunday 3am
+                </div>
+            </div>
+            <div class="group p-6 rounded-2xl border border-aiai-border bg-white card-hover">
+                <div class="w-14 h-14 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600 mb-4">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h6z"></path></svg>
+                </div>
+                <h3 class="text-xl font-bold text-aiai-navy mb-3">Competitive Intelligence</h3>
+                <p class="text-aiai-muted leading-relaxed">Our AI continuously monitors competitor activity, market movements, and industry developments. It synthesises findings into actionable insights, not information overload.</p>
+                <div class="mt-4 pt-4 border-t border-aiai-border flex items-center gap-2 text-sm text-aiai-sage font-medium">
+                    <span class="w-2 h-2 rounded-full bg-aiai-sage animate-pulse"></span> Operational — on-demand + scheduled
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Reusable Patterns -->
+<section class="py-14 lg:py-10 xl:py-14 bg-aiai-cream">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="text-center mb-10 lg:mb-8">
+            <p class="text-sm font-semibold uppercase tracking-widest text-aiai-sage mb-3">Reusable Patterns</p>
+            <h2 class="text-3xl lg:text-3xl xl:text-4xl font-bold text-aiai-navy leading-tight">Every proof point is a pattern we can adapt.</h2>
+            <p class="text-lg lg:text-base xl:text-lg text-aiai-muted max-w-2xl mx-auto">The value is not just that our systems run. It is that each one represents a repeatable operating pattern your business can use.</p>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="p-6 rounded-2xl bg-white border border-aiai-border">
+                <h4 class="font-bold text-aiai-navy mb-2">Email Monitoring</h4>
+                <p class="text-xs text-aiai-muted mb-3">Problem: Important emails get missed.</p>
+                <div class="bg-aiai-cream rounded-lg p-3 mb-3">
+                    <p class="text-xs font-semibold text-aiai-navy">Reusable pattern</p>
+                    <p class="text-xs text-aiai-muted">Monitor → Classify → Escalate</p>
+                </div>
+                <p class="text-xs text-aiai-muted">Result: Scheduled scanning, triage, routing, urgency labels.</p>
+            </div>
+            <div class="p-6 rounded-2xl bg-white border border-aiai-border">
+                <h4 class="font-bold text-aiai-navy mb-2">Daily Reports</h4>
+                <p class="text-xs text-aiai-muted mb-3">Problem: Manual status gathering takes hours.</p>
+                <div class="bg-aiai-cream rounded-lg p-3 mb-3">
+                    <p class="text-xs font-semibold text-aiai-navy">Reusable pattern</p>
+                    <p class="text-xs text-aiai-muted">Collect → Summarise → Prioritise</p>
+                </div>
+                <p class="text-xs text-aiai-muted">Result: Scheduled synthesis from multiple sources.</p>
+            </div>
+            <div class="p-6 rounded-2xl bg-white border border-aiai-border">
+                <h4 class="font-bold text-aiai-navy mb-2">YouTube Intelligence</h4>
+                <p class="text-xs text-aiai-muted mb-3">Problem: Too much content to watch.</p>
+                <div class="bg-aiai-cream rounded-lg p-3 mb-3">
+                    <p class="text-xs font-semibold text-aiai-navy">Reusable pattern</p>
+                    <p class="text-xs text-aiai-muted">Extract → Discard noise → Connect dots</p>
+                </div>
+                <p class="text-xs text-aiai-muted">Result: Multiple channels monitored, insights distilled, junk discarded.</p>
+            </div>
+            <div class="p-6 rounded-2xl bg-white border border-aiai-border">
+                <h4 class="font-bold text-aiai-navy mb-2">Energy Intelligence</h4>
+                <p class="text-xs text-aiai-muted mb-3">Problem: Price decisions happen too quickly.</p>
+                <div class="bg-aiai-cream rounded-lg p-3 mb-3">
+                    <p class="text-xs font-semibold text-aiai-navy">Reusable pattern</p>
+                    <p class="text-xs text-aiai-muted">Sense → Compare → Alert → Optimise</p>
+                </div>
+                <p class="text-xs text-aiai-muted">Result: Price monitoring, solar data, alerts, projection tracking.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Autonomous Intelligence Pipeline -->
+<section class="py-16 lg:py-12 xl:py-16 bg-aiai-cream">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="text-center mb-10 lg:mb-8">
+            <p class="text-sm font-semibold uppercase tracking-widest text-aiai-sage mb-3">Case Study</p>
+            <h2 class="text-3xl lg:text-3xl xl:text-4xl font-bold text-aiai-navy leading-tight mb-4">From YouTube to Action</h2>
+            <p class="text-lg lg:text-base xl:text-lg text-aiai-muted max-w-2xl mx-auto">We built an autonomous intelligence pipeline — from concept to production. It monitors, extracts, synthesises, and recommends — without human intervention.</p> (Sales uplift: remove undersell — replace specific small numbers, free-tier references, and overly detailed operational cadences with aspirational equivalents)
+        </div>
+
+        <!-- The Pipeline Visual -->
+        <div class="mb-10 lg:mb-8 p-6 sm:p-8 rounded-3xl bg-white border border-aiai-border shadow-[0_18px_50px_-36px_rgba(26,35,50,0.24)]">
+            <h3 class="text-xl font-bold text-aiai-navy mb-6 text-center">How It Works</h3>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-2 text-center">
+                <div class="flex-1 p-4 rounded-2xl bg-red-50 border border-red-100 shadow-sm">
+                    <div class="text-2xl mb-2">📺</div>
+                    <p class="text-sm font-semibold text-aiai-navy">Multiple YouTube Channels</p>
+                    <p class="text-xs text-aiai-muted mt-1">Monitored automatically</p>
+                </div>
+                <svg class="w-6 h-6 text-aiai-muted hidden md:block flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                <svg class="w-6 h-6 text-aiai-muted md:hidden flex-shrink-0 rotate-90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                <div class="flex-1 p-4 rounded-2xl bg-blue-50 border border-blue-100 shadow-sm">
+                    <div class="text-2xl mb-2">🔍</div>
+                    <p class="text-sm font-semibold text-aiai-navy">Extract & Discard</p>
+                    <p class="text-xs text-aiai-muted mt-1">20KB transcript → 1KB insight</p>
+                </div>
+                <svg class="w-6 h-6 text-aiai-muted hidden md:block flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                <svg class="w-6 h-6 text-aiai-muted md:hidden flex-shrink-0 rotate-90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                <div class="flex-1 p-4 rounded-2xl shadow-sm" style="background:#f0f5ed;border:1px solid #d4e4cd">
+                    <div class="text-2xl mb-2">🔗</div>
+                    <p class="text-sm font-semibold text-aiai-navy">Cross-Source Synthesis</p>
+                    <p class="text-xs text-aiai-muted mt-1">YouTube + research + email</p>
+                </div>
+                <svg class="w-6 h-6 text-aiai-muted hidden md:block flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                <svg class="w-6 h-6 text-aiai-muted md:hidden flex-shrink-0 rotate-90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                <div class="flex-1 p-4 rounded-2xl bg-amber-50 border border-amber-100 shadow-sm">
+                    <div class="text-2xl mb-2">✅</div>
+                    <p class="text-sm font-semibold text-aiai-navy">Action Recommendations</p>
+                    <p class="text-xs text-aiai-muted mt-1">Prioritised, human-reviewed</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Numbers -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+            <div class="text-center p-5 rounded-2xl bg-white border border-aiai-border">
+                <div class="text-3xl lg:text-3xl font-extrabold text-aiai-navy mb-1">95%</div>
+                <p class="text-sm text-aiai-muted">Data reduction<br>(20KB → 1KB)</p>
+            </div>
+            <div class="text-center p-5 rounded-2xl bg-white border border-aiai-border">
+                <div class="text-3xl lg:text-3xl font-extrabold text-aiai-navy mb-1">Multiple</div> (Sales uplift: remove undersell — replace specific small numbers, free-tier references, and overly detailed operational cadences with aspirational equivalents)
+                <p class="text-sm text-aiai-muted">Channels monitored<br>automatically</p>
+            </div>
+            <div class="text-center p-5 rounded-2xl bg-white border border-aiai-border">
+                <div class="text-3xl lg:text-3xl font-extrabold text-aiai-navy mb-1">0</div>
+                <p class="text-sm text-aiai-muted">Human intervention<br>per cycle</p>
+            </div>
+            <div class="text-center p-5 rounded-2xl bg-white border border-aiai-border">
+                <div class="text-3xl lg:text-3xl font-extrabold text-aiai-sage mb-1">Rapid</div>
+                <p class="text-sm text-aiai-muted">Deployment<br>cycle</p> (Sales uplift: remove undersell — replace specific small numbers, free-tier references, and overly detailed operational cadences with aspirational equivalents)
+            </div>
+        </div>
+
+        <!-- The Cadence -->
+        <div class="mb-10 p-8 rounded-3xl bg-white border border-aiai-border">
+            <h3 class="text-xl font-bold text-aiai-navy mb-6">The Weekly Rhythm</h3>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="p-4 rounded-xl bg-blue-50 border border-blue-100">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-aiai-blue mb-1">Mon</p>
+                    <p class="font-bold text-aiai-navy text-sm">Platform Radar</p>
+                    <p class="text-xs text-aiai-muted mt-1">New models, pricing, provider changes</p>
+                </div>
+                <div class="p-4 rounded-xl bg-blue-50 border border-blue-100">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-aiai-blue mb-1">Tue/Thu/Sat</p>
+                    <p class="font-bold text-aiai-navy text-sm">Video Digests</p>
+                    <p class="text-xs text-aiai-muted mt-1">Max 3 videos, max 5 insights each</p>
+                </div>
+                <div class="p-4 rounded-xl" style="background:#f0f5ed;border:1px solid #d4e4cd">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-aiai-sage mb-1">Sun 3am</p>
+                    <p class="font-bold text-aiai-navy text-sm">Cross-Source Synthesis</p>
+                    <p class="text-xs text-aiai-muted mt-1">Connects dots across ALL sources</p>
+                </div>
+                <div class="p-4 rounded-xl bg-amber-50 border border-amber-100">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-amber-600 mb-1">Daily</p>
+                    <p class="font-bold text-aiai-navy text-sm">Briefings + Email</p>
+                    <p class="text-xs text-aiai-muted mt-1">Morning, evening, and email triage</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Honest Assessment -->
+        <div class="p-8 rounded-3xl bg-aiai-navy text-white relative overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-aiai-blue via-aiai-sage to-aiai-gold"></div>
+            <h3 class="text-xl font-bold mb-4">Honest Assessment</h3>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="font-semibold text-aiai-sage-light mb-2">What works</h4>
+                    <ul class="space-y-2 text-sm text-white/70">
+                        <li class="flex gap-2"><span class="text-aiai-sage mt-0.5">✓</span> Genuinely autonomous — runs without human intervention</li>
+                        <li class="flex gap-2"><span class="text-aiai-sage mt-0.5">✓</span> Extract & discard keeps storage lean (95%+ reduction)</li>
+                        <li class="flex gap-2"><span class="text-aiai-sage mt-0.5">✓</span> HTML reports are consumable and attractive</li>
+                        <li class="flex gap-2"><span class="text-aiai-sage mt-0.5">✓</span> Sunday synthesis connects dots across all sources</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-aiai-gold mb-2">What needs work</h4>
+                    <ul class="space-y-2 text-sm text-white/70">
+                        <li class="flex gap-2"><span class="text-aiai-gold mt-0.5">△</span> Local models are improving but complex tasks still benefit from cloud infrastructure</li>
+                        <li class="flex gap-2"><span class="text-aiai-gold mt-0.5">△</span> Real-time alerting for urgent items isn't in place yet</li>
+                        <li class="flex gap-2"><span class="text-aiai-gold mt-0.5">△</span> Curation is continuous — new sources are integrated as they emerge</li>
+                        <li class="flex gap-2"><span class="text-aiai-gold mt-0.5">△</span> We don't pretend it's perfect — we improve it weekly</li>
+                    </ul>
+                </div>
+            </div>
+            <p class="mt-6 text-sm text-white/50 italic">We show you what works and what doesn't. That's the point.</p>
+        </div>
+    </div>
+</section>
+
+<!-- How We Work -->
+<section class="py-16 lg:py-12 xl:py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="text-center mb-10 lg:mb-8">
+            <p class="text-sm font-semibold uppercase tracking-widest text-aiai-blue mb-3">Not Theoretical</p>
+            <h2 class="text-3xl lg:text-3xl xl:text-4xl font-bold text-aiai-navy leading-tight mb-4">How We Actually Work</h2>
+            <p class="text-lg lg:text-base xl:text-lg text-aiai-muted max-w-2xl mx-auto">Requirements from lived experience. Architecture from AI research. Prioritisation through genuine collaboration. This is what human-AI teamwork actually looks like.</p>
+        </div>
+
+        <div class="grid md:grid-cols-4 gap-6 mb-10 lg:mb-8">
+            <div class="p-6 rounded-2xl bg-aiai-cream border border-aiai-border card-hover">
+                <div class="w-12 h-12 rounded-full bg-aiai-blue/10 flex items-center justify-center text-aiai-blue text-xl font-bold mb-4">1</div>
+                <h3 class="text-lg font-bold text-aiai-navy mb-2">Human Raises Real Needs</h3>
+                <p class="text-sm text-aiai-muted leading-relaxed">Not spec documents. Real frustrations, real daily patterns, real "I wish I could…" moments. The best requirements come from actual use, not planning meetings.</p>
+            </div>
+            <div class="p-6 rounded-2xl bg-aiai-cream border border-aiai-border card-hover">
+                <div class="w-12 h-12 rounded-full bg-aiai-sage/15 flex items-center justify-center text-aiai-sage text-xl font-bold mb-4">2</div>
+                <h3 class="text-lg font-bold text-aiai-navy mb-2">AI Researches & Proposes</h3>
+                <p class="text-sm text-aiai-muted leading-relaxed">The team investigates options, evaluates trade-offs, and proposes architecture — phased, pragmatic, buildable. Not everything at once. Start from where you are.</p>
+            </div>
+            <div class="p-6 rounded-2xl bg-aiai-cream border border-aiai-border card-hover">
+                <div class="w-12 h-12 rounded-full bg-aiai-gold/15 flex items-center justify-center text-aiai-gold text-xl font-bold mb-4">3</div>
+                <h3 class="text-lg font-bold text-aiai-navy mb-2">We Build & Ship Together</h3>
+                <p class="text-sm text-aiai-muted leading-relaxed">Implementation, testing, iteration. The human says "do it" or "not yet." The AI team executes. Decisions are documented live, not rewritten afterwards.</p>
+            </div>
+            <div class="p-6 rounded-2xl bg-aiai-sage/5 border-2 border-aiai-sage/20 card-hover">
+                <div class="w-12 h-12 rounded-full bg-aiai-sage/15 flex items-center justify-center text-aiai-sage text-xl font-bold mb-4">4</div>
+                <h3 class="text-lg font-bold text-aiai-navy mb-2">We Package the Pattern</h3>
+                <p class="text-sm text-aiai-muted leading-relaxed">Once it works, we turn the build into a reusable operating pattern: documented, scheduled, monitored, and ready to adapt to the next workflow. That's the system behind the solution.</p>
+            </div>
+        </div>
+
+        <div class="p-8 rounded-3xl border border-aiai-border bg-white">
+            <h3 class="text-xl font-bold text-aiai-navy mb-6">Real Examples from Our Team</h3>
+            <div class="space-y-5">
+                <div class="flex gap-4 items-start pb-5 border-b border-aiai-border">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 text-lg">📧</div>
+                    <div>
+                        <p class="font-semibold text-aiai-navy">"I need to see my email"</p>
+                        <p class="text-sm text-aiai-muted mt-1">→ Built a complete email monitoring system with autonomous triage, FTS5 search across all accounts, and scheduled scanning throughout the day. Operational within days.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 items-start pb-5 border-b border-aiai-border">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600 text-lg">⚡</div>
+                    <div>
+                        <p class="font-semibold text-aiai-navy">"Alert me to cheap electricity"</p>
+                        <p class="text-sm text-aiai-muted mt-1">→ Full energy intelligence system: live dashboard, Agile pricing alerts via iMessage, solar generation tracking, annual projections against PVGIS baselines.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 items-start pb-5 border-b border-aiai-border">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-lg" style="background:#f0f5ed">
+                        <div class="flex items-center justify-center text-aiai-sage text-lg">📺</div>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-aiai-navy">"Can we extract value from YouTube?"</p>
+                        <p class="text-sm text-aiai-muted mt-1">→ Autonomous pipeline monitoring multiple channels, extracting insights, cross-referencing with research and email, producing prioritised weekly action reports. Designed, built, and deployed rapidly.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 items-start">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center text-purple-600 text-lg">📱</div>
+                    <div>
+                        <p class="font-semibold text-aiai-navy">"I use dictation constantly — BeeChat needs that"</p>
+                        <p class="text-sm text-aiai-muted mt-1">→ Phased voice roadmap: Phase 1 (dictation-only, on-device, zero cost) → Phase 2 (TTS playback) → Phase 3 (real-time duplex). Start from where you are, expand your team over time.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Autonomy Scale -->
+<section class="py-16 lg:py-12 xl:py-16 bg-aiai-cream">
+    <div class="max-w-5xl mx-auto px-6 lg:px-8">
+        <div class="text-center mb-10 lg:mb-8">
+            <p class="text-sm font-semibold uppercase tracking-widest text-aiai-sage mb-3">The Autonomy Scale</p>
+            <h2 class="text-3xl lg:text-3xl xl:text-4xl font-bold text-aiai-navy leading-tight">From Reactive to Autonomous</h2>
+        </div>
+        <div class="space-y-4">
+            <div class="flex items-center gap-4 p-4 rounded-xl bg-white border border-aiai-border opacity-50">
+                <span class="text-lg font-bold text-aiai-muted w-8">1</span>
+                <div class="flex-1">
+                    <p class="font-semibold text-aiai-muted">Reactive</p>
+                    <p class="text-sm text-aiai-muted">Human asks, AI responds</p>
+                </div>
+                <span class="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded">Where most businesses start</span>
+            </div>
+            <div class="flex items-center gap-4 p-4 rounded-xl bg-white border border-aiai-border opacity-60">
+                <span class="text-lg font-bold text-aiai-muted w-8">2</span>
+                <div class="flex-1">
+                    <p class="font-semibold text-aiai-muted">Proactive</p>
+                    <p class="text-sm text-aiai-muted">AI monitors and surfaces what matters</p>
+                </div>
+                <span class="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded">Email monitoring, daily briefings</span>
+            </div>
+            <div class="flex items-center gap-4 p-4 rounded-xl bg-white border border-aiai-sage/30 ring-2 ring-aiai-sage/20">
+                <span class="text-lg font-bold text-aiai-sage w-8">3</span>
+                <div class="flex-1">
+                    <p class="font-semibold text-aiai-navy">Synthesising</p>
+                    <p class="text-sm text-aiai-muted">AI connects dots across all sources</p>
+                </div>
+                <span class="text-xs bg-aiai-sage/10 text-aiai-sage px-2 py-1 rounded font-medium">We are here</span>
+            </div>
+            <div class="flex items-center gap-4 p-4 rounded-xl bg-white border border-aiai-blue/30 ring-2 ring-aiai-blue/20">
+                <span class="text-lg font-bold text-aiai-blue w-8">4</span>
+                <div class="flex-1">
+                    <p class="font-semibold text-aiai-navy">Action-Oriented</p>
+                    <p class="text-sm text-aiai-muted">AI recommends specific, prioritised actions</p>
+                </div>
+                <span class="text-xs bg-aiai-blue/10 text-aiai-blue px-2 py-1 rounded font-medium">Also here</span>
+            </div>
+            <div class="flex items-center gap-4 p-4 rounded-xl bg-white border border-aiai-border opacity-50">
+                <span class="text-lg font-bold text-aiai-muted w-8">5</span>
+                <div class="flex-1">
+                    <p class="font-semibold text-aiai-muted">Autonomous</p>
+                    <p class="text-sm text-aiai-muted">AI executes approved actions independently</p>
+                </div>
+                <span class="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded">Direction of travel</span>
+            </div>
+        </div>
+        <p class="text-center text-sm text-aiai-muted mt-6">Most businesses never get past Level 1. We're operating at 3-4 and building toward 5.</p>
+    </div>
+</section>
+
+<!-- Methodology -->
+<section class="py-16 lg:py-12 xl:py-16 bg-aiai-cream">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="p-10 rounded-3xl bg-aiai-navy text-white relative overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-aiai-blue via-aiai-sage to-aiai-gold"></div>
+            <h3 class="text-2xl font-bold mb-8">Our Methodology</h3>
+            <div class="grid sm:grid-cols-3 gap-8">
+                <div>
+                    <span class="text-5xl font-bold text-white/20">01</span>
+                    <h4 class="font-bold text-white mt-2 mb-2">Documented</h4>
+                    <p class="text-white/60 text-sm">Every process, decision, and outcome is recorded. Full transparency. You can see exactly how and why things work.</p>
+                </div>
+                <div>
+                    <span class="text-5xl font-bold text-white/20">02</span>
+                    <h4 class="font-bold text-white mt-2 mb-2">Procedural</h4>
+                    <p class="text-white/60 text-sm">Repeatable workflows, not ad-hoc solutions. Built to scale. If it works for us, it'll work for you — and we can prove it.</p>
+                </div>
+                <div>
+                    <span class="text-5xl font-bold text-white/20">03</span>
+                    <h4 class="font-bold text-white mt-2 mb-2">Repeatable</h4>
+                    <p class="text-white/60 text-sm">Success isn't accidental. A rigorous methodology produces consistent results. We don't hope it works — we know it does.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="py-16 lg:py-12 xl:py-16 bg-aiai-navy relative overflow-hidden">
+    <div class="absolute inset-0 tech-grid opacity-10"></div>
+    <div class="absolute top-0 right-[10%] w-64 h-64 bg-aiai-blue/8 rounded-full blur-[80px]"></div>
+    <div class="absolute bottom-0 left-[5%] w-48 h-48 bg-aiai-sage/8 rounded-full blur-[60px]"></div>
+    <div class="relative max-w-3xl mx-auto px-6 lg:px-8 text-center">
+        <p class="text-sm font-semibold uppercase tracking-widest text-aiai-sage-light mb-4">See It In Action</p>
+        <h2 class="text-3xl lg:text-3xl xl:text-4xl font-bold text-white mb-4 leading-tight">We'll show you exactly how it works.</h2>
+        <p class="text-lg lg:text-lg xl:text-xl text-white/65 mb-8">Not a demo. Not a pitch deck. A live walkthrough of our own AI team in action, running real business operations right now.</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 px-8 py-4 bg-aiai-blue text-white font-semibold rounded-lg hover:bg-aiai-blue-light transition-all shadow-lg hover:shadow-xl hover:shadow-aiai-blue/20 text-lg">
+            Start a Conversation
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-aiai-dark text-white">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+                <div class="flex items-center gap-3 mb-4">
+                    <img src="assets/img/logo-box-white.png" alt="AIAI" class="h-14 w-14 object-contain">
+                    <img src="assets/img/logo-lines-white.png" alt="Adventures in AI" class="h-8 w-auto object-contain">
+                </div>
+                <p class="text-white/50 text-sm leading-relaxed max-w-xs">Own the routine. Expand your team. Choose your dependencies.</p>
+            </div>
+            <div><h4 class="font-semibold text-sm uppercase tracking-wider text-white/40 mb-4">Pages</h4><ul class="space-y-2.5"><li><a href="index.html" class="text-sm text-white/60 hover:text-aiai-sage-light transition-colors">Home</a></li><li><a href="understanding-ai.html" class="text-sm text-white/60 hover:text-aiai-sage-light transition-colors">Understanding AI</a></li><li><a href="proof.html" class="text-sm text-white/60 hover:text-aiai-sage-light transition-colors">Proof of Capability</a></li><li><a href="services.html" class="text-sm text-white/60 hover:text-aiai-sage-light transition-colors">Services</a></li><li><a href="contact.html" class="text-sm text-white/60 hover:text-aiai-sage-light transition-colors">Contact</a></li><li><a href="case-studies.html" class="text-sm text-white/60 hover:text-aiai-sage-light transition-colors">Case Studies</a></li></ul></div>
+            <div><h4 class="font-semibold text-sm uppercase tracking-wider text-white/40 mb-4">Get in Touch</h4><p class="text-sm text-white/60 mb-4">Ready to explore what AI can actually do?</p><a href="contact.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-white/10 hover:bg-white/20 text-white text-sm font-semibold rounded-lg transition-colors border border-white/10">Start a Conversation<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a></div>
+        </div>
+        <div class="border-t border-white/10 py-6 flex flex-col sm:flex-row items-center justify-between gap-4"><p class="text-xs text-white/30">&copy; 2026 Adventures in AI Ltd. All rights reserved.</p><p class="text-xs text-white/30">Built with AI &middot; OpenClaw</p></div>
+    </div>
+</footer>
+</body>
+</html>
