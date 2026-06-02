@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study: Can AI Build a Real App? The BeeChat Story | Adventures in AI</title>
+    <meta name="description" content="We asked our AI team to build a messaging app. It seemed simple. It wasn't. Five versions, multiple restarts, database corruption, and hard lessons about process, modularity, and boundaries.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'aiai-navy': '#1a2332',
+                        'aiai-navy-light': '#243447',
+                        'aiai-blue': '#2563eb',
+                        'aiai-blue-light': '#3b82f6',
+                        'aiai-sage': '#7c9a6e',
+                        'aiai-sage-light': '#a3bc96',
+                        'aiai-sage-bg': '#f0f5ed',
+                        'aiai-cream': '#faf9f6',
+                        'aiai-dark': '#0f172a',
+                        'aiai-muted': '#64748b',
+                        'aiai-border': '#e2e8f0',
+                        'aiai-orange': '#ea580c',
+                        'aiai-gold': '#b59a3a',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                        serif: ['Merriweather', 'Georgia', 'serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-gradient { background: linear-gradient(135deg, #1a2332 0%, #243447 50%, #1a2332 100%); }
+        .article-body { font-family: 'Merriweather', Georgia, serif; font-size: 1.05rem; line-height: 1.85; color: #1e293b; }
+        .article-body p { margin-bottom: 1.5rem; }
+        .article-body h2 { font-family: 'Inter', sans-serif; font-size: 1.6rem; font-weight: 800; color: #1a2332; margin-top: 3rem; margin-bottom: 1rem; }
+        .article-body h3 { font-family: 'Inter', sans-serif; font-size: 1.25rem; font-weight: 700; color: #334155; margin-top: 2rem; margin-bottom: 0.75rem; }
+        .article-body ul { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+        .article-body li { margin-bottom: 0.5rem; }
+        .article-body a { color: #2563eb; text-decoration: underline; text-decoration-color: rgba(37,99,235,0.3); text-underline-offset: 2px; }
+        .article-body a:hover { text-decoration-color: #2563eb; }
+        .pull-quote { border-left: 4px solid #b59a3a; padding: 1.25rem 1.5rem; margin: 2rem 0; background: linear-gradient(135deg, #fafdf7, #f8f6f0); border-radius: 0 8px 8px 0; }
+        .pull-quote p { font-family: 'Inter', sans-serif; font-size: 1.2rem; font-weight: 600; color: #1a2332; line-height: 1.6; margin: 0; font-style: italic; }
+        .pull-quote .attribution { font-size: 0.85rem; color: #64748b; margin-top: 0.5rem; font-style: normal; }
+        .stat-card { transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -12px rgba(26,35,50,0.15); }
+        .lesson-card { transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+        .lesson-card:hover { transform: translateY(-3px); box-shadow: 0 20px 40px -12px rgba(26,35,50,0.12); }
+        .hero-stat { animation: fadeUp 0.8s ease-out forwards; opacity: 0; }
+        .hero-stat:nth-child(1) { animation-delay: 0.1s; }
+        .hero-stat:nth-child(2) { animation-delay: 0.2s; }
+        .hero-stat:nth-child(3) { animation-delay: 0.3s; }
+        .hero-stat:nth-child(4) { animation-delay: 0.4s; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .tech-grid { background-image: linear-gradient(rgba(37,99,235,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(37,99,235,0.03) 1px, transparent 1px); background-size: 40px 40px; }
+        .timeline-line { position: relative; }
+        .timeline-line::before { content: ''; position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, #ea580c, #2563eb, #7c9a6e, #b59a3a); }
+        @media (min-width: 768px) {
+            .timeline-line::before { left: 50%; transform: translateX(-50%); }
+        }
+        .timeline-item { opacity: 0; transform: translateY(20px); transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .timeline-item.visible { opacity: 1; transform: translateY(0); }
+        .provider-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .provider-card:hover { transform: translateY(-2px); box-shadow: 0 12px 24px -8px rgba(26,35,50,0.1); }
+        .crisis-badge { background: linear-gradient(135deg, rgba(234,88,12,0.08), rgba(234,88,12,0.03)); border: 1px solid rgba(234,88,12,0.15); }
+        .crisis-badge p { color: #7c2d12; }
+    </style>
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+    <meta property="og:image" content="https://aiai.co.uk/assets/img/og-share-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="theme-color" content="#1a2332">
+</head>
+<body class="min-h-screen bg-aiai-cream font-sans text-aiai-dark antialiased pb-16 md:pb-0">
+
+<!-- Navigation -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-aiai-border/50">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16 lg:h-20">
+            <a href="index.html" class="flex items-center group">
+                <img src="assets/img/aiai-wordmark-navy-transparent.png" alt="AIAI — Adventures in AI" class="h-8 md:h-9.5 w-auto object-contain transition-transform group-hover:scale-105">
+            </a>
+            <div class="hidden lg:flex items-center lg:gap-0.5 xl:gap-1">
+                <a href="index.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Home</a>
+                <a href="understanding-ai.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Understanding AI</a>
+                <a href="proof.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Proof</a>
+                <a href="services.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Services</a>
+                <a href="build-with-us.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Build With Us</a>
+                <a href="case-studies.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-blue bg-blue-50 rounded-lg">Case Studies</a>
+                <a href="contact.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Contact</a>
+            </div>
+            <div class="hidden lg:flex items-center lg:gap-2 xl:gap-4">
+                <a href="contact.html" class="inline-flex items-center gap-2 px-4 lg:px-4 xl:px-5 py-2 lg:py-2 xl:py-2.5 bg-aiai-blue text-white text-xs lg:text-xs xl:text-sm font-semibold rounded-lg hover:bg-aiai-blue-light transition-colors shadow-sm">
+                    Start a Conversation
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                </a>
+            </div>
+            <button class="hidden md:flex lg:hidden p-2 rounded-lg hover:bg-aiai-cream transition-colors" aria-label="Toggle navigation menu" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16"></path><path d="M4 12h16"></path><path d="M4 18h16"></path></svg>
+            </button>
+        </div>
+    </div>
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-aiai-border bg-white">
+        <div class="px-6 py-4 space-y-2">
+            <a href="index.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Home</a>
+            <a href="understanding-ai.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Understanding AI</a>
+            <a href="proof.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Proof</a>
+            <a href="services.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Services</a>
+            <a href="build-with-us.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Build With Us</a>
+            <a href="case-studies.html" class="block px-3 py-2 text-sm font-medium text-aiai-blue bg-blue-50 rounded-lg">Case Studies</a>
+            <a href="contact.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Contact</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="relative pt-28 pb-16 lg:pt-32 lg:pb-20 xl:pt-36 xl:pb-24 overflow-hidden hero-gradient">
+    <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute top-16 right-[10%] w-96 h-96 bg-aiai-orange/8 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-0 left-[5%] w-72 h-72 bg-aiai-blue/8 rounded-full blur-[100px]"></div>
+        <div class="absolute top-1/2 right-1/4 w-48 h-48 bg-aiai-sage/5 rounded-full blur-[80px]"></div>
+        <div class="absolute inset-0 tech-grid"></div>
+    </div>
+    <div class="relative max-w-4xl mx-auto px-6 lg:px-8 text-center">
+        <!-- Breadcrumb -->
+        <div class="mb-4">
+            <a href="case-studies.html" class="inline-flex items-center gap-1.5 text-sm text-white/50 hover:text-aiai-sage-light transition-colors">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                <span>All Case Studies</span>
+            </a>
+        </div>
+        <div class="inline-flex items-center gap-2 px-4 py-2 bg-aiai-orange/10 border border-aiai-orange/20 rounded-full mb-6">
+            <span class="text-xs font-semibold uppercase tracking-widest text-orange-300">Case Study</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-white mb-6 leading-tight tracking-tight">
+            Can AI Build a<br><span class="text-aiai-orange">Real App?</span>
+        </h1>
+        <p class="text-lg lg:text-xl text-white/65 leading-relaxed max-w-2xl mx-auto mb-8">
+            We asked our AI team to build a messaging app. It seemed straightforward. It wasn't. Five versions, multiple restarts, database corruption, and hard lessons about process, modularity, and boundaries.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-4 text-sm text-white/40">
+            <span>June 2026</span>
+            <span class="w-1 h-1 bg-white/30 rounded-full"></span>
+            <span>Adventures in AI</span>
+            <span class="w-1 h-1 bg-white/30 rounded-full"></span>
+            <span>12 min read</span>
+        </div>
+        <div class="mt-6">
+            <a href="BeeChat-Case-Study.pdf" download class="inline-flex items-center gap-2 px-5 py-2.5 bg-white/10 border border-white/20 text-white text-sm font-semibold rounded-lg hover:bg-white/20 transition-all">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                Download as PDF
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Hero Stats -->
+<section class="relative -mt-8 z-10">
+    <div class="max-w-4xl mx-auto px-6 lg:px-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+            <div class="hero-stat stat-card bg-white rounded-xl p-5 text-center border border-aiai-border/50">
+                <div class="text-2xl lg:text-3xl font-extrabold text-aiai-orange">5</div>
+                <div class="text-xs font-medium text-aiai-muted mt-1">Versions to Get Here</div>
+            </div>
+            <div class="hero-stat stat-card bg-white rounded-xl p-5 text-center border border-aiai-border/50">
+                <div class="text-2xl lg:text-3xl font-extrabold text-aiai-blue">3</div>
+                <div class="text-xs font-medium text-aiai-muted mt-1">Major Restarts</div>
+            </div>
+            <div class="hero-stat stat-card bg-white rounded-xl p-5 text-center border border-aiai-border/50">
+                <div class="text-2xl lg:text-3xl font-extrabold text-aiai-sage">macOS + iOS</div>
+                <div class="text-xs font-medium text-aiai-muted mt-1">Two Platforms</div>
+            </div>
+            <div class="hero-stat stat-card bg-white rounded-xl p-5 text-center border border-aiai-border/50">
+                <div class="text-2xl lg:text-3xl font-extrabold text-aiai-gold">Now</div>
+                <div class="text-xs font-medium text-aiai-muted mt-1">Working &amp; Deployed</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Article Content -->
+<article class="max-w-3xl mx-auto px-6 lg:px-8 py-12 lg:py-16">
+    <div class="article-body">
+
+        <h2>Part 1: It Seemed Simple Enough</h2>
+
+        <h3>Just Ask the Team to Build an App</h3>
+        <p>In early 2026, we set out to build BeeChat — a macOS messaging app for our AI team. We already had the AI team in place: a coordinator (Bee), a researcher (Gav), a developer (Q), a designer (Mel), a strategic reviewer (Kieran), and an operations manager (Luna). The idea was straightforward: ask Q to build a Swift/SwiftUI app, have Mel design it, Kieran review the architecture, and Bee coordinate.</p>
+
+        <p>What could go wrong?</p>
+
+        <p>Quite a lot, as it turned out. But not because the AI agents weren't capable. Because <em>we</em> didn't know how to run an AI development project properly.</p>
+
+        <h2>Part 2: The Naive Approach — and Its Consequences</h2>
+
+        <h3>Monolithic Code with No Backups</h3>
+        <p>The first version of BeeChat was a single Swift codebase — everything in one Xcode project: the UI, the database layer, the API client, the encryption logic, the keychain integration. No modular separation. No independent packages. Change one thing, and you risked breaking everything else.</p>
+
+        <p>There was also no disciplined version control. Commits were irregular. The git repo drifted from the actual working code on disk. We didn't realise it at the time, but we were building a house of cards.</p>
+
+        <h3>The Working Build That Wasn't in the Repo</h3>
+        <p>In March 2026, we finally got a working build. BeeChat launched. Messages sent and received. The database persisted across restarts. SQLCipher encryption was in place. Keychain integration worked. It did what it was supposed to do.</p>
+
+        <p>The problem? The working build existed on disk — but the git repo had been accidentally reverted to an older commit from the day before. All the source changes that made the app work — the fixes, the wiring, the careful integration — were not committed. They lived only in the build artifacts and uncommitted files.</p>
+
+        <div class="pull-quote">
+            <p>"We had a working app at 17:14 and a broken repository by 21:00. The source code that made it work was gone from version control. Everything after that point was trying to reconstruct what we'd already built."</p>
+        </div>
+
+        <h3>The Crash Cascade</h3>
+        <p>When we tried to fix minor layout issues — moving message bubbles, adjusting widths — the build system broke. Package dependencies failed. Xcode couldn't resolve GRDB, KeychainSwift, MarkdownUI, SQLCipher. Emergency fixes created new problems. Compile errors multiplied. The database corrupted during an encryption migration. The app wouldn't launch.</p>
+
+        <p>By the time we'd finished trying to fix a cosmetic issue, we couldn't even open the app.</p>
+
+        <div class="crisis-badge rounded-lg p-4 my-6">
+            <p class="font-sans font-semibold text-sm uppercase tracking-wide mb-1">The pattern we kept repeating:</p>
+            <p style="margin:0;font-size:0.95rem;color:#7c2d12;">Ask AI to build something → It works → Make a change without understanding the dependencies → Everything breaks → Try to fix the fixes → The original working state is lost → Start again.</p>
+        </div>
+
+        <h2>Part 3: The Hard Lessons</h2>
+
+        <h3>Lesson One: AI Needs Process, Not Just Capability</h3>
+        <p>The AI team could write Swift code. Q could architect, Mel could design, Kieran could review. But without a disciplined development process — regular commits, clean builds, independent testing of each component — the code accumulated technical debt faster than we could pay it down.</p>
+
+        <p>We learned that asking AI to build software is like asking a brilliant developer to build software without a code review process. The talent is there. The structure isn't. And without structure, even brilliant code becomes unmaintainable.</p>
+
+        <h3>Lesson Two: Modularity Is Non-Negotiable</h3>
+        <p>With everything in one codebase, every change was high-risk. Change the database schema, and the UI layer breaks. Update the API client, and the persistence layer fails. There was no isolation — no way to change one thing without risking everything.</p>
+
+        <p>We needed independent packages. If the UI broke, the database should still work. If the database changed, the API client shouldn't care. That's Software Development 101. But when AI is writing the code, it's surprisingly easy to skip it.</p>
+
+        <h3>Lesson Three: Agents Need Roles and Boundaries</h3>
+        <p>Early on, we let the coordinator (Bee) start implementing code. Not just coordinating — actually writing. The result: the person who should be orchestrating the work was also creating work. Changes were being made without review. The architecture was drifting.</p>
+
+        <p>We established a rule that we still follow: <strong>Bee orchestrates, Bee never implements.</strong> Each agent has a defined role. The coordinator coordinates. The developer develops. The reviewer reviews. The designer designs. Without boundaries, the team starts stepping on itself.</p>
+
+        <div class="pull-quote">
+            <p>"The biggest lesson wasn't about AI capability. It was about human process. AI can write code, but it can't decide that code needs modular architecture. That's your job. AI can follow a process, but it won't create one for you. That's your job too."</p>
+        </div>
+
+        <h2>Part 4: Starting Over — Properly This Time</h2>
+
+        <h3>BeeChat v5 — Modular from Day One</h3>
+        <p>By May 2026, we'd learned enough to start properly. BeeChat-v5 wasn't a rewrite of the old codebase — it was a clean build from scratch, designed around three shared Swift packages:</p>
+
+        <ul>
+            <li><strong>BeeChatPersistence</strong> — GRDB/SQLite data layer, topic management, message storage. Independent, testable, with 7+ passing tests.</li>
+            <li><strong>BeeChatGateway</strong> — WebSocket communication with the OpenClaw gateway. Resilient handshake, auto-reconnect. 26 passing tests.</li>
+            <li><strong>BeeChatSyncBridge</strong> — Event routing, message persistence, streaming response handling. 48 passing tests.</li>
+        </ul>
+
+        <p>On top of these shared packages sit two apps — the macOS app and, later, BeeChat-Mobile for iOS. Both depend on the same shared packages. Change the persistence layer once, both apps get the fix. Run the tests once, both apps are verified.</p>
+
+        <div class="pull-quote">
+            <p>"The difference between BeeChat v1 and BeeChat v5 isn't that v5 has better code. It's that v5 has a better structure. The code in v1 was probably fine — we just couldn't maintain it. v5 was designed to be maintained."</p>
+        </div>
+
+        <h3>Gate-Based Development</h3>
+        <p>We also introduced a gate-based development process. Before any feature goes live, it passes through defined gates:</p>
+
+        <ul>
+            <li><strong>Gate 2A:</strong> Architecture specification — what are we building and why?</li>
+            <li><strong>Gate 2B:</strong> Implementation plan — which components change, what tests are needed?</li>
+            <li><strong>Gate 2F:</strong> Integration testing — does it work end-to-end across both platforms?</li>
+        </ul>
+
+        <p>Each gate requires passing tests, code review, and a clean build. No exceptions. This is the process that should have existed from day one.</p>
+
+        <h2>Part 5: Still Learning</h2>
+
+        <h3>The Journey Isn't Over</h3>
+        <p>BeeChat v5 works. The macOS app sends messages, receives AI responses, persists data, and displays streaming output. The iOS app is in development, sharing the same packages. Cross-device topic sync runs over Tailscale — a networking solution we only discovered because we needed it for testing on a real iPhone.</p>
+
+        <p>But we're still learning. Every integration brings new challenges: protocol versioning, database migration safety, WebSocket reconnection edge cases, cross-platform UI differences. The difference now is that when we hit a wall, we have a process for climbing over it — not a process that creates more walls.</p>
+
+        <h2>Part 6: What This Means for You</h2>
+
+    </div>
+</article>
+
+<!-- Lessons Section -->
+<article class="max-w-3xl mx-auto px-6 lg:px-8 pb-12 lg:pb-16">
+    <div class="article-body mb-8">
+        <h2>6 Lessons from Building an App with AI</h2>
+    </div>
+
+    <div class="space-y-4 mb-8">
+        <div class="lesson-card bg-white rounded-xl p-6 border border-aiai-border/50">
+            <div class="flex items-start gap-4">
+                <div class="flex-shrink-0 w-8 h-8 bg-aiai-orange/10 rounded-lg flex items-center justify-center text-aiai-orange font-bold text-sm">1</div>
+                <div>
+                    <h3 class="!mt-0 !mb-2 font-sans text-aiai-navy">AI Can Build Real Apps — But Not Without Process</h3>
+                    <p style="margin:0;font-size:0.95rem;color:#475569;">The AI team wrote all the Swift code for BeeChat. But without commits, reviews, and modular architecture, the code became unmanageable. AI needs the same development discipline as a human team — arguably more, because it won't create discipline for you.</p>
+                </div>
+            </div>
+        </div>
+        <div class="lesson-card bg-white rounded-xl p-6 border border-aiai-border/50">
+            <div class="flex items-start gap-4">
+                <div class="flex-shrink-0 w-8 h-8 bg-aiai-blue/10 rounded-lg flex items-center justify-center text-aiai-blue font-bold text-sm">2</div>
+                <div>
+                    <h3 class="!mt-0 !mb-2 font-sans text-aiai-navy">Modular Architecture Is Everything</h3>
+                    <p style="margin:0;font-size:0.95rem;color:#475569;">A single monolithic codebase means every change is high-risk. Independent packages (Persistence, Gateway, SyncBridge) mean you can change one thing without breaking everything else. This isn't optional for AI development — it's essential.</p>
+                </div>
+            </div>
+        </div>
+        <div class="lesson-card bg-white rounded-xl p-6 border border-aiai-border/50">
+            <div class="flex items-start gap-4">
+                <div class="flex-shrink-0 w-8 h-8 bg-aiai-sage/10 rounded-lg flex items-center justify-center text-aiai-sage font-bold text-sm">3</div>
+                <div>
+                    <h3 class="!mt-0 !mb-2 font-sans text-aiai-navy">Define Agent Roles and Enforce Boundaries</h3>
+                    <p style="margin:0;font-size:0.95rem;color:#475569;">When your coordinator starts writing code, your architecture drifts. When your reviewer isn't in the loop, bugs ship. Each agent needs a clear role and hard boundaries. "Bee orchestrates, Bee never implements" is the rule that saved us.</p>
+                </div>
+            </div>
+        </div>
+        <div class="lesson-card bg-white rounded-xl p-6 border border-aiai-border/50">
+            <div class="flex items-start gap-4">
+                <div class="flex-shrink-0 w-8 h-8 bg-aiai-gold/10 rounded-lg flex items-center justify-center text-aiai-gold font-bold text-sm">4</div>
+                <div>
+                    <h3 class="!mt-0 !mb-2 font-sans text-aiai-navy">Commit Often, Build Always, Never Trust a Dirty Repo</h3>
+                    <p style="margin:0;font-size:0.95rem;color:#475569;">We had a working app and a broken repo. Reconstructing what we'd already built cost us weeks. Regular commits, clean builds, and verified tests prevent that pain. It's boring process — until it saves you.</p>
+                </div>
+            </div>
+        </div>
+        <div class="lesson-card bg-white rounded-xl p-6 border border-aiai-border/50">
+            <div class="flex items-start gap-4">
+                <div class="flex-shrink-0 w-8 h-8 bg-aiai-blue/10 rounded-lg flex items-center justify-center text-aiai-blue font-bold text-sm">5</div>
+                <div>
+                    <h3 class="!mt-0 !mb-2 font-sans text-aiai-navy">Gate-Based Development Prevents Catastrophes</h3>
+                    <p style="margin:0;font-size:0.95rem;color:#475569;">Architecture spec before code. Implementation plan before build. Integration tests before merge. It sounds like bureaucracy. It's actually insurance. We introduced gates after v4 and haven't had a catastrophic regression since.</p>
+                </div>
+            </div>
+        </div>
+        <div class="lesson-card bg-white rounded-xl p-6 border border-aiai-border/50">
+            <div class="flex items-start gap-4">
+                <div class="flex-shrink-0 w-8 h-8 bg-aiai-sage/10 rounded-lg flex items-center justify-center text-aiai-sage font-bold text-sm">6</div>
+                <div>
+                    <h3 class="!mt-0 !mb-2 font-sans text-aiai-navy">The Journey Is Ongoing</h3>
+                    <p style="margin:0;font-size:0.95rem;color:#475569;">We're still learning. Every integration brings new challenges. But now we learn within a structure — tests catch regressions, reviews catch design flaws, modular packages contain the blast radius. The difference isn't that we know everything. It's that we know how to learn safely.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="article-body">
+        <div class="pull-quote">
+            <p>"If you're building an app with AI, you don't need the best AI models. You need the best process. The models are commodity. The process is what separates a working app from a pile of uncommitted Swift files."</p>
+        </div>
+    </div>
+</article>
+
+<!-- Timeline Section -->
+<section class="bg-aiai-navy text-white py-16 lg:py-20">
+    <div class="max-w-4xl mx-auto px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center gap-2 px-4 py-2 bg-aiai-orange/10 border border-aiai-orange/20 rounded-full mb-4">
+                <span class="text-xs font-semibold uppercase tracking-widest text-orange-300">Timeline</span>
+            </div>
+            <h2 class="text-3xl lg:text-4xl font-extrabold text-white">The BeeChat Journey</h2>
+        </div>
+
+        <div class="relative">
+            <div class="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-aiai-orange via-aiai-blue to-aiai-sage -translate-x-1/2"></div>
+            <div class="space-y-8">
+                <div class="timeline-item md:flex md:items-center md:justify-between">
+                    <div class="md:w-5/12 md:text-right mb-2 md:mb-0">
+                        <span class="text-aiai-orange font-bold text-sm">Early 2026</span>
+                        <p class="text-white/70 text-sm mt-1">BeeChat v1. Single Swift codebase. sessions_send relay. Identity problems from day one.</p>
+                    </div>
+                    <div class="hidden md:flex w-8 h-8 bg-aiai-orange rounded-full items-center justify-center flex-shrink-0 z-10">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                    </div>
+                    <div class="md:w-5/12"></div>
+                </div>
+                <div class="timeline-item md:flex md:items-center md:justify-between">
+                    <div class="md:w-5/12"></div>
+                    <div class="hidden md:flex w-8 h-8 bg-aiai-orange rounded-full items-center justify-center flex-shrink-0 z-10">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    </div>
+                    <div class="md:w-5/12 mb-2 md:mb-0">
+                        <span class="text-aiai-orange font-bold text-sm">March 2026</span>
+                        <p class="text-white/70 text-sm mt-1">v2: Direct HTTP API. It works — briefly. Build system breaks. Database corrupts. Working code lost from git.</p>
+                    </div>
+                </div>
+                <div class="timeline-item md:flex md:items-center md:justify-between">
+                    <div class="md:w-5/12 md:text-right mb-2 md:mb-0">
+                        <span class="text-aiai-blue font-bold text-sm">March–April 2026</span>
+                        <p class="text-white/70 text-sm mt-1">Clean restart. More crashes. More restarts. The pattern: build → break → restart. Learning the hard way.</p>
+                    </div>
+                    <div class="hidden md:flex w-8 h-8 bg-aiai-blue rounded-full items-center justify-center flex-shrink-0 z-10">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    </div>
+                    <div class="md:w-5/12"></div>
+                </div>
+                <div class="timeline-item md:flex md:items-center md:justify-between">
+                    <div class="md:w-5/12"></div>
+                    <div class="hidden md:flex w-8 h-8 bg-aiai-blue rounded-full items-center justify-center flex-shrink-0 z-10">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                    </div>
+                    <div class="md:w-5/12 mb-2 md:mb-0">
+                        <span class="text-aiai-blue font-bold text-sm">April 2026</span>
+                        <p class="text-white/70 text-sm mt-1">The breakthrough: modular SPM packages, gate-based process, defined agent roles. Bee orchestrates, never implements.</p>
+                    </div>
+                </div>
+                <div class="timeline-item md:flex md:items-center md:justify-between">
+                    <div class="md:w-5/12 md:text-right mb-2 md:mb-0">
+                        <span class="text-aiai-sage font-bold text-sm">May 2026</span>
+                        <p class="text-white/70 text-sm mt-1">BeeChat v5 live. Three shared packages. 81 passing tests. macOS app working. iOS app in development.</p>
+                    </div>
+                    <div class="hidden md:flex w-8 h-8 bg-aiai-sage rounded-full items-center justify-center flex-shrink-0 z-10">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    </div>
+                    <div class="md:w-5/12"></div>
+                </div>
+                <div class="timeline-item md:flex md:items-center md:justify-between">
+                    <div class="md:w-5/12"></div>
+                    <div class="hidden md:flex w-8 h-8 bg-aiai-gold rounded-full items-center justify-center flex-shrink-0 z-10">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    </div>
+                    <div class="md:w-5/12 mb-2 md:mb-0">
+                        <span class="text-aiai-gold font-bold text-sm">Now</span>
+                        <p class="text-white/70 text-sm mt-1">macOS + iOS apps sharing packages. Tailscale sync. Still learning — but within a structure that contains the mistakes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-16 lg:py-20 bg-gradient-to-b from-aiai-cream to-white">
+    <div class="max-w-3xl mx-auto px-6 lg:px-8 text-center">
+        <div class="inline-flex items-center gap-2 px-4 py-2 bg-aiai-sage/10 border border-aiai-sage/20 rounded-full mb-6">
+            <span class="text-xs font-semibold uppercase tracking-widest text-aiai-sage">Our Take</span>
+        </div>
+        <h2 class="text-2xl lg:text-3xl font-extrabold text-aiai-navy mb-6">AI Can Build Apps — If You Know How to Run the Project</h2>
+        <p class="text-lg text-aiai-muted leading-relaxed mb-8">
+            BeeChat went through five versions before it worked. We lost working code. We corrupted databases. We restarted from scratch multiple times. Not because AI can't write Swift — because we didn't know how to manage an AI development project. Now we do. Whether you want us to build with you or help you build it yourself, we can help you skip the painful bits.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="contact.html" class="inline-flex items-center gap-2 px-7 py-3.5 bg-aiai-blue text-white font-semibold rounded-lg hover:bg-aiai-blue-light transition-all shadow-lg hover:shadow-xl hover:shadow-aiai-blue/20">
+                Start a Conversation
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+            </a>
+            <a href="case-studies.html" class="inline-flex items-center gap-2 px-5 py-3 bg-white border border-aiai-border text-aiai-navy font-semibold rounded-lg hover:bg-aiai-cream transition-colors">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                All Case Studies
+            </a>
+            <a href="BeeChat-Case-Study.pdf" download class="inline-flex items-center gap-2 px-5 py-3 bg-white border border-aiai-border text-aiai-navy font-semibold rounded-lg hover:bg-aiai-cream transition-colors">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                Download PDF
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-aiai-navy text-white py-12 lg:py-16">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-8">
+            <img src="assets/img/aiai-wordmark-white-transparent.png" alt="Adventures in AI" class="h-8 md:h-8.5 w-auto object-contain">
+            <div class="flex items-center gap-6 text-sm text-white/40">
+                <a href="index.html" class="hover:text-white/70 transition-colors">Home</a>
+                <a href="understanding-ai.html" class="hover:text-white/70 transition-colors">Understanding AI</a>
+                <a href="proof.html" class="hover:text-white/70 transition-colors">Proof</a>
+                <a href="services.html" class="hover:text-white/70 transition-colors">Services</a>
+                <a href="build-with-us.html" class="hover:text-white/70 transition-colors">Build With Us</a>
+                <a href="case-studies.html" class="hover:text-white/70 transition-colors">Case Studies</a>
+                <a href="contact.html" class="hover:text-white/70 transition-colors">Contact</a>
+            </div>
+            <p class="text-white/30 text-sm">&copy; 2026 Adventures in AI Ltd</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Mobile menu toggle
+    document.querySelectorAll('[onclick*="mobile-menu"]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+    });
+
+    // Scroll-triggered timeline animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.timeline-item').forEach(el => observer.observe(el));
+</script>
+
+<script>
+// Close mobile menu when a link is clicked
+document.querySelectorAll('[id^="mobile-menu"]').forEach(menu => {
+    menu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            menu.classList.add('hidden');
+        });
+    });
+});
+</script>
+<!-- Mobile Bottom Tab Bar -->
+<nav id="mobile-bottom-bar" class="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white border-t border-[#e2e8f0] shadow-[0_-4px_20px_rgba(0,0,0,0.08)]" style="padding-bottom: env(safe-area-inset-bottom);" aria-label="Mobile navigation">
+  <div class="flex items-center justify-around h-14">
+    <a href="index.html" class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-2 py-1 text-[#64748b] hover:text-[#2563eb] transition-colors" aria-label="Home">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      <span class="text-[10px] font-medium mt-0.5">Home</span>
+    </a>
+    <a href="services.html" class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-2 py-1 text-[#64748b] hover:text-[#2563eb] transition-colors" aria-label="Services">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+      <span class="text-[10px] font-medium mt-0.5">Services</span>
+    </a>
+    <a href="proof.html" class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-2 py-1 text-[#64748b] hover:text-[#2563eb] transition-colors" aria-label="Proof">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+      <span class="text-[10px] font-medium mt-0.5">Proof</span>
+    </a>
+    <a href="build-with-us.html" class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-2 py-1 text-[#64748b] hover:text-[#2563eb] transition-colors" aria-label="Build With Us">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+      <span class="text-[10px] font-medium mt-0.5">Build</span>
+    </a>
+    <button type="button" id="more-toggle-btn" class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-2 py-1 text-[#2563eb] hover:text-[#2563eb] transition-colors" aria-current="page" aria-label="More pages" aria-expanded="false" aria-controls="more-menu">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+      <span class="text-[10px] font-medium mt-0.5">More</span>
+    </button>
+  </div>
+  <!-- More dropdown menu -->
+  <div id="more-menu" class="hidden absolute bottom-full left-0 right-0 bg-white border-t border-[#e2e8f0] shadow-[0_-4px_20px_rgba(0,0,0,0.08)]" role="menu">
+    <div class="flex flex-col divide-y divide-[#e2e8f0]">
+      <a href="understanding-ai.html" class="flex items-center gap-3 px-6 py-3.5 text-sm font-medium text-[#1a2332] hover:bg-[#faf9f6] transition-colors" role="menuitem">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h6z"></path></svg>
+        Understanding AI
+      </a>
+      <a href="case-studies.html" class="flex items-center gap-3 px-6 py-3.5 text-sm font-medium text-[#1a2332] hover:bg-[#faf9f6] transition-colors" role="menuitem">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        Case Studies
+      </a>
+      <a href="contact.html" class="flex items-center gap-3 px-6 py-3.5 text-sm font-medium text-[#1a2332] hover:bg-[#faf9f6] transition-colors" role="menuitem">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+        Contact
+      </a>
+    </div>
+  </div>
+</nav>
+
+<script>
+// Mobile bottom bar "More" toggle
+(function() {
+  var moreBtn = document.getElementById('more-toggle-btn');
+  var moreMenu = document.getElementById('more-menu');
+  if (moreBtn && moreMenu) {
+    moreBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      var isHidden = moreMenu.classList.contains('hidden');
+      moreMenu.classList.toggle('hidden');
+      moreBtn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+      moreBtn.querySelector('span').textContent = isHidden ? 'Less' : 'More';
+    });
+    document.addEventListener('click', function(e) {
+      if (!moreBtn.contains(e.target) && !moreMenu.contains(e.target)) {
+        moreMenu.classList.add('hidden');
+        moreBtn.setAttribute('aria-expanded', 'false');
+        moreBtn.querySelector('span').textContent = 'More';
+      }
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        moreMenu.classList.add('hidden');
+        moreBtn.setAttribute('aria-expanded', 'false');
+        moreBtn.querySelector('span').textContent = 'More';
+      }
+    });
+    moreMenu.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', function() {
+        moreMenu.classList.add('hidden');
+        moreBtn.setAttribute('aria-expanded', 'false');
+        moreBtn.querySelector('span').textContent = 'More';
+      });
+    });
+  }
+})();
+</script>
+</body>
+</html>
