@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study: The Machine That Runs Itself — From Solar Panel to Self-Operating Office | Adventures in AI</title>
+    <meta name="description" content="What happens when you automate your energy monitoring, your email, your research, your security, and your memory — and then let it all run without you? This is the story of a system that learned to operate on its own.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'aiai-navy': '#1a2332',
+                        'aiai-navy-light': '#243447',
+                        'aiai-blue': '#2563eb',
+                        'aiai-blue-light': '#3b82f6',
+                        'aiai-sage': '#7c9a6e',
+                        'aiai-sage-light': '#a3bc96',
+                        'aiai-sage-bg': '#f0f5ed',
+                        'aiai-cream': '#faf9f6',
+                        'aiai-dark': '#0f172a',
+                        'aiai-muted': '#64748b',
+                        'aiai-border': '#e2e8f0',
+                        'aiai-orange': '#ea580c',
+                        'aiai-gold': '#b59a3a',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                        serif: ['Merriweather', 'Georgia', 'serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-gradient { background: linear-gradient(135deg, #1a2332 0%, #1e3a2f 50%, #1a2332 100%); }
+        .article-body { font-family: 'Merriweather', Georgia, serif; font-size: 1.05rem; line-height: 1.85; color: #1e293b; }
+        .article-body p { margin-bottom: 1.5rem; }
+        .article-body h2 { font-family: 'Inter', sans-serif; font-size: 1.6rem; font-weight: 800; color: #1a2332; margin-top: 3rem; margin-bottom: 1rem; }
+        .article-body h3 { font-family: 'Inter', sans-serif; font-size: 1.25rem; font-weight: 700; color: #334155; margin-top: 2rem; margin-bottom: 0.75rem; }
+        .article-body ul { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+        .article-body li { margin-bottom: 0.5rem; }
+        .article-body a { color: #2563eb; text-decoration: underline; text-decoration-color: rgba(37,99,235,0.3); text-underline-offset: 2px; }
+        .article-body a:hover { text-decoration-color: #2563eb; }
+        .pull-quote { border-left: 4px solid #b59a3a; padding: 1.25rem 1.5rem; margin: 2rem 0; background: linear-gradient(135deg, #fafdf7, #f8f6f0); border-radius: 0 8px 8px 0; }
+        .pull-quote p { font-family: 'Inter', sans-serif; font-size: 1.2rem; font-weight: 600; color: #1a2332; line-height: 1.6; margin: 0; font-style: italic; }
+        .pull-quote .attribution { font-size: 0.85rem; color: #64748b; margin-top: 0.5rem; font-style: normal; }
+        .stat-card { transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -12px rgba(26,35,50,0.15); }
+        .lesson-card { transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+        .lesson-card:hover { transform: translateY(-3px); box-shadow: 0 20px 40px -12px rgba(26,35,50,0.12); }
+        .hero-stat { animation: fadeUp 0.8s ease-out forwards; opacity: 0; }
+        .hero-stat:nth-child(1) { animation-delay: 0.1s; }
+        .hero-stat:nth-child(2) { animation-delay: 0.2s; }
+        .hero-stat:nth-child(3) { animation-delay: 0.3s; }
+        .hero-stat:nth-child(4) { animation-delay: 0.4s; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .tech-grid { background-image: linear-gradient(rgba(124,154,110,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(124,154,110,0.03) 1px, transparent 1px); background-size: 40px 40px; }
+        .timeline-line { position: relative; }
+        .timeline-line::before { content: ''; position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, #7c9a6e, #2563eb, #b59a3a, #ea580c); }
+        @media (min-width: 768px) {
+            .timeline-line::before { left: 50%; transform: translateX(-50%); }
+        }
+        .timeline-item { opacity: 0; transform: translateY(20px); transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .timeline-item.visible { opacity: 1; transform: translateY(0); }
+        .automation-node { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .automation-node:hover { transform: translateY(-2px); box-shadow: 0 12px 24px -8px rgba(26,35,50,0.1); }
+        .pulse-dot { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    </style>
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+    <meta property="og:image" content="https://aiai.co.uk/assets/img/og-share-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+</head>
+<body class="bg-aiai-cream text-slate-800 antialiased">
+
+    <!-- Navigation -->
+    <nav class="bg-white/80 backdrop-blur-md border-b border-slate-200/60 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="index.html" class="flex items-center gap-3 group">
+                    <img src="assets/img/aiai-wordmark-navy-transparent.png" alt="Adventures in AI" class="h-8 group-hover:scale-105 transition-transform">
+                </a>
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="index.html" class="text-sm font-medium text-slate-600 hover:text-aiai-navy transition-colors">Home</a>
+                    <a href="services.html" class="text-sm font-medium text-slate-600 hover:text-aiai-navy transition-colors">Services</a>
+                    <a href="case-studies.html" class="text-sm font-medium text-aiai-navy font-semibold">Case Studies</a>
+                    <a href="about.html" class="text-sm font-medium text-slate-600 hover:text-aiai-navy transition-colors">About</a>
+                    <a href="contact.html" class="inline-flex items-center px-4 py-2 bg-aiai-navy text-white text-sm font-semibold rounded-lg hover:bg-aiai-navy-light transition-colors">Get in Touch</a>
+                </div>
+                <button class="md:hidden p-2 text-slate-600" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+            </div>
+            <div id="mobile-menu" class="hidden md:hidden pb-4">
+                <a href="index.html" class="block py-2 text-sm font-medium text-slate-600">Home</a>
+                <a href="services.html" class="block py-2 text-sm font-medium text-slate-600">Services</a>
+                <a href="case-studies.html" class="block py-2 text-sm font-medium text-aiai-navy font-semibold">Case Studies</a>
+                <a href="about.html" class="block py-2 text-sm font-medium text-slate-600">About</a>
+                <a href="contact.html" class="block py-2 text-sm font-medium text-aiai-navy">Get in Touch</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero-gradient relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-20 left-20 w-72 h-72 bg-aiai-sage rounded-full blur-3xl"></div>
+            <div class="absolute bottom-20 right-20 w-96 h-96 bg-aiai-blue rounded-full blur-3xl"></div>
+        </div>
+        <div class="relative max-w-7xl mx-auto px-6 lg:px-8 py-20 lg:py-28">
+            <div class="max-w-4xl">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="inline-flex items-center px-3 py-1 bg-aiai-sage/20 text-aiai-sage-light text-xs font-bold uppercase tracking-wider rounded-full">Case Study</span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-white/10 text-white/70 text-xs font-medium rounded-full">
+                        <span class="w-1.5 h-1.5 bg-aiai-sage-light rounded-full pulse-dot"></span>
+                        Live System
+                    </span>
+                </div>
+                <h1 class="text-4xl lg:text-5xl font-black text-white leading-tight mb-6">
+                    The Machine That Runs Itself
+                </h1>
+                <p class="text-xl text-white/80 leading-relaxed mb-8 max-w-2xl font-serif">
+                    From one solar dashboard to thirty automated jobs running research, email triage, security, memory, and synthesis — without anyone asking them to. This is what happens when you stop doing the work and start building the system that does it.
+                </p>
+                <div class="flex flex-wrap gap-4 mb-10">
+                    <a href="#story" class="inline-flex items-center px-6 py-3 bg-white text-aiai-navy font-bold rounded-lg hover:bg-aiai-cream transition-colors text-sm">
+                        Read the Story
+                        <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </a>
+                    <a href="Automation-Case-Study.pdf" class="inline-flex items-center px-6 py-3 bg-aiai-sage/20 text-white font-semibold rounded-lg hover:bg-aiai-sage/30 transition-colors text-sm border border-aiai-sage/30">
+                        <svg class="mr-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        Download PDF
+                    </a>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="hero-stat bg-white/5 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/10">
+                        <p class="text-2xl font-black text-white tabular-nums">30</p>
+                        <p class="text-xs text-white/50 mt-0.5">Automated jobs</p>
+                    </div>
+                    <div class="hero-stat bg-white/5 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/10">
+                        <p class="text-2xl font-black text-white tabular-nums">24/7</p>
+                        <p class="text-xs text-white/50 mt-0.5">Operation</p>
+                    </div>
+                    <div class="hero-stat bg-white/5 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/10">
+                        <p class="text-2xl font-black text-white tabular-nums">6</p>
+                        <p class="text-xs text-white/50 mt-0.5">AI agents</p>
+                    </div>
+                    <div class="hero-stat bg-white/5 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/10">
+                        <p class="text-2xl font-black text-white tabular-nums">4,553kg</p>
+                        <p class="text-xs text-white/50 mt-0.5">CO₂ saved</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Article Body -->
+    <article id="story" class="max-w-4xl mx-auto px-6 lg:px-8 py-16 lg:py-20">
+        <div class="article-body">
+
+            <p class="text-xl leading-relaxed text-slate-600 font-serif mb-8">
+                Everyone talks about automating a task. No one talks about automating the office — the monitoring, the triage, the research, the memory, the synthesis that makes a business actually run. We didn't set out to build a self-operating system. We just kept automating the next thing that was wasting our time. Two years later, we looked up and realised the machine was running itself.
+            </p>
+
+            <h2>It Started With a Solar Panel</h2>
+
+            <p>
+                Like a lot of good automation stories, this one started with a bill. Specifically, an electricity bill that didn't make sense. Solar panels on the roof, a battery in the garage, an export tariff that changed every half hour — and no way to see what was actually happening in real time.
+            </p>
+
+            <p>
+                The first step was a dashboard. FastAPI on the backend, HTMX for the front end, Tailwind for styling. Nothing fancy — just a page that pulled live data from the Lux Power Tek inverter API and the Octopus Energy grid API, and showed you what your solar panels were doing right now. Generation, battery state, grid import, grid export, and — critically — what it was all costing.
+            </p>
+
+            <div class="pull-quote">
+                <p>"The moment you can see the numbers live, you start making different decisions. You don't run heavy-draw equipment at 6pm when import is 28p. You schedule it for 2pm when the panels are bursting and the battery's full."</p>
+                <div class="attribution">— Adam Box, founder</div>
+            </div>
+
+            <p>
+                The dashboard worked. Then it got better. Annual projections using weather data from Open-Meteo and yield baselines from PVGIS. Live export estimates when the billing data hadn't caught up. A correction factor to account for the inverter reporting self-consumption as "export." Each addition was small. Together, they turned a monitoring screen into a decision-making tool.
+            </p>
+
+            <p>
+                Then came the widget. A macOS desktop widget — small and medium sizes, aurora gradient design — that sits on the desktop and updates every fifteen minutes. No opening a browser, no checking a tab. Just a glance and you know: panels are generating, battery is at 87%, grid import is zero. The information is ambient. You don't have to look for it.
+            </p>
+
+            <h2>Then the Alerts Learned to Think</h2>
+
+            <p>
+                Seeing the data is one thing. Acting on it is another. The Octopus Agile tariff changes price every half hour. Sometimes prices go negative — the grid literally pays you to use electricity. But you have to know when that's happening, and you have to know in time to do something about it.
+            </p>
+
+            <p>
+                So we automated the alerts. Every thirty minutes, a scheduled job checks the Agile pricing API. If prices are negative or unusually low, it sends an iMessage: <em>"Prices negative at 2:30pm — run heavy-draw equipment, charge the EV, schedule high-energy processes while the grid's paying you."</em> If nothing's unusual, you hear nothing. The system knows the difference between information and noise.
+            </p>
+
+            <p>
+                A daily briefing follows at 4:30pm — a summary of tomorrow's pricing patterns, delivered to iMessage so it's there when Adam finishes work and starts thinking about the evening. Again: the right information, at the right time, through the right channel. No app to check. No dashboard to open. The system pushes what you need, when you need it.
+            </p>
+
+            <h2>The Email Started Sorting Itself</h2>
+
+            <p>
+                Here's where it stopped being about solar and started being about the office. Three email accounts — personal, business, and the new Adventures in AI contact address — and a growing pile of newsletters, enquiries, spam, and the occasional genuinely important message buried in the middle of it all.
+            </p>
+
+            <p>
+                The email monitor runs every thirty minutes. It scans all three inboxes, reads every new email, and triages them into four categories:
+            </p>
+
+            <ul>
+                <li><strong>Critical</strong> — security alerts, payment failures. Gets an immediate iMessage.</li>
+                <li><strong>Action</strong> — questions needing a human response, meeting invites, business enquiries. Logged and batched — if three or more pile up, one summary iMessage goes out.</li>
+                <li><strong>Info</strong> — newsletters, industry updates, anything relevant to active projects. Assessed for value, routed to the right agent, logged for the weekly synthesis.</li>
+                <li><strong>Noise</strong> — spam, irrelevant marketing, clickbait. Marked read and forgotten.</li>
+            </ul>
+
+            <p>
+                The clever bit isn't the categorisation. It's the <em>value assessment</em>. Every Info and Action email gets evaluated: is this high-value (directly relevant to a project or opportunity), low-value (mildly interesting but no action), or just noise? High-value items get routed — to the research agent, the project board, the weekly synthesis. Low-value items get a brief note. Noise gets binned.
+            </p>
+
+            <p>
+                When an email contains a link — a newsletter pointing to an article, a Twitter thread from Adam — the system follows it first, reads what's on the other side, and <em>then</em> assesses value. It doesn't judge a link by its subject line. It judges it by what's actually there.
+            </p>
+
+            <h2>Research Without the Researcher</h2>
+
+            <p>
+                Every Monday, Wednesday, and Friday at 7:30am, Gav — the research agent — wakes up and produces the AI Digest. He scans a curated list of accounts on X/Twitter, checks Reddit for model releases and benchmarks, and looks for actionable developments: tools that shipped, monetisation patterns that worked, open-source releases that matter.
+            </p>
+
+            <p>
+                The output is an HTML report, emailed to Adam before he's even looked at his phone. Not a link dump — a curated, assessed digest with clear categories: Actionable (do something with this), Watch (keep an eye on it), and Skip (it's hype, move on). The account list itself is tiered. Tier 1 gets checked every time. Tier 2 always. Tier 3 on Fridays only. Accounts that consistently produce actionable content get promoted. Those that don't get demoted. The research system evolves based on what works.
+            </p>
+
+            <p>
+                On Tuesdays, Thursdays, and Saturdays, a different agent — Neo — does the same thing with YouTube. Nine channels monitored, transcripts pulled for new videos, insights extracted and filed. The focus is the same: not "what happened" but "what should we do about it?"
+            </p>
+
+            <h2>The Sunday Synthesis</h2>
+
+            <p>
+                This is where it gets genuinely impressive. Every Sunday at 3am — while everyone sleeps — Bee, the coordinator agent, produces the Weekly Cross-Source Synthesis.
+            </p>
+
+            <p>
+                This isn't another digest. It's a strategic review. It reads:
+            </p>
+
+            <ul>
+                <li>All BeeBoard pins — the living goals, ideas, and tasks that represent Adam's strategic priorities</li>
+                <li>All active project STATUS files — what's moving, what's stuck, what changed this week</li>
+                <li>All research from the week — YouTube insights, Gav's AI Digests, platform release radar</li>
+                <li>All email triage — what came in, what was valuable, what got routed where</li>
+                <li>All daily memory logs — the raw record of what actually happened</li>
+                <li>The current system config — models, agents, providers, costs</li>
+            </ul>
+
+            <div class="pull-quote">
+                <p>"The Sunday synthesis connects things that a human would miss because they happened in different channels on different days. A YouTube insight about agent coding patterns on Thursday connects to a BeeBoard pin about Codex supervision from last month. That's not aggregation — that's synthesis."</p>
+            </div>
+
+            <p>
+                The output: a full strategic brief. Every goal reviewed for progress. Every project checked for blockers. Cross-source connections surfaced. Actions prioritised for the coming week. New goals suggested. Stale ones flagged for closure.
+            </p>
+
+            <p>
+                On Fridays at 4pm, a follow-up job checks: did we act on those recommendations? It reads the week's memory logs, compares against the Sunday actions, and presents each item with a clear choice — scope it, done already, or park it. The system doesn't just recommend. It follows up on its own recommendations.
+            </p>
+
+            <h2>The Infrastructure That Nobody Thinks About</h2>
+
+            <p>
+                Underneath all the visible automation, a layer of infrastructure keeps everything running:
+            </p>
+
+            <ul>
+                <li><strong>Memory dreaming</strong> — three phases every night at 3am. The system reviews recent conversations, promotes important patterns to long-term memory, and makes creative connections between seemingly unrelated events. Light, Deep, and REM phases, each doing different work. This is how an AI system remembers what matters without hoarding everything.</li>
+                <li><strong>iMessage health checks</strong> — every four hours, the system pings the iMessage bridge. If it detects XPC degradation (a known macOS issue where the messaging process silently breaks), it kills and restarts the service. Nobody notices because it's fixed before it matters.</li>
+                <li><strong>Security scans</strong> — weekly bloat audit and security review. Disk usage, stale sessions, model cleanup, permission checks.</li>
+                <li><strong>Log rotation</strong> — daily, keeps seven compressed backups, maximum 10MB each. Because logs grow forever if you let them.</li>
+                <li><strong>Platform release radar</strong> — every Monday, scan for new Ollama models, OpenClaw updates, provider price changes, and new tools. Categorised as Act Now, Consider, or Aware. Specific recommendations, not vague awareness.</li>
+                <li><strong>Git crawl sync</strong> — every three hours, sync repository state across all active projects. New issues, new PRs, status changes — all captured without anyone checking manually.</li>
+            </ul>
+
+            <p>
+                None of this is glamorous. It's the digital equivalent of checking the boiler pressure and testing the smoke alarms. But without it, the visible automation degrades. The email monitor misses things because iMessage broke. The synthesis runs on stale data because the repos didn't sync. The widget shows yesterday's numbers because no one rotated the logs and the disk filled up.
+            </p>
+
+            <p>
+                Infrastructure is the difference between a demo and a system.
+            </p>
+
+            <h2>The Lark Watcher</h2>
+
+            <p>
+                A practical example of how this scales to business needs. Adam's day job uses Lark (formerly Feishu) for internal messaging. It's not something OpenClaw natively integrates with — there's no API key, no webhook, no plugin.
+            </p>
+
+            <p>
+                So three times a day — 8am, 12pm, 5pm on weekdays — a scheduled job opens a browser, navigates to Lark Messenger, reads the screen, identifies any new or unread messages, and sends a summary via email. If there's nothing new, you hear nothing. If the session has expired and needs re-authentication, it sends an immediate iMessage alert — because a broken authentication is more urgent than a missed message.
+            </p>
+
+            <p>
+                This is automation in the real world. Not everything has an API. Not everything has a webhook. Sometimes you need a browser, a schedule, and the judgment to know the difference between "nothing happened" and "something broke."
+            </p>
+
+            <h2>Even the Appointment Watch</h2>
+
+            <p>
+                Anyone who's used an online GP booking system knows the frustration: you log in, check for appointments, find nothing available, log out, try again tomorrow. The slots appear and disappear in windows so narrow that human checking cadences almost always miss them. You need to see a specific doctor. The system only shows you what's available right now. So you keep checking.
+            </p>
+
+            <p>
+                This is exactly the kind of repetitive watching that humans are bad at and machines are good at. So we automated it. Three times a day, the system logs into the booking portal, navigates to the appointments page, and checks for available slots with a specific clinician. If one appears, an alert goes out. If only other clinicians are available, no message — the requirement was specific. If no appointments are available at all, no message. The system doesn't book. It doesn't access patient records. It watches and alerts, with the exact specificity that was asked for.
+            </p>
+
+            <div class="pull-quote">
+                <p>"The appointment watch is the thing that makes people go quiet when I describe the system. It's not impressive because it's technically hard. It's impressive because it's the kind of thing nobody thinks to automate — and then you realise how much of your day is spent doing exactly this kind of watching and waiting."</p>
+            </div>
+
+            <h2>The Full Inventory</h2>
+
+            <p>
+                Thirty scheduled jobs. Here's what's actually running, right now, on this system:
+            </p>
+
+            <!-- Automation Grid -->
+            <div class="not-prose my-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Solar & Energy -->
+                    <div class="automation-node bg-white rounded-xl border border-aiai-border p-5">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="w-2 h-2 bg-aiai-sage rounded-full pulse-dot"></span>
+                            <h4 class="text-sm font-bold text-aiai-navy uppercase tracking-wider">Solar & Energy</h4>
+                        </div>
+                        <ul class="space-y-1.5 text-sm text-slate-600">
+                            <li>Widget data update — every 15 min</li>
+                            <li>Agile live price check — every 30 min</li>
+                            <li>Agile daily briefing — 4:30pm daily</li>
+                            <li>Annual projection refresh — continuous</li>
+                        </ul>
+                    </div>
+                    <!-- Communication -->
+                    <div class="automation-node bg-white rounded-xl border border-aiai-border p-5">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="w-2 h-2 bg-aiai-blue rounded-full pulse-dot"></span>
+                            <h4 class="text-sm font-bold text-aiai-navy uppercase tracking-wider">Communication</h4>
+                        </div>
+                        <ul class="space-y-1.5 text-sm text-slate-600">
+                            <li>Email triage (3 accounts) — every 30 min</li>
+                            <li>Lark Messenger check — 3× daily weekdays</li>
+                            <li>iMessage health check — every 4 hours</li>
+                            <li>SystmOnline appointment check — 3× daily</li>
+                        </ul>
+                    </div>
+                    <!-- Research -->
+                    <div class="automation-node bg-white rounded-xl border border-aiai-border p-5">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="w-2 h-2 bg-aiai-gold rounded-full pulse-dot"></span>
+                            <h4 class="text-sm font-bold text-aiai-navy uppercase tracking-wider">Research & Intelligence</h4>
+                        </div>
+                        <ul class="space-y-1.5 text-sm text-slate-600">
+                            <li>AI Digest (X + Reddit) — MWF 7:30am</li>
+                            <li>YouTube channel monitor — T/Th/Sat 9am</li>
+                            <li>Weekly YouTube catch-up — Mondays 10am</li>
+                            <li>Platform release radar — Mondays 3am</li>
+                        </ul>
+                    </div>
+                    <!-- Synthesis -->
+                    <div class="automation-node bg-white rounded-xl border border-aiai-border p-5">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="w-2 h-2 bg-aiai-orange rounded-full pulse-dot"></span>
+                            <h4 class="text-sm font-bold text-aiai-navy uppercase tracking-wider">Synthesis & Strategy</h4>
+                        </div>
+                        <ul class="space-y-1.5 text-sm text-slate-600">
+                            <li>Sunday cross-source synthesis — Sun 3am</li>
+                            <li>Friday action follow-up — Fri 4pm</li>
+                            <li>Weekly bloat audit + security scan</li>
+                            <li>Model override cleanup — every 6 hours</li>
+                        </ul>
+                    </div>
+                    <!-- Infrastructure -->
+                    <div class="automation-node bg-white rounded-xl border border-aiai-border p-5">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="w-2 h-2 bg-slate-400 rounded-full pulse-dot"></span>
+                            <h4 class="text-sm font-bold text-aiai-navy uppercase tracking-wider">Infrastructure</h4>
+                        </div>
+                        <ul class="space-y-1.5 text-sm text-slate-600">
+                            <li>Memory dreaming (3 phases) — daily 3am</li>
+                            <li>Log rotation — daily 4am</li>
+                            <li>Session archiving — weekly</li>
+                            <li>Git crawl sync — every 3 hours</li>
+                            <li>Wiki frontmatter maintenance — daily 3:30am</li>
+                            <li>OpenClaw update check — daily 9:05am</li>
+                        </ul>
+                    </div>
+                    <!-- One-Shots & Special -->
+                    <div class="automation-node bg-white rounded-xl border border-aiai-border p-5">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="w-2 h-2 bg-purple-400 rounded-full"></span>
+                            <h4 class="text-sm font-bold text-aiai-navy uppercase tracking-wider">Special</h4>
+                        </div>
+                        <ul class="space-y-1.5 text-sm text-slate-600">
+                            <li>Model availability watch — weekly</li>
+                            <li>Smart Energy Optimiser alerts</li>
+                            <li>BeeBoard pin extraction for synthesis</li>
+                            <li>Custom one-shot reminders</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h2>The Architecture Principle</h2>
+
+            <p>
+                There's a pattern here that matters more than any individual job. Every automation in this system follows the same principle:
+            </p>
+
+            <p>
+                <strong>Push, don't pull.</strong>
+            </p>
+
+            <p>
+                Traditional software makes you go look for information — open a dashboard, check an inbox, refresh a page. This system pushes. The solar widget is on the desktop. The Agile alert arrives by iMessage. The email triage happens silently and only surfaces what matters. The research digest arrives by email before you're awake. The Sunday synthesis connects dots you didn't know were dots.
+            </p>
+
+            <p>
+                The user doesn't check the system. The system checks itself, and only speaks when it has something to say.
+            </p>
+
+            <p>
+                That's the architectural difference between a collection of scripts and a self-operating office. Scripts wait to be run. A self-operating system runs itself and reports by exception.
+            </p>
+
+            <h2>What We Learned Building It</h2>
+
+            <!-- Lesson Cards -->
+            <div class="not-prose my-10 space-y-4">
+                <div class="lesson-card bg-white rounded-xl border border-aiai-border p-6">
+                    <div class="flex items-start gap-4">
+                        <span class="flex-shrink-0 w-10 h-10 bg-aiai-sage-bg rounded-lg flex items-center justify-center text-aiai-sage font-bold text-lg">1</span>
+                        <div>
+                            <h4 class="font-bold text-aiai-navy mb-1">Start with what's annoying you</h4>
+                            <p class="text-slate-600 text-sm leading-relaxed">Nobody sat down and designed a "self-operating office." We automated the electricity bill. Then the email. Then the research. Each step was small and obvious. The system emerged from the sequence, not from a plan.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="lesson-card bg-white rounded-xl border border-aiai-border p-6">
+                    <div class="flex items-start gap-4">
+                        <span class="flex-shrink-0 w-10 h-10 bg-aiai-sage-bg rounded-lg flex items-center justify-center text-aiai-sage font-bold text-lg">2</span>
+                        <div>
+                            <h4 class="font-bold text-aiai-navy mb-1">Push beats pull every time</h4>
+                            <p class="text-slate-600 text-sm leading-relaxed">If your automation still requires someone to check it, it's not automated — it's just faster. The real shift happens when the system comes to you: alerts for what's urgent, silence for what isn't. Design for the recipient, not the data.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="lesson-card bg-white rounded-xl border border-aiai-border p-6">
+                    <div class="flex items-start gap-4">
+                        <span class="flex-shrink-0 w-10 h-10 bg-aiai-sage-bg rounded-lg flex items-center justify-center text-aiai-sage font-bold text-lg">3</span>
+                        <div>
+                            <h4 class="font-bold text-aiai-navy mb-1">Infrastructure is the difference between demo and production</h4>
+                            <p class="text-slate-600 text-sm leading-relaxed">The email monitor, the synthesis, the research digest — none of it works if iMessage broke yesterday and no one noticed. Health checks, log rotation, session cleanup: invisible work that keeps visible work running. If you're not automating the maintenance, you're not done.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="lesson-card bg-white rounded-xl border border-aiai-border p-6">
+                    <div class="flex items-start gap-4">
+                        <span class="flex-shrink-0 w-10 h-10 bg-aiai-sage-bg rounded-lg flex items-center justify-center text-aiai-sage font-bold text-lg">4</span>
+                        <div>
+                            <h4 class="font-bold text-aiai-navy mb-1">Value assessment is more important than categorisation</h4>
+                            <p class="text-slate-600 text-sm leading-relaxed">Sorting email into "important" and "not important" is table stakes. The real value is asking: what happens next with this? Does it connect to a project? Does it change a decision? Does it just sit there? Route the high-value stuff. Note the low-value stuff. Bin the noise. The system should have opinions about what matters.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="lesson-card bg-white rounded-xl border border-aiai-border p-6">
+                    <div class="flex items-start gap-4">
+                        <span class="flex-shrink-0 w-10 h-10 bg-aiai-sage-bg rounded-lg flex items-center justify-center text-aiai-sage font-bold text-lg">5</span>
+                        <div>
+                            <h4 class="font-bold text-aiai-navy mb-1">Synthesis is the crown jewel</h4>
+                            <p class="text-slate-600 text-sm leading-relaxed">Any system can collect information. The Sunday synthesis is different because it connects information. A YouTube insight on Thursday and an email enquiry on Tuesday and a BeeBoard goal from last month — separately, they're data points. Connected, they're a strategy. The highest-value automation is the one that makes connections a human would miss.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="lesson-card bg-white rounded-xl border border-aiai-border p-6">
+                    <div class="flex items-start gap-4">
+                        <span class="flex-shrink-0 w-10 h-10 bg-aiai-sage-bg rounded-lg flex items-center justify-center text-aiai-sage font-bold text-lg">6</span>
+                        <div>
+                            <h4 class="font-bold text-aiai-navy mb-1">Not everything has an API — and that's okay</h4>
+                            <p class="text-slate-600 text-sm leading-relaxed">The Lark Messenger check and the GP appointment check don't use APIs. They use a browser, a schedule, and judgment. In the real world, most business systems aren't API-first. If your automation only works when there's a clean integration, it only works in demos. Build for the world you actually live in.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2>What This Means for Your Business</h2>
+
+            <p>
+                You don't need thirty automated jobs. You probably need three or four — the ones that are eating your time right now. The email you check obsessively. The pricing you should be tracking. The competitor moves you keep missing because you were busy with the email.
+            </p>
+
+            <p>
+                But the principle scales. Start with the annoyance. Automate the next obvious thing. Let the system push instead of making you pull. Build the infrastructure that keeps it running. And when you look up, you'll find that the machine runs itself — and you're free to do the work that actually needs a human.
+            </p>
+
+            <p>
+                We can help you get there. Whether you want us to build it with you, or you want to build it yourself and just need someone who's already made the mistakes — we've been where you are, and we know the path from "one annoying task" to "a system that works while you sleep."
+            </p>
+
+        </div>
+    </article>
+
+    <!-- CTA Section -->
+    <section class="bg-aiai-navy relative overflow-hidden">
+        <div class="absolute inset-0 opacity-5">
+            <div class="absolute top-10 right-10 w-64 h-64 bg-aiai-sage rounded-full blur-3xl"></div>
+        </div>
+        <div class="relative max-w-4xl mx-auto px-6 lg:px-8 py-16 text-center">
+            <h2 class="text-3xl font-black text-white mb-4">Ready to Stop Checking and Start Building?</h2>
+            <p class="text-white/70 text-lg mb-8 max-w-2xl mx-auto font-serif">
+                Whether you want a self-operating office or just want to stop checking your email every ten minutes, we can help. From a single automation to a full system — we've built it, we run it, and we can show you how.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="contact.html" class="inline-flex items-center px-8 py-3.5 bg-white text-aiai-navy font-bold rounded-lg hover:bg-aiai-cream transition-colors">Talk to Us</a>
+                <a href="case-studies.html" class="inline-flex items-center px-8 py-3.5 bg-aiai-sage/20 text-white font-semibold rounded-lg hover:bg-aiai-sage/30 transition-colors border border-aiai-sage/30">More Case Studies</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-aiai-dark text-white/60 py-12">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex items-center gap-3">
+                    <img src="assets/img/aiai-wordmark-navy-transparent.png" alt="Adventures in AI" class="h-6 brightness-200">
+                </div>
+                <div class="flex items-center gap-6 text-sm">
+                    <a href="index.html" class="hover:text-white transition-colors">Home</a>
+                    <a href="services.html" class="hover:text-white transition-colors">Services</a>
+                    <a href="case-studies.html" class="hover:text-white transition-colors">Case Studies</a>
+                    <a href="about.html" class="hover:text-white transition-colors">About</a>
+                    <a href="contact.html" class="hover:text-white transition-colors">Contact</a>
+                </div>
+                <p class="text-xs">© 2026 Adventures in AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
