@@ -161,18 +161,56 @@
             </article>
         </a>
 
-        <!-- Case Study 2: Placeholder — Light card, different visual treatment -->
-        <div class="relative bg-white rounded-2xl border-2 border-dashed border-aiai-border p-8 lg:p-10 flex flex-col items-center justify-center text-center min-h-[380px]">
-            <div class="w-16 h-16 rounded-full bg-aiai-cream flex items-center justify-center mb-4">
-                <svg class="w-8 h-8 text-aiai-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 5v14M5 12h14"/>
-                </svg>
-            </div>
-            <h3 class="text-xl font-bold text-aiai-navy mb-2">Coming Soon</h3>
-            <p class="text-aiai-muted text-sm leading-relaxed max-w-xs">
-                The next case study is in the works — another real story, another real business problem, another proof over promise.
-            </p>
-        </div>
+        <!-- Case Study 2: Multi-Model Journey — Warm gradient card, cost/practical narrative -->
+        <a href="case-study-multi-model.html" class="group block">
+            <article class="relative bg-gradient-to-br from-aiai-navy via-aiai-navy-light to-aiai-navy rounded-2xl overflow-hidden transition-all duration-350 group-hover:shadow-2xl group-hover:shadow-aiai-navy/30 group-hover:-translate-y-1">
+                <!-- Decorative gradient overlay -->
+                <div class="absolute inset-0 bg-gradient-to-br from-aiai-orange/15 via-transparent to-aiai-sage/15"></div>
+                <!-- Subtle grid pattern -->
+                <div class="absolute inset-0 opacity-5" style="background-image: linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px); background-size: 32px 32px;"></div>
+                <div class="relative p-8 lg:p-10">
+                    <!-- Tag row -->
+                    <div class="flex items-center gap-2 mb-5">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-aiai-orange/20 text-orange-300 text-xs font-semibold rounded-full uppercase tracking-wide">
+                            <span class="w-1.5 h-1.5 bg-orange-300 rounded-full animate-pulse"></span>
+                            Cost Strategy
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-aiai-sage/20 text-aiai-sage-light text-xs font-semibold rounded-full uppercase tracking-wide">
+                            Multi-Provider
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-aiai-gold/20 text-yellow-300 text-xs font-semibold rounded-full uppercase tracking-wide">
+                            Practical
+                        </span>
+                    </div>
+                    <h2 class="text-2xl lg:text-3xl font-extrabold text-white mb-3 leading-tight group-hover:text-aiai-orange transition-colors">
+                        From One Model to Many
+                    </h2>
+                    <p class="text-white/60 text-sm font-serif leading-relaxed mb-6">
+                        The real journey from pay-per-token burn to a multi-provider AI team running 24/7. The costs, the rate limits, the subscriptions, the free-tier discoveries — and what it means for your business.
+                    </p>
+                    <!-- Key stats row -->
+                    <div class="grid grid-cols-3 gap-4 pt-6 border-t border-white/10">
+                        <div>
+                            <p class="text-2xl font-extrabold text-white tabular-nums">8+</p>
+                            <p class="text-xs text-white/40 mt-1">AI Providers</p>
+                        </div>
+                        <div>
+                            <p class="text-2xl font-extrabold text-white tabular-nums">67%</p>
+                            <p class="text-xs text-white/40 mt-1">Cost reduction</p>
+                        </div>
+                        <div>
+                            <p class="text-2xl font-extrabold text-white tabular-nums">9</p>
+                            <p class="text-xs text-white/40 mt-1">Specialist agents</p>
+                        </div>
+                    </div>
+                    <!-- CTA arrow -->
+                    <div class="mt-8 flex items-center gap-2 text-aiai-orange font-semibold text-sm">
+                        Read the full story
+                        <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    </div>
+                </div>
+            </article>
+        </a>
 
     </div>
 

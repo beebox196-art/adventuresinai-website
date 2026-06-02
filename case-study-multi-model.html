@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study: From One Model to Many — Building an AI Stack That Doesn't Break the Bank | Adventures in AI</title>
+    <meta name="description" content="How we built a multi-provider AI team that runs 24/7 — the costs, the crises, the workarounds, and the lessons. Not theory. Lived experience.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'aiai-navy': '#1a2332',
+                        'aiai-navy-light': '#243447',
+                        'aiai-blue': '#2563eb',
+                        'aiai-blue-light': '#3b82f6',
+                        'aiai-sage': '#7c9a6e',
+                        'aiai-sage-light': '#a3bc96',
+                        'aiai-sage-bg': '#f0f5ed',
+                        'aiai-cream': '#faf9f6',
+                        'aiai-dark': '#0f172a',
+                        'aiai-muted': '#64748b',
+                        'aiai-border': '#e2e8f0',
+                        'aiai-orange': '#ea580c',
+                        'aiai-gold': '#b59a3a',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                        serif: ['Merriweather', 'Georgia', 'serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-gradient { background: linear-gradient(135deg, #1a2332 0%, #243447 50%, #1a2332 100%); }
+        .article-body { font-family: 'Merriweather', Georgia, serif; font-size: 1.05rem; line-height: 1.85; color: #1e293b; }
+        .article-body p { margin-bottom: 1.5rem; }
+        .article-body h2 { font-family: 'Inter', sans-serif; font-size: 1.6rem; font-weight: 800; color: #1a2332; margin-top: 3rem; margin-bottom: 1rem; }
+        .article-body h3 { font-family: 'Inter', sans-serif; font-size: 1.25rem; font-weight: 700; color: #334155; margin-top: 2rem; margin-bottom: 0.75rem; }
+        .article-body ul { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+        .article-body li { margin-bottom: 0.5rem; }
+        .article-body a { color: #2563eb; text-decoration: underline; text-decoration-color: rgba(37,99,235,0.3); text-underline-offset: 2px; }
+        .article-body a:hover { text-decoration-color: #2563eb; }
+        .pull-quote { border-left: 4px solid #b59a3a; padding: 1.25rem 1.5rem; margin: 2rem 0; background: linear-gradient(135deg, #fafdf7, #f8f6f0); border-radius: 0 8px 8px 0; }
+        .pull-quote p { font-family: 'Inter', sans-serif; font-size: 1.2rem; font-weight: 600; color: #1a2332; line-height: 1.6; margin: 0; font-style: italic; }
+        .pull-quote .attribution { font-size: 0.85rem; color: #64748b; margin-top: 0.5rem; font-style: normal; }
+        .stat-card { transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -12px rgba(26,35,50,0.15); }
+        .lesson-card { transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+        .lesson-card:hover { transform: translateY(-3px); box-shadow: 0 20px 40px -12px rgba(26,35,50,0.12); }
+        .hero-stat { animation: fadeUp 0.8s ease-out forwards; opacity: 0; }
+        .hero-stat:nth-child(1) { animation-delay: 0.1s; }
+        .hero-stat:nth-child(2) { animation-delay: 0.2s; }
+        .hero-stat:nth-child(3) { animation-delay: 0.3s; }
+        .hero-stat:nth-child(4) { animation-delay: 0.4s; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .tech-grid { background-image: linear-gradient(rgba(37,99,235,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(37,99,235,0.03) 1px, transparent 1px); background-size: 40px 40px; }
+        .timeline-line { position: relative; }
+        .timeline-line::before { content: ''; position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, #ea580c, #2563eb, #7c9a6e, #b59a3a); }
+        @media (min-width: 768px) {
+            .timeline-line::before { left: 50%; transform: translateX(-50%); }
+        }
+        .timeline-item { opacity: 0; transform: translateY(20px); transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .timeline-item.visible { opacity: 1; transform: translateY(0); }
+        .provider-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .provider-card:hover { transform: translateY(-2px); box-shadow: 0 12px 24px -8px rgba(26,35,50,0.1); }
+    </style>
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+    <meta property="og:image" content="https://aiai.co.uk/assets/img/og-share-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="theme-color" content="#1a2332">
+</head>
+<body class="min-h-screen bg-aiai-cream font-sans text-aiai-dark antialiased pb-16 md:pb-0">
+
+<!-- Navigation -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-aiai-border/50">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16 lg:h-20">
+            <a href="index.html" class="flex items-center group">
+                <img src="assets/img/aiai-wordmark-navy-transparent.png" alt="AIAI — Adventures in AI" class="h-8 md:h-9.5 w-auto object-contain transition-transform group-hover:scale-105">
+            </a>
+            <div class="hidden lg:flex items-center lg:gap-0.5 xl:gap-1">
+                <a href="index.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Home</a>
+                <a href="understanding-ai.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Understanding AI</a>
+                <a href="proof.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Proof</a>
+                <a href="services.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Services</a>
+                <a href="build-with-us.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Build With Us</a>
+                <a href="case-studies.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-blue bg-blue-50 rounded-lg">Case Studies</a>
+                <a href="contact.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Contact</a>
+            </div>
+            <div class="hidden lg:flex items-center lg:gap-2 xl:gap-4">
+                <a href="contact.html" class="inline-flex items-center gap-2 px-4 lg:px-4 xl:px-5 py-2 lg:py-2 xl:py-2.5 bg-aiai-blue text-white text-xs lg:text-xs xl:text-sm font-semibold rounded-lg hover:bg-aiai-blue-light transition-colors shadow-sm">
+                    Start a Conversation
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                </a>
+            </div>
+            <button class="hidden md:flex lg:hidden p-2 rounded-lg hover:bg-aiai-cream transition-colors" aria-label="Toggle navigation menu" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16"></path><path d="M4 12h16"></path><path d="M4 18h16"></path></svg>
+            </button>
+        </div>
+    </div>
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-aiai-border bg-white">
+        <div class="px-6 py-4 space-y-2">
+            <a href="index.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Home</a>
+            <a href="understanding-ai.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Understanding AI</a>
+            <a href="proof.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Proof</a>
+            <a href="services.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Services</a>
+            <a href="build-with-us.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Build With Us</a>
+            <a href="case-studies.html" class="block px-3 py-2 text-sm font-medium text-aiai-blue bg-blue-50 rounded-lg">Case Studies</a>
+            <a href="contact.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Contact</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="relative pt-28 pb-16 lg:pt-32 lg:pb-20 xl:pt-36 xl:pb-24 overflow-hidden hero-gradient">
+    <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute top-16 right-[10%] w-96 h-96 bg-aiai-orange/8 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-0 left-[5%] w-72 h-72 bg-aiai-blue/8 rounded-full blur-[100px]"></div>
+        <div class="absolute top-1/2 right-1/4 w-48 h-48 bg-aiai-sage/5 rounded-full blur-[80px]"></div>
+        <div class="absolute inset-0 tech-grid"></div>
+    </div>
+    <div class="relative max-w-4xl mx-auto px-6 lg:px-8 text-center">
+        <!-- Breadcrumb -->
+        <div class="mb-4">
+            <a href="case-studies.html" class="inline-flex items-center gap-1.5 text-sm text-white/50 hover:text-aiai-sage-light transition-colors">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                <span>All Case Studies</span>
+            </a>
+        </div>
+        <div class="inline-flex items-center gap-2 px-4 py-2 bg-aiai-orange/10 border border-aiai-orange/20 rounded-full mb-6">
+            <span class="text-xs font-semibold uppercase tracking-widest text-orange-300">Case Study</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-white mb-6 leading-tight tracking-tight">
+            From One Model<br><span class="text-aiai-sage-light">to Many</span>
+        </h1>
+        <p class="text-lg lg:text-xl text-white/65 leading-relaxed max-w-2xl mx-auto mb-8">
+            Building an AI stack that doesn't break the bank — the real journey from pay-per-token burn to a multi-provider team running 24/7. Costs, crises, workarounds, and lessons.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-4 text-sm text-white/40">
+            <span>June 2026</span>
+            <span class="w-1 h-1 bg-white/30 rounded-full"></span>
+            <span>Adventures in AI</span>
+            <span class="w-1 h-1 bg-white/30 rounded-full"></span>
+            <span>10 min read</span>
+        </div>
+        <div class="mt-6">
+            <a href="Multi-Model-Case-Study.pdf" download class="inline-flex items-center gap-2 px-5 py-2.5 bg-white/10 border border-white/20 text-white text-sm font-semibold rounded-lg hover:bg-white/20 transition-all">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                Download as PDF
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Hero Stats -->
+<section class="relative -mt-8 z-10">
+    <div class="max-w-4xl mx-auto px-6 lg:px-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+            <div class="hero-stat stat-card bg-white rounded-xl p-5 text-center border border-aiai-border/50">
+                <div class="text-2xl lg:text-3xl font-extrabold text-aiai-orange">8+</div>
+                <div class="text-xs font-medium text-aiai-muted mt-1">AI Providers</div>
+            </div>
+            <div class="hero-stat stat-card bg-white rounded-xl p-5 text-center border border-aiai-border/50">
+                <div class="text-2xl lg:text-3xl font-extrabold text-aiai-blue">9</div>
+                <div class="text-xs font-medium text-aiai-muted mt-1">Specialist Agents</div>
+            </div>
+            <div class="hero-stat stat-card bg-white rounded-xl p-5 text-center border border-aiai-border/50">
+                <div class="text-2xl lg:text-3xl font-extrabold text-aiai-sage">67%</div>
+                <div class="text-xs font-medium text-aiai-muted mt-1">Cost Reduction</div>
+            </div>
+            <div class="hero-stat stat-card bg-white rounded-xl p-5 text-center border border-aiai-border/50">
+                <div class="text-2xl lg:text-3xl font-extrabold text-aiai-gold">0</div>
+                <div class="text-xs font-medium text-aiai-muted mt-1">Single Points of Failure</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Article Content -->
+<article class="max-w-3xl mx-auto px-6 lg:px-8 py-12 lg:py-16">
+    <div class="article-body">
+
+        <h2>Part 1: The Starting Problem</h2>
+
+        <h3>Pay-Per-Token Is the Only Way In</h3>
+        <p>When we first set up our AI team in early 2026, there was really only one practical option: route everything through OpenRouter, the API aggregator that gives you access to dozens of models via a single key. It was brilliant for getting started — one account, one API, pick your model per call. No contracts, no waiting, no enterprise sales calls.</p>
+
+        <p>The problem? Every single token cost money. Every agent conversation, every research query, every code review, every heartbeat check — all metered, all billed. When you're running multiple agents doing real work across research, development, design, operations, and review, those tokens add up fast. Our early monthly AI spend was significant — entirely pay-per-token, entirely through one provider.</p>
+
+        <p>And it wasn't just the cost. Because everything went through one pipe, everything shared one set of rate limits.</p>
+
+        <div class="pull-quote">
+            <p>"In the early days, every token was pay-per-token through a single provider. It worked — but it was expensive, unpredictable, and fragile. That's the price of admission. There was no shortcut."</p>
+        </div>
+
+        <h2>Part 2: Hitting the Walls</h2>
+
+        <h3>Rate Limits — The Stop Sign You Can't Ignore</h3>
+        <p>Rate limits aren't a gentle suggestion. They're a hard stop. When multiple agents are running simultaneously — Bee coordinating, Gav researching, Q coding, Luna producing daily reports — you hit provider throttling fast. HTTP 429 responses became a regular part of our daily operations. The agent would be mid-task, hit the limit, and stop. Sometimes for seconds. Sometimes for minutes. Sometimes longer.</p>
+
+        <p>When your AI team is your team, that's not an inconvenience. That's a colleague going offline.</p>
+
+        <h3>Context Windows That Don't Fit</h3>
+        <p>Some models simply couldn't handle the context our agents needed. A long research brief, a full code review, a day's worth of conversation history — not every model has the capacity. We'd hit weight limits and context window limits that meant either truncating the work or switching models mid-task. Neither is ideal.</p>
+
+        <h3>The Cost Ceiling Problem</h3>
+        <p>With pay-per-token, there's no fixed monthly cost. Every burst of activity meant a burst of spend. A productive day — three agents running complex tasks simultaneously — could cost more than a quiet week. That's not how you budget. That's not how you plan. And when you're a small business trying to prove AI works, unpredictability is the enemy.</p>
+
+        <div class="pull-quote">
+            <p>"We didn't have a cost problem. We had a cost certainty problem. When you don't know what tomorrow's AI bill will be, you can't make decisions."</p>
+        </div>
+
+        <h2>Part 3: The Subscriptions</h2>
+
+        <h3>The Foundation Layer — Ollama & Bailian</h3>
+        <p>The first move away from pure pay-per-token was a low-cost cloud subscription through Ollama. Suddenly we had access to GLM-5.1, MiniMax-M2.7, Gemma 4 — capable models routed through Ollama's cloud infrastructure. Bee moved off OpenRouter. Q moved off OpenRouter. The daily token burn started dropping.</p>
+
+        <p>Shortly after, we added Bailian (Alibaba Cloud) for access to Qwen 3.6 Plus and its extraordinary 1 million token context window. Compaction, fallback routing, overflow capacity — all moved to Bailian. Together, these two low-cost subscriptions replaced a significant chunk of our pay-per-token bill and covered the bulk of our daily operations.</p>
+
+        <p>That worked well for a while. But we couldn't access everything through Ollama and Bailian. Some tasks needed specialist capabilities — web research, image processing, design-quality output — that those models couldn't provide.</p>
+
+        <div class="pull-quote">
+            <p>"Ollama and Bailian got us out of the pay-per-token trap for everyday work. But they couldn't do everything. The specialist stuff still needed specialist models."</p>
+        </div>
+
+        <h3>The Specialist Layer — ChatGPT, Claude, xAI</h3>
+        <p>The next phase was layering in the premium subscriptions as they became available and as we identified what we needed from them:</p>
+
+        <ul>
+            <li><strong>ChatGPT Pro</strong> — We needed access to GPT's design capabilities for Mel's creative work, plus Twitter integration and image processing that simply wasn't available through our foundation subscriptions. Mel and Luna moved onto subscription-covered GPT models.</li>
+            <li><strong>Claude Pro</strong> — For Kieran's adversarial review work — structured, careful reasoning that catches what faster models miss. A different kind of thinking for a different kind of task.</li>
+            <li><strong>xAI Premium / Grok</strong> — Gav needed a model optimised for web search and real-time research synthesis. Grok gave us that speed and access.</li>
+            <li><strong>DeepSeek</strong> — A pay-per-use fallback account for reasoning when other providers are throttling or unavailable. Not a subscription — more like an insurance policy.</li>
+        </ul>
+
+        <p>Each subscription was added because we hit a wall the previous layer couldn't climb. Not because we planned to buy everything upfront. The stack evolved.</p>
+
+        <h2>Part 4: Discovering Free & Low-Cost Models</h2>
+
+        <h3>Low-Cost Models That Punch Above Their Weight</h3>
+        <p>The Ollama and Bailian subscriptions were our first step away from pay-per-token — and they remain the workhorses of the stack. Together, these low-cost subscriptions handle the majority of daily token volume:</p>
+
+        <ul>
+            <li><strong>Ollama Cloud</strong> — GLM-5.1 runs Bee's coordination. MiniMax-M2.7 runs Q's code. Gemma 4 provides another fallback. Multiple capable models, one subscription, one bill.</li>
+            <li><strong>Bailian / Qwen</strong> — Qwen 3.6 Plus with its 1M token context window handles compaction and overflow. Extraordinary value for a low-cost subscription.</li>
+            <li><strong>Google Gemini 2.5 Flash</strong> — The only genuinely free tier in our stack. Fast, capable, serves as a universal fallback when paid services are throttling.</li>
+            <li><strong>Local Qwen3 8B</strong> — Running on our Mac mini hardware. Free, local, zero external dependency. We're watching the rapid advances in local model capability closely — what can run well on consumer hardware is improving monthly, and we expect to move more workloads on-device as the models improve.</li>
+        </ul>
+
+        <p>The key insight: the big-brand models (GPT, Claude, Grok) are excellent for their specialist roles, but they don't need to carry the whole load. For many tasks — coordination, compaction, fallback routing, code generation — lower-cost models are more than good enough. The trick is knowing <em>which</em> model is right for <em>which</em> job.</p>
+
+        <div class="pull-quote">
+            <p>"The question isn't 'is this the best model?' The question is 'is this the right model for this job?' A low-cost subscription model that's 90% as good is the right choice for 90% of tasks."</p>
+        </div>
+
+        <h2>Part 5: The Current Stack</h2>
+
+        <p>Here's what our multi-model setup looks like today. Every agent has a primary model chosen for their specific workload, plus a chain of fallbacks so that if one provider goes down, the agent keeps working.</p>
+
+        <h3>How We Built the Cost Structure</h3>
+        <p>The stack is built in three cost tiers — and this is the architecture that matters, not the individual prices:</p>
+        <ul>
+            <li><strong>Foundation tier</strong> — Low-cost subscriptions that cover the bulk of daily operations: coordination, compaction, code generation, fallback routing. These are the workhorses — high volume, low cost per task.</li>
+            <li><strong>Specialist tier</strong> — Premium subscriptions for capabilities the foundation can't provide: creative design, adversarial review, real-time research, image processing. Higher cost per month, but only used where the task demands it.</li>
+            <li><strong>Resilience tier</strong> — Free tiers (Gemini) and local models (Qwen3 8B on Mac mini) plus a pay-per-use fallback account (DeepSeek). These cost almost nothing but provide the safety net that keeps the team running when paid services hit limits.</li>
+        </ul>
+        <p><strong>The result: our monthly AI costs dropped by roughly two-thirds</strong> compared to running everything on pay-per-token — while running more agents, with more resilience, and more specialist capability. The key wasn't finding cheaper models. It was putting each model where it belongs.</p>
+
+    </div>
+</article>
+
+<!-- Agent Stack Table -->
+<section class="bg-white py-12 lg:py-16 border-y border-aiai-border/50">
+    <div class="max-w-4xl mx-auto px-6 lg:px-8">
+        <h2 class="text-2xl lg:text-3xl font-extrabold text-aiai-navy mb-2 text-center">The Team, The Models</h2>
+        <p class="text-aiai-muted text-center mb-10 max-w-2xl mx-auto">Each agent runs on the model best suited to their role. Fallback chains ensure resilience.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Bee -->
+            <div class="provider-card bg-aiai-cream rounded-xl p-5 border border-aiai-border/50">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="text-2xl">🐝</span>
+                    <div>
+                        <h3 class="font-bold text-aiai-navy text-sm">Bee — Coordinator</h3>
+                        <p class="text-xs text-aiai-muted">GLM-5.1 (free)</p>
+                    </div>
+                </div>
+                <div class="text-xs text-aiai-muted leading-relaxed">Orchestrates the team. 200K context. Falls back to Qwen, DeepSeek, Gemini, local Qwen3.</div>
+            </div>
+            <!-- Gav -->
+            <div class="provider-card bg-aiai-cream rounded-xl p-5 border border-aiai-border/50">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="text-2xl">🔍</span>
+                    <div>
+                        <h3 class="font-bold text-aiai-navy text-sm">Gav — Research</h3>
+                        <p class="text-xs text-aiai-muted">Grok 4.3 (xAI sub)</p>
+                    </div>
+                </div>
+                <div class="text-xs text-aiai-muted leading-relaxed">Web search, deep synthesis. Falls back to GPT-5.5 Instant, GLM-5.1, Qwen, Gemini.</div>
+            </div>
+            <!-- Q -->
+            <div class="provider-card bg-aiai-cream rounded-xl p-5 border border-aiai-border/50">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="text-2xl">💻</span>
+                    <div>
+                        <h3 class="font-bold text-aiai-navy text-sm">Q — Developer</h3>
+                        <p class="text-xs text-aiai-muted">MiniMax-M2.7 (free)</p>
+                    </div>
+                </div>
+                <div class="text-xs text-aiai-muted leading-relaxed">Code, deployment, architecture. Falls back to GLM-5.1, Gemma 4, Qwen, DeepSeek, Gemini.</div>
+            </div>
+            <!-- Mel -->
+            <div class="provider-card bg-aiai-cream rounded-xl p-5 border border-aiai-border/50">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="text-2xl">🎨</span>
+                    <div>
+                        <h3 class="font-bold text-aiai-navy text-sm">Mel — Design</h3>
+                        <p class="text-xs text-aiai-muted">GPT-5.5 (ChatGPT sub)</p>
+                    </div>
+                </div>
+                <div class="text-xs text-aiai-muted leading-relaxed">UI/UX, brand polish. Falls back to GLM-5.1, Qwen, DeepSeek, Gemini, local Qwen3.</div>
+            </div>
+            <!-- Luna -->
+            <div class="provider-card bg-aiai-cream rounded-xl p-5 border border-aiai-border/50">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="text-2xl">📋</span>
+                    <div>
+                        <h3 class="font-bold text-aiai-navy text-sm">Luna — Operations</h3>
+                        <p class="text-xs text-aiai-muted">GPT-5.5 Instant (sub)</p>
+                    </div>
+                </div>
+                <div class="text-xs text-aiai-muted leading-relaxed">Daily reports, health checks. Falls back to GLM-5.1, Qwen, DeepSeek, Gemini, local Qwen3.</div>
+            </div>
+            <!-- Kieran -->
+            <div class="provider-card bg-aiai-cream rounded-xl p-5 border border-aiai-border/50">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="text-2xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-aiai-navy text-sm">Kieran — Review</h3>
+                        <p class="text-xs text-aiai-muted">Qwen 3.6 Plus (free)</p>
+                    </div>
+                </div>
+                <div class="text-xs text-aiai-muted leading-relaxed">Adversarial review, strategic challenge. Falls back to GLM-5.1, DeepSeek, Gemini, local Qwen3.</div>
+            </div>
+        </div>
+        <!-- Cost summary -->
+        <div class="mt-8 bg-aiai-navy rounded-xl p-6 text-center">
+            <p class="text-white/60 text-sm mb-2">Monthly AI cost vs. pay-per-token</p>
+            <p class="text-3xl font-extrabold text-white">~67%<span class="text-lg text-white/40 font-medium"> reduction</span></p>
+            <p class="text-white/40 text-xs mt-2">Foundation subscriptions for daily ops · Premium subscriptions for specialist tasks · Free tiers + local models for resilience.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Article continues -->
+<article class="max-w-3xl mx-auto px-6 lg:px-8 py-12 lg:py-16">
+    <div class="article-body">
+
+        <p>OpenRouter is still wired in. We still have the API key, still have the account. But it's no longer our daily driver — it's the emergency valve. If every subscription model hits a wall simultaneously, we can fall back to pay-per-token. It hasn't happened yet.</p>
+
+        <p>We're also watching the local model landscape closely. What can run on a Mac mini today is a generation behind what requires cloud infrastructure. But the gap is narrowing. Qwen3 8B already handles our heartbeats locally. As local models improve, we'll move more workloads on-device — reducing our dependence on external providers, their rate limits, and their pricing changes.</p>
+
+        <h2>Part 6: What This Means — 7 Lessons</h2>
+
+    </div>
+
+    <div class="space-y-4 mb-8">
+        <div class="lesson-card bg-white rounded-xl p-6 border border-aiai-border/50">
+            <div class="flex items-start gap-4">
+                <div class="flex-shrink-0 w-8 h-8 bg-aiai-orange/10 rounded-lg flex items-center justify-center text-aiai-orange font-bold text-sm">1</div>
+                <div>
+                    <h3 class="!mt-0 !mb-2 font-sans text-aiai-navy">Start From Where You Are</h3>
+                    <p style="margin:0;font-size:0.95rem;color:#475569;">Pay-per-token isn't a failure. It's the on-ramp. You can't diversify until you've run single-track and learned what you actually need. Start there. Don't wait for the perfect setup.</p>
+                </div>
+            </div>
+        </div>
+        <div class="lesson-card bg-white rounded-xl p-6 border border-aiai-border/50">
+            <div class="flex items-start gap-4">
+                <div class="flex-shrink-0 w-8 h-8 bg-aiai-blue/10 rounded-lg flex items-center justify-center text-aiai-blue font-bold text-sm">2</div>
+                <div>
+                    <h3 class="!mt-0 !mb-2 font-sans text-aiai-navy">Rate Limits Teach You to Diversify</h3>
+                    <p style="margin:0;font-size:0.95rem;color:#475569;">Every 429 error was a lesson: don't put all your tokens in one basket. Rate limits forced us to find alternatives, and every alternative made the stack stronger.</p>
+                </div>
+            </div>
+        </div>
+        <div class="lesson-card bg-white rounded-xl p-6 border border-aiai-border/50">
+            <div class="flex items-start gap-4">
+                <div class="flex-shrink-0 w-8 h-8 bg-aiai-sage/10 rounded-lg flex items-center justify-center text-aiai-sage font-bold text-sm">3</div>
+                <div>
+                    <h3 class="!mt-0 !mb-2 font-sans text-aiai-navy">Match the Model to the Agent</h3>
+                    <p style="margin:0;font-size:0.95rem;color:#475569;">Design needs GPT's nuance. Research needs Grok's speed. Operations needs Instant's throughput. Development can run on free models. One model for everything is as wasteful as one tool for every job.</p>
+                </div>
+            </div>
+        </div>
+        <div class="lesson-card bg-white rounded-xl p-6 border border-aiai-border/50">
+            <div class="flex items-start gap-4">
+                <div class="flex-shrink-0 w-8 h-8 bg-aiai-gold/10 rounded-lg flex items-center justify-center text-aiai-gold font-bold text-sm">4</div>
+                <div>
+                    <h3 class="!mt-0 !mb-2 font-sans text-aiai-navy">Low-Cost Doesn't Mean Low-Quality</h3>
+                    <p style="margin:0;font-size:0.95rem;color:#475569;">GLM-5.1 runs our coordinator. Qwen runs our compaction. MiniMax runs our developer. All via low-cost subscriptions. Gemini's free tier covers fallbacks. But you need to test them against your actual workload, not just read benchmarks.</p>
+                </div>
+            </div>
+        </div>
+        <div class="lesson-card bg-white rounded-xl p-6 border border-aiai-border/50">
+            <div class="flex items-start gap-4">
+                <div class="flex-shrink-0 w-8 h-8 bg-aiai-blue/10 rounded-lg flex items-center justify-center text-aiai-blue font-bold text-sm">5</div>
+                <div>
+                    <h3 class="!mt-0 !mb-2 font-sans text-aiai-navy">Subscriptions Create Cost Certainty</h3>
+                    <p style="margin:0;font-size:0.95rem;color:#475569;">Moving from pay-per-token to subscriptions cut our monthly AI costs by roughly two-thirds — and we're running more agents, more reliably. Knowing what you'll spend each month lets you plan. Subscriptions turned a variable cost into a predictable one.</p>
+                </div>
+            </div>
+        </div>
+        <div class="lesson-card bg-white rounded-xl p-6 border border-aiai-border/50">
+            <div class="flex items-start gap-4">
+                <div class="flex-shrink-0 w-8 h-8 bg-aiai-sage/10 rounded-lg flex items-center justify-center text-aiai-sage font-bold text-sm">6</div>
+                <div>
+                    <h3 class="!mt-0 !mb-2 font-sans text-aiai-navy">Fallback Chains Prevent Outages From Becoming Disasters</h3>
+                    <p style="margin:0;font-size:0.95rem;color:#475569;">Every agent in our team has 4–6 fallback models. When OpenAI goes down, the agent routes to DeepSeek. When DeepSeek throttles, it routes to Gemini. The team keeps working even when individual providers don't.</p>
+                </div>
+            </div>
+        </div>
+        <div class="lesson-card bg-white rounded-xl p-6 border border-aiai-border/50">
+            <div class="flex items-start gap-4">
+                <div class="flex-shrink-0 w-8 h-8 bg-aiai-orange/10 rounded-lg flex items-center justify-center text-aiai-orange font-bold text-sm">7</div>
+                <div>
+                    <h3 class="!mt-0 !mb-2 font-sans text-aiai-navy">This Is Achievable — But It Takes Experience to Build Right</h3>
+                    <p style="margin:0;font-size:0.95rem;color:#475569;">None of this is magic. But none of it is plug-and-play either. It took months of hitting walls, testing alternatives, and rebuilding config to get here. The value isn't in the subscriptions — it's in knowing which model to use where, how to build fallback chains, and how to evolve the stack as new options emerge. That's the expertise we bring.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="article-body">
+        <div class="pull-quote">
+            <p>"Building a multi-model AI stack isn't a weekend project. It's achievable, but it takes care, preparation, and the willingness to learn from every rate limit and every unexpected bill. The good news? We've already made those mistakes — and we can help you avoid them."</p>
+        </div>
+    </div>
+</article>
+
+<!-- Timeline Section -->
+<section class="bg-aiai-navy text-white py-16 lg:py-20">
+    <div class="max-w-4xl mx-auto px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center gap-2 px-4 py-2 bg-aiai-orange/10 border border-aiai-orange/20 rounded-full mb-4">
+                <span class="text-xs font-semibold uppercase tracking-widest text-orange-300">Timeline</span>
+            </div>
+            <h2 class="text-3xl lg:text-4xl font-extrabold text-white">The Journey</h2>
+        </div>
+
+        <div class="relative">
+            <div class="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-aiai-orange via-aiai-blue to-aiai-sage -translate-x-1/2"></div>
+            <div class="space-y-8">
+                <div class="timeline-item md:flex md:items-center md:justify-between">
+                    <div class="md:w-5/12 md:text-right mb-2 md:mb-0">
+                        <span class="text-aiai-orange font-bold text-sm">Feb 2026</span>
+                        <p class="text-white/70 text-sm mt-1">OpenRouter pay-per-token. Single provider. Every token metered.</p>
+                    </div>
+                    <div class="hidden md:flex w-8 h-8 bg-aiai-orange rounded-full items-center justify-center flex-shrink-0 z-10">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                    </div>
+                    <div class="md:w-5/12"></div>
+                </div>
+                <div class="timeline-item md:flex md:items-center md:justify-between">
+                    <div class="md:w-5/12"></div>
+                    <div class="hidden md:flex w-8 h-8 bg-aiai-orange rounded-full items-center justify-center flex-shrink-0 z-10">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    </div>
+                    <div class="md:w-5/12 mb-2 md:mb-0">
+                        <span class="text-aiai-orange font-bold text-sm">Mar 2026</span>
+                        <p class="text-white/70 text-sm mt-1">Rate limits hitting daily. 429s become part of life. Exploring alternatives.</p>
+                    </div>
+                </div>
+                <div class="timeline-item md:flex md:items-center md:justify-between">
+                    <div class="md:w-5/12 md:text-right mb-2 md:mb-0">
+                        <span class="text-aiai-blue font-bold text-sm">Apr 2026</span>
+                        <p class="text-white/70 text-sm mt-1">Ollama subscription first. Bee and Q move off pay-per-token. Daily burn drops.</p>
+                    </div>
+                    <div class="hidden md:flex w-8 h-8 bg-aiai-blue rounded-full items-center justify-center flex-shrink-0 z-10">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    </div>
+                    <div class="md:w-5/12"></div>
+                </div>
+                <div class="timeline-item md:flex md:items-center md:justify-between">
+                    <div class="md:w-5/12"></div>
+                    <div class="hidden md:flex w-8 h-8 bg-aiai-blue rounded-full items-center justify-center flex-shrink-0 z-10">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                    </div>
+                    <div class="md:w-5/12 mb-2 md:mb-0">
+                        <span class="text-aiai-blue font-bold text-sm">May 2026</span>
+                        <p class="text-white/70 text-sm mt-1">Bailian added. £25.50/mo now covers most daily tokens. OpenRouter becomes backup.</p>
+                    </div>
+                </div>
+                <div class="timeline-item md:flex md:items-center md:justify-between">
+                    <div class="md:w-5/12 md:text-right mb-2 md:mb-0">
+                        <span class="text-aiai-blue font-bold text-sm">May–Jun 2026</span>
+                        <p class="text-white/70 text-sm mt-1">Specialist subs layered in: ChatGPT, Claude, xAI. Each added when we hit a wall the foundation couldn't climb.</p>
+                    </div>
+                    <div class="hidden md:flex w-8 h-8 bg-aiai-blue rounded-full items-center justify-center flex-shrink-0 z-10">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+                    </div>
+                    <div class="md:w-5/12"></div>
+                </div>
+                <div class="timeline-item md:flex md:items-center md:justify-between">
+                    <div class="md:w-5/12"></div>
+                    <div class="hidden md:flex w-8 h-8 bg-aiai-gold rounded-full items-center justify-center flex-shrink-0 z-10">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    </div>
+                    <div class="md:w-5/12 mb-2 md:mb-0">
+                        <span class="text-aiai-gold font-bold text-sm">Now</span>
+                        <p class="text-white/70 text-sm mt-1">9 agents, 8+ providers. Monthly costs down by two-thirds vs. pay-per-token. Zero single points of failure.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-16 lg:py-20 bg-gradient-to-b from-aiai-cream to-white">
+    <div class="max-w-3xl mx-auto px-6 lg:px-8 text-center">
+        <div class="inline-flex items-center gap-2 px-4 py-2 bg-aiai-sage/10 border border-aiai-sage/20 rounded-full mb-6">
+            <span class="text-xs font-semibold uppercase tracking-widest text-aiai-sage">Our Take</span>
+        </div>
+        <h2 class="text-2xl lg:text-3xl font-extrabold text-aiai-navy mb-6">We Built This Stack So You Don't Have to Learn the Hard Way</h2>
+        <p class="text-lg text-aiai-muted leading-relaxed mb-8">
+            This case study isn't theory. It's months of real experience — the bills we paid, the rate limits we hit, the models we tested, the config we rewrote. The subscriptions are just infrastructure. What matters is knowing which model to use where, how to build fallback chains that actually work, and how to evolve the stack as new options appear. If you're starting your AI journey, we can help you skip the expensive mistakes and get to the working system faster.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="contact.html" class="inline-flex items-center gap-2 px-7 py-3.5 bg-aiai-blue text-white font-semibold rounded-lg hover:bg-aiai-blue-light transition-all shadow-lg hover:shadow-xl hover:shadow-aiai-blue/20">
+                Start a Conversation
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+            </a>
+            <a href="case-studies.html" class="inline-flex items-center gap-2 px-5 py-3 bg-white border border-aiai-border text-aiai-navy font-semibold rounded-lg hover:bg-aiai-cream transition-colors">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                All Case Studies
+            </a>
+            <a href="Multi-Model-Case-Study.pdf" download class="inline-flex items-center gap-2 px-5 py-3 bg-white border border-aiai-border text-aiai-navy font-semibold rounded-lg hover:bg-aiai-cream transition-colors">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download PDF
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-aiai-navy text-white py-12 lg:py-16">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-8">
+            <img src="assets/img/aiai-wordmark-white-transparent.png" alt="Adventures in AI" class="h-8 md:h-8.5 w-auto object-contain">
+            <div class="flex items-center gap-6 text-sm text-white/40">
+                <a href="index.html" class="hover:text-white/70 transition-colors">Home</a>
+                <a href="understanding-ai.html" class="hover:text-white/70 transition-colors">Understanding AI</a>
+                <a href="proof.html" class="hover:text-white/70 transition-colors">Proof</a>
+                <a href="services.html" class="hover:text-white/70 transition-colors">Services</a>
+                <a href="build-with-us.html" class="hover:text-white/70 transition-colors">Build With Us</a>
+                <a href="case-studies.html" class="hover:text-white/70 transition-colors">Case Studies</a>
+                <a href="contact.html" class="hover:text-white/70 transition-colors">Contact</a>
+            </div>
+            <p class="text-white/30 text-sm">&copy; 2026 Adventures in AI Ltd</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Mobile menu toggle
+    document.querySelectorAll('[onclick*="mobile-menu"]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+    });
+
+    // Scroll-triggered timeline animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.timeline-item').forEach(el => observer.observe(el));
+</script>
+
+<script>
+// Close mobile menu when a link is clicked
+document.querySelectorAll('[id^="mobile-menu"]').forEach(menu => {
+    menu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            menu.classList.add('hidden');
+        });
+    });
+});
+</script>
+<!-- Mobile Bottom Tab Bar -->
+<nav id="mobile-bottom-bar" class="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white border-t border-[#e2e8f0] shadow-[0_-4px_20px_rgba(0,0,0,0.08)]" style="padding-bottom: env(safe-area-inset-bottom);" aria-label="Mobile navigation">
+  <div class="flex items-center justify-around h-14">
+    <a href="index.html" class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-2 py-1 text-[#64748b] hover:text-[#2563eb] transition-colors" aria-label="Home">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      <span class="text-[10px] font-medium mt-0.5">Home</span>
+    </a>
+    <a href="services.html" class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-2 py-1 text-[#64748b] hover:text-[#2563eb] transition-colors" aria-label="Services">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+      <span class="text-[10px] font-medium mt-0.5">Services</span>
+    </a>
+    <a href="proof.html" class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-2 py-1 text-[#64748b] hover:text-[#2563eb] transition-colors" aria-label="Proof">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+      <span class="text-[10px] font-medium mt-0.5">Proof</span>
+    </a>
+    <a href="build-with-us.html" class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-2 py-1 text-[#64748b] hover:text-[#2563eb] transition-colors" aria-label="Build With Us">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+      <span class="text-[10px] font-medium mt-0.5">Build</span>
+    </a>
+    <button type="button" id="more-toggle-btn" class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-2 py-1 text-[#2563eb] hover:text-[#2563eb] transition-colors" aria-current="page" aria-label="More pages" aria-expanded="false" aria-controls="more-menu">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+      <span class="text-[10px] font-medium mt-0.5">More</span>
+    </button>
+  </div>
+  <!-- More dropdown menu -->
+  <div id="more-menu" class="hidden absolute bottom-full left-0 right-0 bg-white border-t border-[#e2e8f0] shadow-[0_-4px_20px_rgba(0,0,0,0.08)]" role="menu">
+    <div class="flex flex-col divide-y divide-[#e2e8f0]">
+      <a href="understanding-ai.html" class="flex items-center gap-3 px-6 py-3.5 text-sm font-medium text-[#1a2332] hover:bg-[#faf9f6] transition-colors" role="menuitem">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h6z"></path></svg>
+        Understanding AI
+      </a>
+      <a href="case-studies.html" class="flex items-center gap-3 px-6 py-3.5 text-sm font-medium text-[#1a2332] hover:bg-[#faf9f6] transition-colors" role="menuitem">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        Case Studies
+      </a>
+      <a href="contact.html" class="flex items-center gap-3 px-6 py-3.5 text-sm font-medium text-[#1a2332] hover:bg-[#faf9f6] transition-colors" role="menuitem">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+        Contact
+      </a>
+    </div>
+  </div>
+</nav>
+
+<script>
+// Mobile bottom bar "More" toggle
+(function() {
+  var moreBtn = document.getElementById('more-toggle-btn');
+  var moreMenu = document.getElementById('more-menu');
+  if (moreBtn && moreMenu) {
+    moreBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      var isHidden = moreMenu.classList.contains('hidden');
+      moreMenu.classList.toggle('hidden');
+      moreBtn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+      moreBtn.querySelector('span').textContent = isHidden ? 'Less' : 'More';
+    });
+    document.addEventListener('click', function(e) {
+      if (!moreBtn.contains(e.target) && !moreMenu.contains(e.target)) {
+        moreMenu.classList.add('hidden');
+        moreBtn.setAttribute('aria-expanded', 'false');
+        moreBtn.querySelector('span').textContent = 'More';
+      }
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        moreMenu.classList.add('hidden');
+        moreBtn.setAttribute('aria-expanded', 'false');
+        moreBtn.querySelector('span').textContent = 'More';
+      }
+    });
+    moreMenu.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', function() {
+        moreMenu.classList.add('hidden');
+        moreBtn.setAttribute('aria-expanded', 'false');
+        moreBtn.querySelector('span').textContent = 'More';
+      });
+    });
+  }
+})();
+</script>
+</body>
+</html>
