@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study: Intelligence at Speed — Adventures in AI</title>
+    <meta name="description" content="Under 2 hours from a single brief to a fully structured, outreach-ready contact database — how a multi-agent AI team researched, categorised, and built market intelligence from scratch.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'aiai-navy': '#1a2332',
+                        'aiai-navy-light': '#243447',
+                        'aiai-blue': '#2563eb',
+                        'aiai-blue-light': '#3b82f6',
+                        'aiai-sage': '#7c9a6e',
+                        'aiai-sage-light': '#a3bc96',
+                        'aiai-sage-bg': '#f0f5ed',
+                        'aiai-cream': '#faf9f6',
+                        'aiai-dark': '#0f172a',
+                        'aiai-muted': '#64748b',
+                        'aiai-border': '#e2e8f0',
+                        'aiai-orange': '#ea580c',
+                        'aiai-gold': '#b59a3a',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                        serif: ['Merriweather', 'Georgia', 'serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-gradient { background: linear-gradient(135deg, #1a2332 0%, #243447 50%, #1a2332 100%); }
+
+        .article-body { font-family: 'Merriweather', Georgia, serif; font-size: 1.05rem; line-height: 1.85; color: #1e293b; }
+        .article-body p { margin-bottom: 1.5rem; }
+        .article-body h2 { font-family: 'Inter', sans-serif; font-size: 1.6rem; font-weight: 800; color: #1a2332; margin-top: 3rem; margin-bottom: 1rem; }
+        .article-body h3 { font-family: 'Inter', sans-serif; font-size: 1.25rem; font-weight: 700; color: #334155; margin-top: 2rem; margin-bottom: 0.75rem; }
+        .article-body ul { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+        .article-body li { margin-bottom: 0.5rem; }
+        .article-body a { color: #2563eb; text-decoration: underline; text-decoration-color: rgba(37,99,235,0.3); text-underline-offset: 2px; }
+        .article-body a:hover { text-decoration-color: #2563eb; }
+        .pull-quote { border-left: 4px solid #b59a3a; padding: 1.25rem 1.5rem; margin: 2rem 0; background: linear-gradient(135deg, #fafdf7, #f8f6f0); border-radius: 0 8px 8px 0; }
+        .pull-quote p { font-family: 'Inter', sans-serif; font-size: 1.2rem; font-weight: 600; color: #1a2332; line-height: 1.6; margin: 0; font-style: italic; }
+        .pull-quote .attribution { font-size: 0.85rem; color: #64748b; margin-top: 0.5rem; font-style: normal; }
+        .stat-card { transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -12px rgba(26,35,50,0.15); }
+        .timeline-line { position: relative; }
+        .timeline-line::before { content: ''; position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, #2563eb, #7c9a6e, #b59a3a); }
+        @media (min-width: 768px) {
+            .timeline-line::before { left: 50%; transform: translateX(-50%); }
+        }
+        .timeline-item { opacity: 0; transform: translateY(20px); transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .timeline-item.visible { opacity: 1; transform: translateY(0); }
+        .lesson-card { transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+        .lesson-card:hover { transform: translateY(-3px); box-shadow: 0 20px 40px -12px rgba(26,35,50,0.12); }
+        .hero-stat { animation: fadeUp 0.8s ease-out forwards; opacity: 0; }
+        .hero-stat:nth-child(1) { animation-delay: 0.1s; }
+        .hero-stat:nth-child(2) { animation-delay: 0.2s; }
+        .hero-stat:nth-child(3) { animation-delay: 0.3s; }
+        .hero-stat:nth-child(4) { animation-delay: 0.4s; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .tech-grid { background-image: linear-gradient(rgba(37,99,235,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(37,99,235,0.03) 1px, transparent 1px); background-size: 40px 40px; }
+        .card-hover { transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 22px 48px -18px rgba(26,35,50,0.14); }
+    </style>
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+    <meta property="og:image" content="https://aiai.co.uk/assets/img/og-share-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="theme-color" content="#1a2332">
+</head>
+<body class="min-h-screen bg-aiai-cream font-sans text-aiai-dark antialiased pb-16 md:pb-0">
+
+<!-- Navigation -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-aiai-border/50">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16 lg:h-20">
+            <a href="index.html" class="flex items-center group">
+                <img src="assets/img/aiai-wordmark-navy-transparent.png" alt="AIAI — Adventures in AI" class="h-8 md:h-9.5 w-auto object-contain transition-transform group-hover:scale-105">
+            </a>
+            <div class="hidden lg:flex items-center lg:gap-0.5 xl:gap-1">
+                <a href="index.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Home</a>
+                <a href="understanding-ai.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Understanding AI</a>
+                <a href="proof.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Proof</a>
+                <a href="services.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Services</a>
+                <a href="build-with-us.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Build With Us</a>
+                <a href="case-studies.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-blue bg-blue-50 rounded-lg">Case Studies</a>
+                <a href="insights.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Insights</a>
+                <a href="contact.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Contact</a>
+
+            </div>
+            <div class="hidden lg:flex items-center lg:gap-2 xl:gap-4">
+                <a href="contact.html" class="inline-flex items-center gap-2 px-4 lg:px-4 xl:px-5 py-2 lg:py-2 xl:py-2.5 bg-aiai-blue text-white text-xs lg:text-xs xl:text-sm font-semibold rounded-lg hover:bg-aiai-blue-light transition-colors shadow-sm">
+                    Start a Conversation
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                </a>
+            </div>
+            <button class="hidden md:flex lg:hidden p-2 rounded-lg hover:bg-aiai-cream transition-colors" aria-label="Toggle navigation menu" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16"></path><path d="M4 12h16"></path><path d="M4 18h16"></path></svg>
+            </button>
+        </div>
+    </div>
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-aiai-border bg-white">
+        <div class="px-6 py-4 space-y-2">
+            <a href="index.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Home</a>
+            <a href="understanding-ai.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Understanding AI</a>
+            <a href="proof.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Proof</a>
+            <a href="services.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Services</a>
+            <a href="build-with-us.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Build With Us</a>
+            <a href="case-studies.html" class="block px-3 py-2 text-sm font-medium text-aiai-blue bg-blue-50 rounded-lg">Case Studies</a>
+            <a href="insights.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Insights</a>
+            <a href="contact.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Contact</a>
+
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="relative pt-28 pb-16 lg:pt-32 lg:pb-20 xl:pt-36 xl:pb-24 overflow-hidden hero-gradient">
+    <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute top-16 right-[10%] w-96 h-96 bg-aiai-sage/8 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-0 left-[5%] w-72 h-72 bg-aiai-blue/8 rounded-full blur-[100px]"></div>
+        <div class="absolute top-1/2 right-1/4 w-48 h-48 bg-aiai-gold/5 rounded-full blur-[80px]"></div>
+        <div class="absolute inset-0 tech-grid"></div>
+    </div>
+    <div class="relative max-w-4xl mx-auto px-6 lg:px-8 text-center">
+        <!-- Breadcrumb -->
+        <div class="mb-4">
+            <a href="case-studies.html" class="inline-flex items-center gap-1.5 text-sm text-white/50 hover:text-aiai-sage-light transition-colors">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                <span>All Case Studies</span>
+            </a>
+        </div>
+        <!-- Tags -->
+        <div class="flex flex-wrap items-center justify-center gap-2 mb-6">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-aiai-gold/15 text-yellow-200 text-xs font-semibold rounded-full uppercase tracking-wide border border-aiai-gold/25">Client Work</span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-aiai-blue/15 text-blue-200 text-xs font-semibold rounded-full uppercase tracking-wide border border-aiai-blue/25">Research</span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-aiai-sage/15 text-green-200 text-xs font-semibold rounded-full uppercase tracking-wide border border-aiai-sage/25">Data Intelligence</span>
+        </div>
+        <div class="inline-flex items-center gap-2 px-4 py-2 bg-aiai-gold/10 border border-aiai-gold/20 rounded-full mb-6">
+            <span class="text-xs font-semibold uppercase tracking-widest text-yellow-200">Client Case Study</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-white mb-6 leading-tight tracking-tight">
+            Intelligence at<br><span class="text-aiai-gold">Speed</span>
+        </h1>
+        <p class="text-lg lg:text-xl text-white/65 leading-relaxed max-w-2xl mx-auto mb-8">
+            Under 2 hours from a single brief to a fully structured, outreach-ready contact database. What happens when you deploy a multi-agent AI team against a real market intelligence problem.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-4 text-sm text-white/40">
+            <span>May 2026</span>
+            <span class="w-1 h-1 bg-white/30 rounded-full"></span>
+            <span>Client Engagement</span>
+            <span class="w-1 h-1 bg-white/30 rounded-full"></span>
+            <span>8 min read</span>
+        </div>
+    </div>
+</section>
+
+<!-- Hero Stats -->
+<section class="relative -mt-8 z-10">
+    <div class="max-w-4xl mx-auto px-6 lg:px-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+            <div class="hero-stat stat-card bg-white rounded-xl p-5 text-center border border-aiai-border/50">
+                <div class="text-2xl lg:text-3xl font-extrabold text-aiai-blue">46</div>
+                <div class="text-xs font-medium text-aiai-muted mt-1">Named Individuals</div>
+            </div>
+            <div class="hero-stat stat-card bg-white rounded-xl p-5 text-center border border-aiai-border/50">
+                <div class="text-2xl lg:text-3xl font-extrabold text-aiai-sage">70</div>
+                <div class="text-xs font-medium text-aiai-muted mt-1">Companies Scraped</div>
+            </div>
+            <div class="hero-stat stat-card bg-white rounded-xl p-5 text-center border border-aiai-border/50">
+                <div class="text-2xl lg:text-3xl font-extrabold text-aiai-gold">27</div>
+                <div class="text-xs font-medium text-aiai-muted mt-1">Fully Categorised</div>
+            </div>
+            <div class="hero-stat stat-card bg-white rounded-xl p-5 text-center border border-aiai-border/50">
+                <div class="text-2xl lg:text-3xl font-extrabold text-aiai-orange">6</div>
+                <div class="text-xs font-medium text-aiai-muted mt-1">Data Dimensions</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Article Content -->
+<article class="max-w-3xl mx-auto px-6 lg:px-8 py-12 lg:py-16">
+    <div class="article-body">
+
+        <h2>The Brief</h2>
+
+        <p>A client came to us with a specific problem. They were building a UK community portal for drone professionals in the construction, surveying, engineering, and infrastructure sectors. The portal needed members — specifically, professionals with UAV expertise at major organisations who could bring authority, experience, and credibility to the community.</p>
+
+        <p>The brief was straightforward but ambitious: find the right people, understand who they are and why they matter, and deliver something the client could act on immediately. Not a list of Google hits. Not a CSV of names scraped from a directory. A <strong>structured, categorised, outreach-ready contact database</strong> with enough context to make every conversation count.</p>
+
+        <p>The client had no time for a multi-week research project. They needed intelligence, fast. We said we could deliver in under 2 hours — and we did.</p>
+
+        <div class="pull-quote">
+            <p>"Find me the people who matter in UK construction drones — and tell me why they matter."</p>
+            <div class="attribution">— The brief, in a single sentence</div>
+        </div>
+
+        <h2>What We Did</h2>
+
+        <p>We deployed a three-agent AI team working in parallel, each handling a distinct part of the intelligence pipeline. The work happened simultaneously, not sequentially — that's how we hit the speed target.</p>
+
+        <h3>Parallel Execution, Not Sequential Discovery</h3>
+
+        <p>Traditional research flows one step at a time: identify sources → scrape data → clean it → analyse → format. That's fine if you have a week. If you have two hours, parallel is the only option.</p>
+
+        <p>Our coordinator agent (<strong>Bee</strong>) broke the brief into three independent workstreams:</p>
+
+        <ul>
+            <li><strong>Directory scraping and contact discovery</strong> — handled by our research agent (<strong>Gav</strong>), systematically mapping six structured data sources including the Drone Survey Directory, ARPAS-UK, Drone Safe Register, The Survey Association, RICS Find a Surveyor, and CICES.</li>
+            <li><strong>Taxonomy and framework design</strong> — handled by our framework designer (<strong>Mel</strong>), building a 6-dimension categorisation model tailored to the client's community structure.</li>
+            <li><strong>Quality verification and gap analysis</strong> — handled by Bee, cross-referencing discoveries against the framework and flagging gaps for Phase 2.</li>
+        </ul>
+
+        <p>Because each stream was independent, they ran simultaneously. Scraping didn't wait for the taxonomy. The taxonomy didn't wait for a completed dataset. The coordinator stitched them together at the end.</p>
+
+        <h3>The Taxonomy: Six Dimensions of Fit</h3>
+
+        <p>Every contact was scored across six dimensions, producing a structured assessment of their relevance to the client's community:</p>
+
+        <ul>
+            <li><strong>Sector</strong> — Which industry sector they operate in (construction, surveying, engineering, infrastructure, or multi-sector)</li>
+            <li><strong>Role Type</strong> — Their position in the drone ecosystem (in-house UAV lead, drone service provider, engineering consultant, survey contractor, trainer, regulator, technology vendor, academic, owner, project manager)</li>
+            <li><strong>Organisation Type</strong> — The size and nature of their employer (solo operator, SME, large contractor, consultancy, public body, trade association, academic institution)</li>
+            <li><strong>Region</strong> — Geographic coverage across 12 UK regions</li>
+            <li><strong>Community Fit</strong> — A HIGH/MEDIUM/LOW assessment of how well they align with the portal's community-driven mission</li>
+            <li><strong>Service Tags</strong> — Specific capabilities (LiDAR, photogrammetry, thermography, BVLOS, surveying, inspection, training, and more)</li>
+        </ul>
+
+        <p>This framework wasn't generic. It was designed specifically for the client's community model. Each dimension answered a practical question: who are they, what do they do, where are they based, and how well do they fit the community's purpose?</p>
+
+        <h2>What Was Produced</h2>
+
+        <p>The client received five deliverables, all produced within the two-hour window:</p>
+
+        <h3>1. Master Contact Database</h3>
+        <p>A structured spreadsheet with <strong>46 named individuals</strong> across five tiers — from senior infrastructure drone leads at organisations like National Highways and Network Rail, through to independent surveying companies operating in every UK region. Each record included name, job title, company, website, LinkedIn URL, region, and classification across all six taxonomy dimensions.</p>
+
+        <h3>2. Company Directory</h3>
+        <p><strong>70 UK drone companies</strong> with full contact details — websites, regions, phone numbers where publicly listed — systematically scraped from structured directory sources. Covering the full spectrum from national infrastructure organisations to regional independent operators.</p>
+
+        <h3>3. Categorisation Framework</h3>
+        <p>The 6-dimension taxonomy document, designed to be reusable. As the client adds more contacts in Phase 2, they can apply the same classification system — no need to redesign the framework each time the database grows.</p>
+
+        <h3>4. Outreach Playbook</h3>
+        <p><strong>Five persona-specific message templates</strong> — each tailored to a different type of community member. In-house UAV leads get a different message than independent surveyors. Engineering consultants get a different message than technology vendors. Every template includes the core value proposition, tone guidance, and suggested channel (email vs LinkedIn).</p>
+
+        <h3>5. Data Schema & Deduplication Rules</h3>
+        <p>A complete data dictionary documenting every column in the contact database, plus a deduplication protocol for merging records when new data sources are added. Phase 2 can scale without breaking what Phase 1 built.</p>
+
+        <div class="pull-quote">
+            <p>"Here's what we produced in under 2 hours: 46 named individuals, 70 companies, a 6-dimension taxonomy, and a playbook you can use today."</p>
+            <div class="attribution">— The client-facing summary</div>
+        </div>
+
+        <h2>Methodology</h2>
+
+        <h3>The Data Pipeline</h3>
+
+        <p>Six structured data sources were systematically mapped and explored:</p>
+
+        <ul>
+            <li><strong>Drone Survey Directory</strong> — A verified UK drone services directory with company listings, regions, and service categories</li>
+            <li><strong>ARPAS-UK</strong> — The UK's drone trade association directory, providing high-trust, vetted contacts</li>
+            <li><strong>Drone Safe Register</strong> — CAA-approved drone operators, with insurance verification and structured service tags</li>
+            <li><strong>The Survey Association (TSA)</strong> — Professional surveying trade body directory</li>
+            <li><strong>RICS Find a Surveyor</strong> — Chartered surveying professionals with structured location and specialism data</li>
+            <li><strong>CICES</strong> — Chartered Institution of Civil Engineering Surveyors directory</li>
+        </ul>
+
+        <p>Each source provided a different lens on the market. Trade associations gave quality-filtered contacts. Structured directories gave consistent, comparable data. Professional bodies added authority and trust signals. Combined, they produced coverage that no single source could deliver.</p>
+
+        <h3>The Timeline</h3>
+
+    </div>
+</article>
+
+<!-- Timeline Section -->
+<section class="bg-aiai-navy text-white py-16 lg:py-20">
+    <div class="max-w-4xl mx-auto px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center gap-2 px-4 py-2 bg-aiai-sage/10 border border-aiai-sage/20 rounded-full mb-4">
+                <span class="text-xs font-semibold uppercase tracking-widest text-aiai-sage-light">Methodology</span>
+            </div>
+            <h2 class="text-3xl lg:text-4xl font-extrabold text-white">How It Happened</h2>
+        </div>
+
+        <div class="relative timeline-line">
+            <div class="space-y-8">
+                <div class="timeline-item md:flex md:items-center md:justify-between">
+                    <div class="md:w-5/12 md:text-right mb-2 md:mb-0">
+                        <span class="text-aiai-blue font-bold text-sm">Phase 1</span>
+                        <p class="text-white/70 text-sm mt-1">Brief received and decomposed into independent workstreams by the coordinator agent. Directory sources identified and mapped.</p>
+                    </div>
+                    <div class="hidden md:flex w-8 h-8 bg-aiai-blue rounded-full items-center justify-center flex-shrink-0 z-10">
+                        <span class="text-white text-xs font-bold">1</span>
+                    </div>
+                    <div class="md:w-5/12"></div>
+                </div>
+
+                <div class="timeline-item md:flex md:items-center md:justify-between">
+                    <div class="md:w-5/12"></div>
+                    <div class="hidden md:flex w-8 h-8 bg-aiai-sage rounded-full items-center justify-center flex-shrink-0 z-10">
+                        <span class="text-white text-xs font-bold">2</span>
+                    </div>
+                    <div class="md:w-5/12 mb-2 md:mb-0">
+                        <span class="text-aiai-sage font-bold text-sm">Phase 2</span>
+                        <p class="text-white/70 text-sm mt-1">Parallel execution: directory scraping (Gav), taxonomy design (Mel), and quality oversight (Bee) run simultaneously across six data sources.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item md:flex md:items-center md:justify-between">
+                    <div class="md:w-5/12 md:text-right mb-2 md:mb-0">
+                        <span class="text-aiai-gold font-bold text-sm">Phase 3</span>
+                        <p class="text-white/70 text-sm mt-1">Data assembly: scraped contacts matched against the taxonomy. Fit scores assigned. Gap analysis identifies Phase 2 targets.</p>
+                    </div>
+                    <div class="hidden md:flex w-8 h-8 bg-aiai-gold rounded-full items-center justify-center flex-shrink-0 z-10">
+                        <span class="text-white text-xs font-bold">3</span>
+                    </div>
+                    <div class="md:w-5/12"></div>
+                </div>
+
+                <div class="timeline-item md:flex md:items-center md:justify-between">
+                    <div class="md:w-5/12"></div>
+                    <div class="hidden md:flex w-8 h-8 bg-aiai-orange rounded-full items-center justify-center flex-shrink-0 z-10">
+                        <span class="text-white text-xs font-bold">4</span>
+                    </div>
+                    <div class="md:w-5/12 mb-2 md:mb-0">
+                        <span class="text-aiai-orange font-bold text-sm">Phase 4</span>
+                        <p class="text-white/70 text-sm mt-1">Delivery: outreach playbook drafted, schema documented, deduplication rules applied. Client receives five structured deliverables, ready to use.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Article Content (cont.) -->
+<article class="max-w-3xl mx-auto px-6 lg:px-8 py-12 lg:py-16">
+    <div class="article-body">
+
+        <h2>The Team</h2>
+
+        <p>This wasn't one AI doing everything. It was a coordinated team of three specialised agents, each working in its domain of expertise, with a human in the loop for direction and quality sign-off.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 mb-8">
+            <div class="bg-white rounded-xl p-6 border border-aiai-border/50 text-center">
+                <div class="w-14 h-14 rounded-full bg-aiai-gold/10 flex items-center justify-center mx-auto mb-4 text-2xl">
+                    🐝
+                </div>
+                <h3 class="font-bold text-aiai-navy text-lg mb-1">Bee</h3>
+                <p class="text-xs text-aiai-muted font-medium mb-3">Coordinator</p>
+                <p class="text-sm text-aiai-muted leading-relaxed">Decomposed the brief, ran individual research on key contacts, cross-referenced data against the framework, and handled quality verification.</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 border border-aiai-border/50 text-center">
+                <div class="w-14 h-14 rounded-full bg-aiai-blue/10 flex items-center justify-center mx-auto mb-4 text-2xl">
+                    🔍
+                </div>
+                <h3 class="font-bold text-aiai-navy text-lg mb-1">Gav</h3>
+                <p class="text-xs text-aiai-muted font-medium mb-3">Research</p>
+                <p class="text-sm text-aiai-muted leading-relaxed">Systematically scraped six structured directories, extracted company and contact details, and mapped UK regional coverage across 70 companies.</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 border border-aiai-border/50 text-center">
+                <div class="w-14 h-14 rounded-full bg-aiai-sage/10 flex items-center justify-center mx-auto mb-4 text-2xl">
+                    🧩
+                </div>
+                <h3 class="font-bold text-aiai-navy text-lg mb-1">Mel</h3>
+                <p class="text-xs text-aiai-muted font-medium mb-3">Framework Design</p>
+                <p class="text-sm text-aiai-muted leading-relaxed">Designed the 6-dimension categorisation taxonomy, created persona profiles for the outreach playbook, and drafted the message templates.</p>
+            </div>
+        </div>
+
+        <p>The human stayed in the loop for strategic decisions — approving the taxonomy structure, reviewing fit scores on tier-1 contacts, and signing off on the outreach messaging. The agents did the heavy lifting; the human directed the work and validated the output.</p>
+
+        <h2>What This Means For You</h2>
+
+        <p>This case study matters because it bridges from "what we do internally" to "what we can do for clients." It's not a demo or a proof of concept — it's real deliverables produced for a real client on a real deadline.</p>
+
+        <p>If your business needs market intelligence, contact databases, competitive research, or data enrichment, here's what this project demonstrates:</p>
+
+        <div class="space-y-4 mb-8">
+            <div class="lesson-card bg-white rounded-xl p-6 border border-aiai-border/50">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0 w-8 h-8 bg-aiai-blue/10 rounded-lg flex items-center justify-center text-aiai-blue font-bold text-sm">1</div>
+                    <div>
+                        <h3 class="!mt-0 !mb-2">Speed Without Sacrifice</h3>
+                        <p style="margin:0;font-size:0.95rem;color:#475569;">Under 2 hours from brief to delivery. The AI team researched across six data sources, categorised 27 contacts, and produced five structured deliverables — all while the client was still in their morning. Speed doesn't mean shallow; the taxonomy, playbook, and deduplication rules were designed for reuse.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lesson-card bg-white rounded-xl p-6 border border-aiai-border/50">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0 w-8 h-8 bg-aiai-sage/10 rounded-lg flex items-center justify-center text-aiai-sage font-bold text-sm">2</div>
+                    <div>
+                        <h3 class="!mt-0 !mb-2">Multi-Agent Systems Beat Single Agents</h3>
+                        <p style="margin:0;font-size:0.95rem;color:#475569;">Three specialised agents working in parallel solved the brief faster and more thoroughly than any single model could. One scraped, one designed the framework, one verified quality. The coordinator stitched the outputs together. This is how AI works at scale — not one tool doing everything, but a team each doing what it does best.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lesson-card bg-white rounded-xl p-6 border border-aiai-border/50">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0 w-8 h-8 bg-aiai-gold/10 rounded-lg flex items-center justify-center text-aiai-gold font-bold text-sm">3</div>
+                    <div>
+                        <h3 class="!mt-0 !mb-2">The Output Is Reusable Infrastructure</h3>
+                        <p style="margin:0;font-size:0.95rem;color:#475569;">The taxonomy, schema, and playbook aren't one-off artefacts — they're infrastructure. Phase 2 can scale to 300+ additional contacts without rebuilding the framework. The client didn't just get data; they got a system for ongoing intelligence gathering.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>How We Can Do This For You</h2>
+
+        <p>This project sits at the intersection of <strong>data intelligence</strong> and <strong>AI-augmented research</strong> — capabilities that apply across industries, not just construction and drones.</p>
+
+        <p>If you need market intelligence, competitor analysis, contact databases, or structured research from scattered public sources, the same multi-agent pipeline can be configured for your sector. The taxonomy changes. The sources change. The methodology scales.</p>
+
+        <p>Want to see what we'd find in your sector? <a href="contact.html">Start a conversation</a> — brief us on your market, and we'll show you what our team can uncover.</p>
+
+        <p class="text-center text-aiai-muted text-sm mt-12">
+            <a href="case-studies.html" class="inline-flex items-center gap-2 text-aiai-blue hover:text-aiai-blue-light transition-colors font-medium">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                Back to Case Studies
+            </a>
+        </p>
+
+    </div>
+</article>
+
+<!-- Footer -->
+<footer class="bg-aiai-navy text-white border-t border-white/10">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-12 lg:py-16">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+            <div class="sm:col-span-2 md:col-span-1">
+                <img src="assets/img/aiai-wordmark-white-transparent.png" alt="AIAI" class="h-8 w-auto mb-4">
+                <p class="text-sm text-white/50 leading-relaxed mb-4">Helping UK SMEs adopt AI realistically — proof-first, rent-aware, outcome-led.</p>
+            </div>
+            <div>
+                <h3 class="text-sm font-semibold text-white/80 mb-4 uppercase tracking-wider">Site</h3>
+                <ul class="space-y-2.5">
+                    <li><a href="index.html" class="text-sm text-white/50 hover:text-white transition-colors">Home</a></li>
+                    <li><a href="understanding-ai.html" class="text-sm text-white/50 hover:text-white transition-colors">Understanding AI</a></li>
+                    <li><a href="proof.html" class="text-sm text-white/50 hover:text-white transition-colors">Proof</a></li>
+                    <li><a href="services.html" class="text-sm text-white/50 hover:text-white transition-colors">Services</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-sm font-semibold text-white/80 mb-4 uppercase tracking-wider">More</h3>
+                <ul class="space-y-2.5">
+                    <li><a href="build-with-us.html" class="text-sm text-white/50 hover:text-white transition-colors">Build With Us</a></li>
+                    <li><a href="case-studies.html" class="text-sm text-white/50 hover:text-white transition-colors">Case Studies</a></li>
+                    <li><a href="insights.html" class="text-sm text-white/50 hover:text-white transition-colors">Insights</a></li>
+                    <li><a href="contact.html" class="text-sm text-white/50 hover:text-white transition-colors">Contact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-sm font-semibold text-white/80 mb-4 uppercase tracking-wider">Contact</h3>
+                <ul class="space-y-2.5">
+                    <li><a href="mailto:hello@adventuresinai.co.uk" class="text-sm text-white/50 hover:text-white transition-colors">hello@adventuresinai.co.uk</a></li>
+                    <li class="text-sm text-white/40">Yorkshire, UK</li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-white/10 pt-8 text-center">
+            <p class="text-xs text-white/40">&copy; 2026 Adventures in AI Ltd. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Mobile Bottom Navigation Bar -->
+<div id="mobile-bottom-bar" class="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-aiai-border/50 md:hidden">
+    <div class="flex items-center justify-around px-1 py-1.5 pb-[env(safe-area-inset-bottom)]">
+        <a href="index.html" class="flex flex-col items-center justify-center gap-1 min-w-[44px] min-h-[44px] py-1.5 px-1 text-aiai-muted hover:text-aiai-navy transition-colors" aria-label="Home">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            <span class="text-[10px] font-medium leading-none">Home</span>
+        </a>
+        <a href="services.html" class="flex flex-col items-center justify-center gap-1 min-w-[44px] min-h-[44px] py-1.5 px-1 text-aiai-muted hover:text-aiai-navy transition-colors" aria-label="Services">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            <span class="text-[10px] font-medium leading-none">Services</span>
+        </a>
+        <a href="proof.html" class="flex flex-col items-center justify-center gap-1 min-w-[44px] min-h-[44px] py-1.5 px-1 text-aiai-muted hover:text-aiai-navy transition-colors" aria-label="Proof">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            <span class="text-[10px] font-medium leading-none">Proof</span>
+        </a>
+        <a href="insights.html" class="flex flex-col items-center justify-center gap-1 min-w-[44px] min-h-[44px] py-1.5 px-1 text-aiai-muted hover:text-aiai-navy transition-colors" aria-label="Insights">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <span class="text-[10px] font-medium leading-none">Insights</span>
+        </a>
+        <button type="button" id="more-menu-toggle" class="flex flex-col items-center justify-center gap-1 min-w-[44px] min-h-[44px] py-1.5 px-1 text-aiai-muted hover:text-aiai-navy transition-colors" aria-label="More" aria-expanded="false">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+            <span class="text-[10px] font-medium leading-none">More</span>
+        </button>
+    </div>
+    <div id="more-menu-panel" class="hidden border-t border-aiai-border bg-white px-4 py-3 space-y-1">
+        <a href="understanding-ai.html" class="block px-3 py-2.5 text-sm font-medium text-aiai-dark hover:bg-aiai-cream rounded-lg transition-colors">Understanding AI</a>
+        <a href="build-with-us.html" class="block px-3 py-2.5 text-sm font-medium text-aiai-dark hover:bg-aiai-cream rounded-lg transition-colors">Build With Us</a>
+        <a href="case-studies.html" class="block px-3 py-2.5 text-sm font-medium text-aiai-blue bg-blue-50 rounded-lg">Case Studies</a>
+        <a href="contact.html" class="block px-3 py-2.5 text-sm font-medium text-aiai-dark hover:bg-aiai-cream rounded-lg transition-colors">Contact</a>
+    </div>
+</div>
+
+<script>
+(function() {
+    var toggle = document.getElementById('more-menu-toggle');
+    var panel = document.getElementById('more-menu-panel');
+    if (!toggle || !panel) return;
+    var isOpen = false;
+    toggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        isOpen = !isOpen;
+        if (isOpen) { panel.classList.remove('hidden'); toggle.setAttribute('aria-expanded', 'true'); }
+        else { panel.classList.add('hidden'); toggle.setAttribute('aria-expanded', 'false'); }
+    });
+    document.addEventListener('click', function(e) {
+        if (isOpen && !toggle.contains(e.target) && !panel.contains(e.target)) {
+            panel.classList.add('hidden');
+            toggle.setAttribute('aria-expanded', 'false');
+            isOpen = false;
+        }
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && isOpen) {
+            panel.classList.add('hidden');
+            toggle.setAttribute('aria-expanded', 'false');
+            isOpen = false;
+            toggle.focus();
+        }
+    });
+    var menuLinks = panel.querySelectorAll('a');
+    if (menuLinks.length > 0) {
+        menuLinks[0].addEventListener('keydown', function(e) {
+            if (e.key === 'Tab' && e.shiftKey) { panel.classList.add('hidden'); toggle.setAttribute('aria-expanded', 'false'); isOpen = false; toggle.focus(); }
+        });
+        menuLinks[menuLinks.length - 1].addEventListener('keydown', function(e) {
+            if (e.key === 'Tab' && !e.shiftKey) { panel.classList.add('hidden'); toggle.setAttribute('aria-expanded', 'false'); isOpen = false; }
+        });
+    }
+    window.__moreMenuAPI = { open: function() { panel.classList.remove('hidden'); toggle.setAttribute('aria-expanded', 'true'); isOpen = true; }, close: function() { panel.classList.add('hidden'); toggle.setAttribute('aria-expanded', 'false'); isOpen = false; }, isOpen: function() { return isOpen; } };
+})();
+
+(function() {
+    var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) { entry.target.classList.add('visible'); }
+        });
+    }, { threshold: 0.2 });
+    document.querySelectorAll('.timeline-item').forEach(function(item) { observer.observe(item); });
+})();
+
+(function() {
+    var menu = document.getElementById('mobile-menu');
+    if (!menu) return;
+    menu.querySelectorAll('a').forEach(function(link) {
+        link.addEventListener('click', function() { menu.classList.add('hidden'); });
+    });
+})();
+</script>
+</body>
+</html>
