@@ -145,7 +145,7 @@
                 Building in Public: The Decision Trail
             </h1>
             <p class="text-xl text-white/80 leading-relaxed mb-8 max-w-2xl font-serif">
-                We're building a knowledge graph tool using the same process we sell. Fourteen formal decisions. Every rationale documented. Every spike tested before code. The case study is the proof of work — and the project is the proof of concept.
+                            We're building a knowledge graph tool using the same process we sell. Four model providers reviewed the plan independently. A fifth synthesised the disagreements into 14 formal decisions. Every rationale documented. Every spike tested before code. The case study is the proof of work — and the project is the proof of concept.
             </p>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div class="hero-stat bg-white/5 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/10">
@@ -164,6 +164,10 @@
                     <p class="text-2xl font-black text-white tabular-nums">0</p>
                     <p class="text-xs text-white/50 mt-0.5">False positives</p>
                 </div>
+                <div class="hero-stat bg-white/5 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/10">
+                    <p class="text-2xl font-black text-white tabular-nums">5</p>
+                    <p class="text-xs text-white/50 mt-0.5">Model providers reviewed</p>
+                </div>
             </div>
         </div>
     </div>
@@ -180,6 +184,76 @@
         <div class="pull-quote">
             <p>"Knowledge without connections is just noise with better formatting."</p>
         </div>
+
+        <h2>Four Models, Four Reviews, One Conclusion</h2>
+
+        <p>
+            Before a single line of code was written, the outline plan went to four independent reviewers — each running on a different model provider:
+        </p>
+
+        <ul>
+            <li><strong>Claude Sonnet 4.6</strong> — optimistic about the commercial angle, pushed for UX specs first</li>
+            <li><strong>Claude Opus 4.8</strong> — sceptical of the market gap, insisted on CLI-first validation</li>
+            <li><strong>Grok 4.3 (via Gav)</strong> — pragmatic, flagged the BeeBoard overlap risk, agreed with Opus on scope</li>
+            <li><strong>GPT-5.5 (via Mel)</strong> — design-led, argued for visual prototypes alongside the engine, coined the "forensic lens" metaphor</li>
+        </ul>
+
+        <p>
+            Then Kieran — the adversarial reviewer — synthesised all four reviews into a single report. Not to average the opinions, but to find where they <em>disagreed</em> and where they <em>converged</em>.
+        </p>
+
+        <div class="pull-quote">
+            <p>"When four independent reviewers on different models converge on the exact same next steps, those steps are not suggestions. They are prerequisites."</p>
+            <div class="attribution">— Kieran Synthesis Report</div>
+        </div>
+
+        <p>
+            All four independently identified entity resolution as the #1 risk. All four said build the engine before the UI. All four flagged the timeline as under-specified. The consensus was clear — but the disagreements were more valuable:
+        </p>
+
+        <div class="not-prose my-10 space-y-4">
+            <div class="bg-white rounded-xl border border-aiai-border p-6">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0 w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-aiai-navy mb-1">Disagreement: Commercial Angle</h4>
+                        <p class="text-sm text-aiai-muted leading-relaxed">Sonnet called the market gap confirmed. Opus pushed back: "A gap defined as the specific combination of four things nobody bundled is a <em>feature gap</em>, not necessarily a <em>market gap</em>." Gav and Mel agreed with Opus. Result: commercial angle explicitly deferred to later. <strong>Decision D007.</strong></p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl border border-aiai-border p-6">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0 w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-aiai-navy mb-1">Disagreement: What Should the Timeline Do?</h4>
+                        <p class="text-sm text-aiai-muted leading-relaxed">Sonnet wanted detailed UX specs. Opus wanted date-range comparison, not animation. Gav wanted decision provenance. Mel coined the phrase that reframed the whole feature: <em>"The timeline should behave less like a video scrubber and more like a forensic lens."</em> Result: diff comparison is the primary interaction. Animation is Phase 2. <strong>Decision D002.</strong></p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl border border-aiai-border p-6">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0 w-10 h-10 bg-orange-50 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-aiai-navy mb-1">Disagreement: When Should the UI Appear?</h4>
+                        <p class="text-sm text-aiai-muted leading-relaxed">Three reviewers said engine first, UI second. Mel disagreed: <em>"A text CLI cannot validate whether timeline navigation, node focus, visual density, and source context are understandable."</em> Result: engine validates the pipeline, but a throwaway visual prototype runs in parallel to answer the question: does a graph actually help, or is it just impressive? <strong>Decision D003.</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p>
+            The synthesis also caught things <em>nobody</em> saw individually: the success criterion was anti-useful (incentivising false positives), format drift in ingestion would silently break old files, re-extraction determinism was a bigger problem than acknowledged, and nobody had designed the empty state. Each of these became a formal decision.
+        </p>
+
+        <p>
+            This is the adversarial review process in action. Not one model giving one answer — four models stress-testing the same plan from different angles, with a fifth synthesising the conflicts into actionable decisions. The disagreements produced better outcomes than any single opinion could have.
+        </p>
 
         <h2>What Beelinks Is</h2>
 
