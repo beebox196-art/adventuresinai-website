@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study: Building in Public — The Decision Trail | Adventures in AI</title>
+    <meta name="description" content="We're building a knowledge graph tool using the same process we sell. 14 formal decisions, every rationale documented, every spike tested before code. This is what actually happened.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'aiai-navy': '#1a2332',
+                        'aiai-navy-light': '#243447',
+                        'aiai-blue': '#2563eb',
+                        'aiai-blue-light': '#3b82f6',
+                        'aiai-sage': '#7c9a6e',
+                        'aiai-sage-light': '#a3bc96',
+                        'aiai-sage-bg': '#f0f5ed',
+                        'aiai-cream': '#faf9f6',
+                        'aiai-dark': '#0f172a',
+                        'aiai-muted': '#64748b',
+                        'aiai-border': '#e2e8f0',
+                        'aiai-orange': '#ea580c',
+                        'aiai-gold': '#b59a3a',
+                        'aiai-purple': '#7c3aed',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                        serif: ['Merriweather', 'Georgia', 'serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-gradient { background: linear-gradient(135deg, #1a2332 0%, #1e1b4b 40%, #1a2332 100%); }
+        .article-body { font-family: 'Merriweather', Georgia, serif; font-size: 1.05rem; line-height: 1.85; color: #1e293b; }
+        .article-body p { margin-bottom: 1.5rem; }
+        .article-body h2 { font-family: 'Inter', sans-serif; font-size: 1.6rem; font-weight: 800; color: #1a2332; margin-top: 3rem; margin-bottom: 1rem; }
+        .article-body h3 { font-family: 'Inter', sans-serif; font-size: 1.25rem; font-weight: 700; color: #334155; margin-top: 2rem; margin-bottom: 0.75rem; }
+        .article-body ul { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+        .article-body li { margin-bottom: 0.5rem; }
+        .article-body a { color: #2563eb; text-decoration: underline; text-decoration-color: rgba(37,99,235,0.3); text-underline-offset: 2px; }
+        .article-body a:hover { text-decoration-color: #2563eb; }
+        .pull-quote { border-left: 4px solid #b59a3a; padding: 1.25rem 1.5rem; margin: 2rem 0; background: linear-gradient(135deg, #fafdf7, #f8f6f0); border-radius: 0 8px 8px 0; }
+        .pull-quote p { font-family: 'Inter', sans-serif; font-size: 1.2rem; font-weight: 600; color: #1a2332; line-height: 1.6; margin: 0; font-style: italic; }
+        .pull-quote .attribution { font-size: 0.85rem; color: #64748b; margin-top: 0.5rem; font-style: normal; }
+        .stat-card { transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -12px rgba(26,35,50,0.15); }
+        .lesson-card { transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+        .lesson-card:hover { transform: translateY(-3px); box-shadow: 0 20px 40px -12px rgba(26,35,50,0.12); }
+        .decision-card { transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+        .decision-card:hover { transform: translateY(-3px); box-shadow: 0 16px 36px -12px rgba(26,35,50,0.12); }
+        .hero-stat { animation: fadeUp 0.8s ease-out forwards; opacity: 0; }
+        .hero-stat:nth-child(1) { animation-delay: 0.1s; }
+        .hero-stat:nth-child(2) { animation-delay: 0.2s; }
+        .hero-stat:nth-child(3) { animation-delay: 0.3s; }
+        .hero-stat:nth-child(4) { animation-delay: 0.4s; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .tech-grid { background-image: linear-gradient(rgba(124,154,110,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(124,154,110,0.03) 1px, transparent 1px); background-size: 40px 40px; }
+        .pulse-dot { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .timeline-line { position: relative; }
+        .timeline-line::before { content: ''; position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, #7c9a6e, #2563eb, #7c3aed, #b59a3a); }
+        @media (min-width: 768px) {
+            .timeline-line::before { left: 50%; transform: translateX(-50%); }
+        }
+        .timeline-item { opacity: 0; transform: translateY(20px); transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .timeline-item.visible { opacity: 1; transform: translateY(0); }
+    </style>
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+    <meta property="og:image" content="https://aiai.co.uk/assets/img/og-share-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="theme-color" content="#1a2332">
+</head>
+<body class="min-h-screen bg-aiai-cream font-sans text-aiai-dark antialiased pb-16 md:pb-0">
+
+<!-- Navigation -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-aiai-border/50">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16 lg:h-20">
+            <a href="index.html" class="flex items-center group">
+                <img src="assets/img/aiai-wordmark-navy-transparent.png" alt="AIAI — Adventures in AI" class="h-8 md:h-9.5 w-auto object-contain transition-transform group-hover:scale-105">
+            </a>
+            <div class="hidden lg:flex items-center lg:gap-0.5 xl:gap-1">
+                <a href="index.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Home</a>
+                <a href="understanding-ai.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Understanding AI</a>
+                <a href="proof.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Proof</a>
+                <a href="services.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Services</a>
+                <a href="build-with-us.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Build With Us</a>
+                <a href="case-studies.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-blue bg-blue-50 rounded-lg">Case Studies</a>
+                <a href="insights.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Insights</a>
+                <a href="contact.html" class="px-2 lg:px-2 xl:px-3 py-1.5 lg:py-1.5 xl:py-2 text-xs lg:text-xs xl:text-sm font-medium text-aiai-muted hover:text-aiai-navy transition-colors rounded-lg hover:bg-aiai-cream">Contact</a>
+            </div>
+            <div class="hidden lg:flex items-center lg:gap-2 xl:gap-4">
+                <a href="contact.html" class="inline-flex items-center gap-2 px-4 lg:px-4 xl:px-5 py-2 lg:py-2 xl:py-2.5 bg-aiai-blue text-white text-xs lg:text-xs xl:text-sm font-semibold rounded-lg hover:bg-aiai-blue-light transition-colors shadow-sm">
+                    Start a Conversation
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                </a>
+            </div>
+            <button class="hidden md:flex lg:hidden p-2 rounded-lg hover:bg-aiai-cream transition-colors" aria-label="Toggle navigation menu" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16"></path><path d="M4 12h16"></path><path d="M4 18h16"></path></svg>
+            </button>
+        </div>
+    </div>
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-aiai-border bg-white">
+        <div class="px-6 py-4 space-y-2">
+            <a href="index.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Home</a>
+            <a href="understanding-ai.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Understanding AI</a>
+            <a href="proof.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Proof</a>
+            <a href="services.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Services</a>
+            <a href="build-with-us.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Build With Us</a>
+            <a href="case-studies.html" class="block px-3 py-2 text-sm font-medium text-aiai-blue bg-blue-50 rounded-lg">Case Studies</a>
+            <a href="insights.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Insights</a>
+            <a href="contact.html" class="block px-3 py-2 text-sm font-medium text-aiai-muted hover:text-aiai-navy rounded-lg">Contact</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero-gradient relative overflow-hidden pt-24 lg:pt-28">
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-20 left-20 w-72 h-72 bg-aiai-purple rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 right-20 w-96 h-96 bg-aiai-blue rounded-full blur-3xl"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-6 lg:px-8 py-20 lg:py-28">
+        <div class="max-w-4xl">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="inline-flex items-center px-3 py-1 bg-aiai-purple/20 text-purple-300 text-xs font-bold uppercase tracking-wider rounded-full">Case Study</span>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-white/10 text-white/70 text-xs font-medium rounded-full">
+                    <span class="w-1.5 h-1.5 bg-aiai-purple rounded-full pulse-dot"></span>
+                    Live Development
+                </span>
+            </div>
+            <h1 class="text-4xl lg:text-5xl font-black text-white leading-tight mb-6">
+                Building in Public: The Decision Trail
+            </h1>
+            <p class="text-xl text-white/80 leading-relaxed mb-8 max-w-2xl font-serif">
+                We're building a knowledge graph tool using the same process we sell. Fourteen formal decisions. Every rationale documented. Every spike tested before code. The case study is the proof of work — and the project is the proof of concept.
+            </p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="hero-stat bg-white/5 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/10">
+                    <p class="text-2xl font-black text-white tabular-nums">14</p>
+                    <p class="text-xs text-white/50 mt-0.5">Documented decisions</p>
+                </div>
+                <div class="hero-stat bg-white/5 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/10">
+                    <p class="text-2xl font-black text-white tabular-nums">884</p>
+                    <p class="text-xs text-white/50 mt-0.5">Entities indexed</p>
+                </div>
+                <div class="hero-stat bg-white/5 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/10">
+                    <p class="text-2xl font-black text-white tabular-nums">38ms</p>
+                    <p class="text-xs text-white/50 mt-0.5">Query speed</p>
+                </div>
+                <div class="hero-stat bg-white/5 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/10">
+                    <p class="text-2xl font-black text-white tabular-nums">0</p>
+                    <p class="text-xs text-white/50 mt-0.5">False positives</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Article Body -->
+<article class="max-w-4xl mx-auto px-6 lg:px-8 py-16 lg:py-20">
+    <div class="article-body">
+
+        <p class="text-xl leading-relaxed text-slate-600 font-serif mb-8">
+            You're reading this on a website built by an AI team — BeeBot, Q, Mel, Gav, Kieran. Behind it, there are memory files, wiki entries, decision logs, session transcripts, and project docs: hundreds of files of institutional knowledge. The problem isn't that the knowledge isn't there. It's that none of it's connected. "BeeChat" appears ten different ways. "Mission Control" has had four completely different names. The same person is known by five different surface forms depending on which file you're reading.
+        </p>
+
+        <div class="pull-quote">
+            <p>"Knowledge without connections is just noise with better formatting."</p>
+        </div>
+
+        <h2>What Beelinks Is</h2>
+
+        <p>
+            Beelinks is a search-driven, timeline-aware knowledge graph that sits on top of existing file-based knowledge systems — memory, wiki, decisions, corrections, session transcripts, project docs — and makes the hidden connections between them visible. Type a term like "BeeChat" and watch its entire world light up: linked documents, cross-project references, decision trails, and how they all evolved over time.
+        </p>
+
+        <p>
+            It's not a chatbot interface. It's not a doc search. It's a discovery layer — designed to answer the questions you didn't know to ask. "What else connects to this?" "How has this term evolved?" "What decisions mention this project?"
+        </p>
+
+        <p>
+            But this case study isn't about the product. It's about <em>how it's being built</em>.
+        </p>
+
+        <h2>We Didn't Start by Building</h2>
+
+        <p>
+            When the concept landed — "a knowledge graph that shows connections across all our files" — the instinct was to start building. Build the schema. Build the UI. Build something to show.
+        </p>
+
+        <p>
+            Instead, we ran a spike.
+        </p>
+
+        <div class="not-prose my-10">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="stat-card bg-white rounded-xl border border-aiai-border p-6">
+                    <div class="w-10 h-10 rounded-lg bg-aiai-orange/10 flex items-center justify-center mb-4">
+                        <span class="text-aiai-orange font-bold text-lg">28</span>
+                    </div>
+                    <h4 class="font-bold text-aiai-navy mb-1">Test Files</h4>
+                    <p class="text-sm text-aiai-muted leading-relaxed">Across 7 categories: daily logs, reviews, specs, wiki, decisions, corrections, indexes. Old and new. Structured and unstructured.</p>
+                </div>
+                <div class="stat-card bg-white rounded-xl border border-aiai-border p-6">
+                    <div class="w-10 h-10 rounded-lg bg-aiai-blue/10 flex items-center justify-center mb-4">
+                        <span class="text-aiai-blue font-bold text-lg">2</span>
+                    </div>
+                    <h4 class="font-bold text-aiai-navy mb-1">Extraction Methods</h4>
+                    <p class="text-sm text-aiai-muted leading-relaxed">Regex pattern matching for structured metadata. LLM semantic extraction for named entities. Run independently, compared rigorously.</p>
+                </div>
+                <div class="stat-card bg-white rounded-xl border border-aiai-border p-6">
+                    <div class="w-10 h-10 rounded-lg bg-aiai-sage/10 flex items-center justify-center mb-4">
+                        <span class="text-aiai-sage font-bold text-lg">~80%</span>
+                    </div>
+                    <h4 class="font-bold text-aiai-navy mb-1">Combined Precision</h4>
+                    <p class="text-sm text-aiai-muted leading-relaxed">Neither method alone was enough. Regex: ~20% precision on named entities. LLM: ~85% but missed dates. Together: ~80% and strong.</p>
+                </div>
+            </div>
+        </div>
+
+        <p>
+            The spike produced a critical finding before a single line of production code was written: <strong>regex alone is useless for named entity extraction.</strong> Twenty per cent precision. Eighty per cent noise. Markdown headings, sentence fragments, and formatting artefacts all returned as "entities." If we'd built the ingestion pipeline on regex alone — which was the original assumption — we'd have built a graph on noise.
+        </p>
+
+        <p>
+            The LLM method was much better — ~85% precision, correct entity typing, alias detection. But it missed dates and structured metadata completely. And it was non-deterministic: re-running on the same file produced different results.
+        </p>
+
+        <div class="pull-quote">
+            <p>"The spike cost us a day. Building on the wrong assumption would have cost us the project."</p>
+        </div>
+
+        <h2>The Alias Problem Is The Problem</h2>
+
+        <p>
+            The spike revealed something more fundamental than extraction quality. Across 28 files, the same things were called different names — and some things had changed names entirely:
+        </p>
+
+        <div class="not-prose my-8 overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b-2 border-aiai-border">
+                        <th class="text-left py-3 px-4 font-bold text-aiai-navy">Canonical Entity</th>
+                        <th class="text-left py-3 px-4 font-bold text-aiai-navy">Surface Forms Found</th>
+                        <th class="text-left py-3 px-4 font-bold text-aiai-navy">Risk</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-aiai-border">
+                    <tr class="bg-white/50">
+                        <td class="py-3 px-4 font-semibold text-aiai-navy">BeeChat</td>
+                        <td class="py-3 px-4 text-aiai-muted text-xs leading-relaxed">BeeChat, BeeChat v3, BeeChat-v3, BeeChat v4, BeeChat-v4, BeeChat v5, BeeChat-v5, Beechat-v5, BeeChat-Mobile, BeeChat Mobile</td>
+                        <td class="py-3 px-4"><span class="inline-flex items-center px-2 py-0.5 bg-red-50 text-red-700 text-xs font-semibold rounded-full">10 variants</span></td>
+                    </tr>
+                    <tr class="bg-white/50">
+                        <td class="py-3 px-4 font-semibold text-aiai-navy">Mission Control</td>
+                        <td class="py-3 px-4 text-aiai-muted text-xs leading-relaxed">Mission Control, MC, MC2.0, Mission Control 2.0, Delivery Cockpit, System Monitor</td>
+                        <td class="py-3 px-4"><span class="inline-flex items-center px-2 py-0.5 bg-red-50 text-red-700 text-xs font-semibold rounded-full">6 variants + renamed</span></td>
+                    </tr>
+                    <tr class="bg-white/50">
+                        <td class="py-3 px-4 font-semibold text-aiai-navy">Adam</td>
+                        <td class="py-3 px-4 text-aiai-muted text-xs leading-relaxed">Adam, Adam Box, adam.m.box, adam.m.box@gmail.com, adam.m.box@googlemail.com</td>
+                        <td class="py-3 px-4"><span class="inline-flex items-center px-2 py-0.5 bg-orange-50 text-orange-700 text-xs font-semibold rounded-full">5 variants</span></td>
+                    </tr>
+                    <tr class="bg-white/50">
+                        <td class="py-3 px-4 font-semibold text-aiai-navy">OpenClaw</td>
+                        <td class="py-3 px-4 text-aiai-muted text-xs leading-relaxed">OpenClaw, openclaw, openclaw-macos, openclaw-ios</td>
+                        <td class="py-3 px-4"><span class="inline-flex items-center px-2 py-0.5 bg-orange-50 text-orange-700 text-xs font-semibold rounded-full">4 variants</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p>
+            "Mission Control" used to be called "System Monitor" and "Delivery Cockpit." Those aren't aliases — they're <em>name changes over time</em>. A simple alias table won't solve this. You need <code>valid_from</code> and <code>valid_to</code> semantics to know that "in April 2026, this entity was called System Monitor." That finding shaped the entire temporal model.
+        </p>
+
+        <p>
+            Entity resolution isn't a technical detail. It's the core challenge of the entire project. And we wouldn't have known how severe it was without testing first.
+        </p>
+
+        <h2>Fourteen Decisions, Every One Documented</h2>
+
+        <p>
+            This is the part that matters for your business. Most projects make decisions in Slack messages, buried email threads, or — worse — silently in code. Beelinks has a <strong>decisions.md</strong> file with 14 formal decisions, each with a rationale, each timestamped, each cross-referenced against the review that informed it.
+        </p>
+
+        <div class="pull-quote">
+            <p>"Decisions are the product, not the code. The 14 decisions will outlast any implementation. They encode the 'why' that code can't."</p>
+        </div>
+
+        <div class="not-prose my-10 space-y-4">
+            <div class="decision-card bg-white rounded-xl border border-aiai-border p-6">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0 w-12 h-12 bg-aiai-navy rounded-xl flex items-center justify-center">
+                        <span class="text-white font-mono font-bold text-xs">D001</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-aiai-navy mb-1">Entity Spike Before Build</h4>
+                        <p class="text-sm text-aiai-muted leading-relaxed mb-2">All four independent reviewers flagged entity resolution as the #1 risk. No canonical IDs, no alias table, no confidence scoring. Building on noisy extraction would produce <em>"authoritative-looking wrongness."</em></p>
+                        <p class="text-xs text-aiai-sage font-semibold">Outcome: Spike proved the risk was real. Extracted 547 entities from 28 files across 2 methods. Gate passed with amended criterion.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="decision-card bg-white rounded-xl border border-aiai-border p-6">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0 w-12 h-12 bg-aiai-navy rounded-xl flex items-center justify-center">
+                        <span class="text-white font-mono font-bold text-xs">D002</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-aiai-navy mb-1">Temporal Model: Diff Over Animation</h4>
+                        <p class="text-sm text-aiai-muted leading-relaxed mb-2">Mel's design insight: <em>"The timeline should behave less like a video scrubber and more like a forensic lens."</em> Decision provenance over visual morphing. Animation is Phase 2 at the earliest.</p>
+                        <p class="text-xs text-aiai-sage font-semibold">Outcome: Architecture doc updated with valid_from/valid_to fields. No play/pause timeline in MVP.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="decision-card bg-white rounded-xl border border-aiai-border p-6">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0 w-12 h-12 bg-aiai-navy rounded-xl flex items-center justify-center">
+                        <span class="text-white font-mono font-bold text-xs">D003</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-aiai-navy mb-1">Engine Before UI</h4>
+                        <p class="text-sm text-aiai-muted leading-relaxed mb-2">If CLI text output isn't useful, the pretty graph won't be either. Pipeline validates through code before design gets a pixel. All four reviewers recommended engine-first.</p>
+                        <p class="text-xs text-aiai-sage font-semibold">Outcome: CLI MVP delivered. <code>beelinks query "BeeChat"</code> returns 10 results, 0 false positives, 38ms. Phase 0 gate exceeded.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="decision-card bg-white rounded-xl border border-aiai-border p-6">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0 w-12 h-12 bg-aiai-navy rounded-xl flex items-center justify-center">
+                        <span class="text-white font-mono font-bold text-xs">D005</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-aiai-navy mb-1">Privacy: Local-Only Extraction</h4>
+                        <p class="text-sm text-aiai-muted leading-relaxed mb-2">"Your data stays on your machine" claim would be quietly broken by cloud LLM extraction. Spike tested whether local-only (Ollama + local models) was viable before making claims about privacy.</p>
+                        <p class="text-xs text-aiai-sage font-semibold">Outcome: Spike confirmed local extraction works at ~85% precision. Privacy claim holds. Gate passed.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="decision-card bg-white rounded-xl border border-aiai-border p-6">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0 w-12 h-12 bg-aiai-navy rounded-xl flex items-center justify-center">
+                        <span class="text-white font-mono font-bold text-xs">D008</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-aiai-navy mb-1">Success Criterion: Precision Over Recall</h4>
+                        <p class="text-sm text-aiai-muted leading-relaxed mb-2">Original goal was "80% of relevant connections." That incentivises false positives. A graph with 10 correct connections is more useful than one with 80 where half are noise. Reframed to: <em>"Top-5 connections all appear with correct provenance, ≤2 false positives."</em></p>
+                        <p class="text-xs text-aiai-sage font-semibold">Outcome: Gate criterion rewritten. CLI query exceeded it: 10 correct, 0 false positives.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="decision-card bg-white rounded-xl border border-aiai-border p-6">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0 w-12 h-12 bg-aiai-navy rounded-xl flex items-center justify-center">
+                        <span class="text-white font-mono font-bold text-xs">D010</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-aiai-navy mb-1">Entity Identity: Hash-Based, Not Re-Extraction</h4>
+                        <p class="text-sm text-aiai-muted leading-relaxed mb-2">LLM extraction is non-deterministic. Re-running after a model update produces different entities. Delta detection becomes meaningless. Entity identity must survive model changes — not be re-derived each run.</p>
+                        <p class="text-xs text-aiai-sage font-semibold">Outcome: sha256(canonical_name + entity_type) as stable ID. Alias table links surface forms to canonical IDs.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="decision-card bg-white rounded-xl border border-aiai-border p-6">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0 w-12 h-12 bg-aiai-navy rounded-xl flex items-center justify-center">
+                        <span class="text-white font-mono font-bold text-xs">D012</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-aiai-navy mb-1">Design the Empty State First</h4>
+                        <p class="text-sm text-aiai-muted leading-relaxed mb-2">An empty screen on an obscure query destroys trust. First impression is the empty state — not the full graph, not the animation, not the search results. Design for "nothing found" before designing for "everything found."</p>
+                        <p class="text-xs text-aiai-sage font-semibold">Outcome: Empty state spec included in Phase 1 visual prototype. No Cytoscape work until empty state is designed.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p>
+            Some decisions overturned earlier ones. D005 said local-only. D014 — written after the Phase 0 build proved the local pipeline worked — switched to cloud extraction for production throughput. The data still stays local. But the extraction step uses a fast cloud model. That's not backtracking — it's adjusting to evidence.
+        </p>
+
+        <p>
+            This is how real projects work. Decisions change when new information arrives. What matters is that the change is documented, rationalised, and traceable.
+        </p>
+
+        <h2>The Build, Gate by Gate</h2>
+
+        <p>
+            With the spike complete and the decisions locked, the engine got built. The build followed a gated structure — each phase has explicit criteria that must be met before the next begins. No moving on because it "feels ready."
+        </p>
+
+        <div class="not-prose my-10 timeline-line">
+            <div class="grid grid-cols-1 gap-6">
+                <div class="timeline-item bg-white rounded-xl border border-aiai-border p-6 relative md:ml-[50%] md:pl-10">
+                    <div class="absolute left-6 md:left-5 top-6 w-3 h-3 bg-aiai-sage rounded-full border-2 border-white"></div>
+                    <span class="inline-flex items-center px-2 py-0.5 bg-aiai-sage-bg text-aiai-sage text-xs font-semibold rounded-full mb-3">Gate 1 — Passed</span>
+                    <h4 class="font-bold text-aiai-navy mb-2">Entity Extraction Spike</h4>
+                    <p class="text-sm text-aiai-muted leading-relaxed">28 files, 2 extraction methods, 547 entities. Proved regex alone wasn't viable (~20% precision). Combined pipeline hit ~80%. Alias problem quantified: 10 major families identified. Gate amended to combined pipeline criterion.</p>
+                </div>
+                <div class="timeline-item bg-white rounded-xl border border-aiai-border p-6 relative md:mr-[50%] md:pr-10 md:text-right">
+                    <div class="absolute right-6 md:right-5 top-6 w-3 h-3 bg-aiai-blue rounded-full border-2 border-white"></div>
+                    <span class="inline-flex items-center px-2 py-0.5 bg-blue-50 text-aiai-blue text-xs font-semibold rounded-full mb-3">Gate 2–4 — Passed</span>
+                    <h4 class="font-bold text-aiai-navy mb-2">Deployment, Data Model, Search Spec</h4>
+                    <p class="text-sm text-aiai-muted leading-relaxed">CLI + local web UI (same pattern as Solar Dashboard). FTS5 with 8-component ranking. Hash-based entity IDs. Cutoff date set (April 2026). Export API spec drafted before any visual work.</p>
+                </div>
+                <div class="timeline-item bg-white rounded-xl border border-aiai-border p-6 relative md:ml-[50%] md:pl-10">
+                    <div class="absolute left-6 md:left-5 top-6 w-3 h-3 bg-aiai-purple rounded-full border-2 border-white"></div>
+                    <span class="inline-flex items-center px-2 py-0.5 bg-purple-50 text-aiai-purple text-xs font-semibold rounded-full mb-3">Phase 0 — Complete</span>
+                    <h4 class="font-bold text-aiai-navy mb-2">Engine MVP Built</h4>
+                    <p class="text-sm text-aiai-muted leading-relaxed">SQLite schema (6 tables + FTS5), file ingestion for 7 categories, three-layer extraction pipeline, CLI with 6 commands, HTTP API with 6 endpoints. 884 entities, 14,118 occurrences, 296 files indexed.</p>
+                </div>
+                <div class="timeline-item bg-white rounded-xl border border-aiai-border p-6 relative md:mr-[50%] md:pr-10 md:text-right">
+                    <div class="absolute right-6 md:right-5 top-6 w-3 h-3 bg-aiai-gold rounded-full border-2 border-white"></div>
+                    <span class="inline-flex items-center px-2 py-0.5 bg-yellow-50 text-aiai-gold text-xs font-semibold rounded-full mb-3">Gate 5 — Exceeded</span>
+                    <h4 class="font-bold text-aiai-navy mb-2">Acceptance Test</h4>
+                    <p class="text-sm text-aiai-muted leading-relaxed"><code class="text-xs bg-slate-100 px-1.5 py-0.5 rounded">beelinks query "BeeChat"</code> returned 10 results, all correct, zero false positives, 38ms. Gate criterion was 5 correct with ≤2 false positives. Delivered double with zero noise.</p>
+                </div>
+                <div class="timeline-item bg-white rounded-xl border border-aiai-border p-6 relative md:ml-[50%] md:pl-10">
+                    <div class="absolute left-6 md:left-5 top-6 w-3 h-3 bg-aiai-orange rounded-full border-2 border-white pulse-dot"></div>
+                    <span class="inline-flex items-center px-2 py-0.5 bg-orange-50 text-aiai-orange text-xs font-semibold rounded-full mb-3">Phase 0B — Active</span>
+                    <h4 class="font-bold text-aiai-navy mb-2">Value Delivery</h4>
+                    <p class="text-sm text-aiai-muted leading-relaxed">Cloud extraction for production throughput. Full relationship validation. Integration with weekly synthesis, agent context injection, and cross-source intelligence. This is where the tool becomes infrastructure.</p>
+                </div>
+            </div>
+        </div>
+
+        <h2>The Team Behind It</h2>
+
+        <p>
+            Beelinks is built by the same five-agent team that built this website:
+        </p>
+
+        <ul>
+            <li><strong>Q</strong> — All implementation. Schema, pipeline, CLI, API, search ranking, validation.</li>
+            <li><strong>Bee</strong> — Coordination, gate enforcement, spec writing, spike report synthesis, this case study.</li>
+            <li><strong>Mel</strong> — Design insight. The "forensic lens" timeline metaphor that shaped D002. Empty state as default design concern (D012).</li>
+            <li><strong>Gav</strong> — Research. Validated the gap and the approach. Confirmed no off-the-shelf tool does this at this scope.</li>
+            <li><strong>Kieran</strong> — Adversarial review. Found the flaws nobody else caught. Relationship hints must not be auto-promoted to edges. Cutoff date needed for format drift. Export API first, UI later.</li>
+        </ul>
+
+        <p>
+            The same team, the same process, the same principles — applied to different problems. That's the AIAI thesis: the methodology scales across domains, not just the technology.
+        </p>
+
+        <h2>What We Learned</h2>
+
+        <div class="not-prose my-10 space-y-4">
+            <div class="lesson-card bg-white rounded-xl border border-aiai-border p-6">
+                <div class="flex items-start gap-4">
+                    <span class="flex-shrink-0 w-10 h-10 bg-aiai-sage-bg rounded-lg flex items-center justify-center text-aiai-sage font-bold text-lg">1</span>
+                    <div>
+                        <h4 class="font-bold text-aiai-navy mb-1">Spike before you build</h4>
+                        <p class="text-slate-600 text-sm leading-relaxed">The spike cost a day. It proved regex alone was useless for named entities. Building the ingestion pipeline on that assumption would have produced a graph on noise — and we'd have discovered it weeks later, after the architecture was committed. The spike didn't delay the project. It saved it.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="lesson-card bg-white rounded-xl border border-aiai-border p-6">
+                <div class="flex items-start gap-4">
+                    <span class="flex-shrink-0 w-10 h-10 bg-aiai-sage-bg rounded-lg flex items-center justify-center text-aiai-sage font-bold text-lg">2</span>
+                    <div>
+                        <h4 class="font-bold text-aiai-navy mb-1">Decisions are the durable output</h4>
+                        <p class="text-slate-600 text-sm leading-relaxed">Code will be rewritten. The schema will evolve. The UI will get redesigned. But the 14 decisions — the "why" behind each choice — will outlast any implementation. When someone asks in six months "why did we use FTS5 instead of embeddings?" the answer is in decisions.md, not lost in a chat transcript.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="lesson-card bg-white rounded-xl border border-aiai-border p-6">
+                <div class="flex items-start gap-4">
+                    <span class="flex-shrink-0 w-10 h-10 bg-aiai-sage-bg rounded-lg flex items-center justify-center text-aiai-sage font-bold text-lg">3</span>
+                    <div>
+                        <h4 class="font-bold text-aiai-navy mb-1">Hybrid extraction beats pure anything</h4>
+                        <p class="text-slate-600 text-sm leading-relaxed">Regex is fast, deterministic, and terrible at named entities. LLMs are slow, non-deterministic, and good at semantics. Together they cover each other's gaps. The three-layer pipeline — regex for structured metadata, LLM for semantic entities, merge with confidence scoring — is what makes the system reliable. Neither alone hits the bar.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="lesson-card bg-white rounded-xl border border-aiai-border p-6">
+                <div class="flex items-start gap-4">
+                    <span class="flex-shrink-0 w-10 h-10 bg-aiai-sage-bg rounded-lg flex items-center justify-center text-aiai-sage font-bold text-lg">4</span>
+                    <div>
+                        <h4 class="font-bold text-aiai-navy mb-1">The alias problem never stops being the problem</h4>
+                        <p class="text-slate-600 text-sm leading-relaxed">Entity resolution isn't a cleanup step after extraction. It's the core challenge. Renamed projects, case variations, version suffixes, personal vs. professional names — these aren't edge cases. They're the norm. Any knowledge system that doesn't handle temporal identity changes ("this was called X until April, then Y") is producing authoritative-looking wrongness.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="lesson-card bg-white rounded-xl border border-aiai-border p-6">
+                <div class="flex items-start gap-4">
+                    <span class="flex-shrink-0 w-10 h-10 bg-aiai-sage-bg rounded-lg flex items-center justify-center text-aiai-sage font-bold text-lg">5</span>
+                    <div>
+                        <h4 class="font-bold text-aiai-navy mb-1">Document the disagreement, not just the consensus</h4>
+                        <p class="text-slate-600 text-sm leading-relaxed">The review synthesis records where reviewers disagreed and why. That's more valuable than consensus — it shows where the real risks are. Five reviewers independently flagged entity resolution as the #1 risk. One reviewer flagged the original success metric as incentivising false positives. The disagreements are where the thinking happens.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="lesson-card bg-white rounded-xl border border-aiai-border p-6">
+                <div class="flex items-start gap-4">
+                    <span class="flex-shrink-0 w-10 h-10 bg-aiai-sage-bg rounded-lg flex items-center justify-center text-aiai-sage font-bold text-lg">6</span>
+                    <div>
+                        <h4 class="font-bold text-aiai-navy mb-1">This case study is itself proof of the process</h4>
+                        <p class="text-slate-600 text-sm leading-relaxed">You just read a case study about a methodology applied to build a tool that will make that same methodology visible and searchable. That's not circular — it's recursive. The process produces tools that document the process. The case study is the evidence. Beelinks will be the evidence aggregator.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>What This Means for Your Business</h2>
+
+        <p>
+            You probably don't need a knowledge graph. But you almost certainly have the same underlying problem: institutional knowledge spread across files, chats, docs, and brains — with no connections between them. Decisions get made in Slack and forgotten. Lessons get learned and re-learned. The same question gets answered three times because nobody remembered it was answered before.
+        </p>
+
+        <p>
+            The solution isn't the software. It's the process. Document decisions. Spike assumptions before committing to architecture. Measure precision, not just volume. Design for the empty state. Make the "why" durable.
+        </p>
+
+        <p>
+            We can help you apply this to your business — whether that's building a knowledge system, standing up an AI team, or just learning to make decisions that survive the moment they're made. Beelinks is the tool. The methodology is the product.
+        </p>
+
+        </div>
+    </article>
+
+    <!-- CTA Section -->
+    <section class="bg-aiai-navy relative overflow-hidden">
+        <div class="absolute inset-0 opacity-5">
+            <div class="absolute top-10 right-10 w-64 h-64 bg-aiai-purple rounded-full blur-3xl"></div>
+        </div>
+        <div class="relative max-w-4xl mx-auto px-6 lg:px-8 py-16 text-center">
+            <h2 class="text-3xl font-black text-white mb-4">See the Process in Action</h2>
+            <p class="text-white/70 text-lg mb-8 max-w-2xl mx-auto font-serif">
+                Beelinks is being built right now by the same team that built this website — using the same methodology. If you want to see how an AI team makes decisions, tests assumptions, and delivers results, we can show you the real thing, not a presentation about it.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="contact.html" class="inline-flex items-center px-8 py-3.5 bg-white text-aiai-navy font-bold rounded-lg hover:bg-aiai-cream transition-colors">Talk to Us</a>
+                <a href="case-studies.html" class="inline-flex items-center px-8 py-3.5 bg-aiai-purple/20 text-white font-semibold rounded-lg hover:bg-aiai-purple/30 transition-colors border border-aiai-purple/30">More Case Studies</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-aiai-navy text-white py-12 lg:py-16">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row items-center justify-between gap-8">
+                <img src="assets/img/aiai-wordmark-white-transparent.png" alt="Adventures in AI" class="h-8 md:h-8.5 w-auto object-contain">
+                <div class="flex items-center gap-6 text-sm text-white/40">
+                    <a href="index.html" class="hover:text-white/70 transition-colors">Home</a>
+                    <a href="understanding-ai.html" class="hover:text-white/70 transition-colors">Understanding AI</a>
+                    <a href="proof.html" class="hover:text-white/70 transition-colors">Proof</a>
+                    <a href="services.html" class="hover:text-white/70 transition-colors">Services</a>
+                    <a href="build-with-us.html" class="hover:text-white/70 transition-colors">Build With Us</a>
+                    <a href="case-studies.html" class="hover:text-white/70 transition-colors">Case Studies</a>
+                    <a href="insights.html" class="hover:text-white/70 transition-colors">Insights</a>
+                    <a href="contact.html" class="hover:text-white/70 transition-colors">Contact</a>
+                </div>
+                <p class="text-white/30 text-sm">&copy; 2026 Adventures in AI Ltd</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    // Timeline scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.timeline-item').forEach(el => observer.observe(el));
+
+    // Mobile menu auto-close
+    document.querySelectorAll('#mobile-menu a').forEach(link => {
+        link.addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.add('hidden');
+        });
+    });
+    </script>
+
+    <!-- Mobile Bottom Tab Bar -->
+    <nav id="mobile-bottom-bar" class="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white border-t border-[#e2e8f0] shadow-[0_-4px_20px_rgba(0,0,0,0.08)]" style="padding-bottom: env(safe-area-inset-bottom);" aria-label="Mobile navigation">
+      <div class="flex items-center justify-around h-14">
+        <a href="index.html" class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-2 py-1 text-[#64748b] hover:text-[#2563eb] transition-colors" aria-label="Home">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          <span class="text-[10px] font-medium mt-0.5">Home</span>
+        </a>
+        <a href="services.html" class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-2 py-1 text-[#64748b] hover:text-[#2563eb] transition-colors" aria-label="Services">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <span class="text-[10px] font-medium mt-0.5">Services</span>
+        </a>
+        <a href="proof.html" class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-2 py-1 text-[#64748b] hover:text-[#2563eb] transition-colors" aria-label="Proof">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          <span class="text-[10px] font-medium mt-0.5">Proof</span>
+        </a>
+        <a href="insights.html" class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-2 py-1 text-[#64748b] hover:text-[#2563eb] transition-colors" aria-label="Insights">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path><path d="M11 8v6"></path><path d="M8 11h6"></path></svg>
+          <span class="text-[10px] font-medium mt-0.5">Insights</span>
+        </a>
+        <button type="button" id="more-toggle-btn" class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-2 py-1 text-[#2563eb] hover:text-[#2563eb] transition-colors" aria-current="page" aria-label="More pages" aria-expanded="false" aria-controls="more-menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+          <span class="text-[10px] font-medium mt-0.5">More</span>
+        </button>
+      </div>
+      <div id="more-menu" class="hidden absolute bottom-full left-0 right-0 bg-white border-t border-[#e2e8f0] shadow-[0_-4px_20px_rgba(0,0,0,0.08)]" role="menu">
+        <div class="flex flex-col divide-y divide-[#e2e8f0]">
+          <a href="understanding-ai.html" class="flex items-center gap-3 px-6 py-3.5 text-sm font-medium text-[#1a2332] hover:bg-[#faf9f6] transition-colors" role="menuitem">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h6z"></path></svg>
+            Understanding AI
+          </a>
+          <a href="build-with-us.html" class="flex items-center gap-3 px-6 py-3.5 text-sm font-medium text-[#1a2332] hover:bg-[#faf9f6] transition-colors" role="menuitem">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+            Build With Us
+          </a>
+          <a href="case-studies.html" class="flex items-center gap-3 px-6 py-3.5 text-sm font-medium text-[#1a2332] hover:bg-[#faf9f6] transition-colors" role="menuitem">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            Case Studies
+          </a>
+          <a href="contact.html" class="flex items-center gap-3 px-6 py-3.5 text-sm font-medium text-[#1a2332] hover:bg-[#faf9f6] transition-colors" role="menuitem">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            Contact
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <script>
+    (function() {
+      var moreBtn = document.getElementById('more-toggle-btn');
+      var moreMenu = document.getElementById('more-menu');
+      if (moreBtn && moreMenu) {
+        moreBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          var isHidden = moreMenu.classList.contains('hidden');
+          moreMenu.classList.toggle('hidden');
+          moreBtn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+          moreBtn.querySelector('span').textContent = isHidden ? 'Less' : 'More';
+        });
+        document.addEventListener('click', function(e) {
+          if (!moreBtn.contains(e.target) && !moreMenu.contains(e.target)) {
+            moreMenu.classList.add('hidden');
+            moreBtn.setAttribute('aria-expanded', 'false');
+            moreBtn.querySelector('span').textContent = 'More';
+          }
+        });
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape') {
+            moreMenu.classList.add('hidden');
+            moreBtn.setAttribute('aria-expanded', 'false');
+            moreBtn.querySelector('span').textContent = 'More';
+          }
+        });
+        moreMenu.querySelectorAll('a').forEach(function(link) {
+          link.addEventListener('click', function() {
+            moreMenu.classList.add('hidden');
+            moreBtn.setAttribute('aria-expanded', 'false');
+            moreBtn.querySelector('span').textContent = 'More';
+          });
+        });
+      }
+    })();
+    </script>
+</body>
+</html>
